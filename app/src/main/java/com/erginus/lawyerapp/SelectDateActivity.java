@@ -1,10 +1,9 @@
 package com.erginus.lawyerapp;
 
-import android.app.usage.UsageEvents;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -12,7 +11,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +20,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.erginus.lawyerapp.common.EventDecoratorCustom;
 import com.erginus.lawyerapp.fragment.HomeFragment;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
@@ -40,6 +38,8 @@ public class SelectDateActivity extends AppCompatActivity implements OnDateSelec
     FrameLayout f;
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
+    CalendarDay eventDay2;
+    List<CalendarDay> type2;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -56,22 +56,10 @@ public class SelectDateActivity extends AppCompatActivity implements OnDateSelec
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView)findViewById(R.id.navigation);
         materialCalendarView.setSelectedDate(Calendar.getInstance());
-       /* Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        long eventStart = calendar.getTimeInMillis();
-
-        calendar.add(Calendar.HOUR, 3);
-        long eventEnd = calendar.getTimeInMillis();
-
-        UsageEvents.Event event = new UsageEvents.Event("Dinner with Jane", eventStart, eventEnd);
-
-        List<UsageEvents.Event> events = new ArrayList<UsageEvents.Event>();
-        events.add(event);
-
-        materialCalendarView.getEventAdapter().setEvents(events);*/
+        type2=new ArrayList<>();
+        eventDay2 = CalendarDay.from(2016,10,21);
+        type2.add(eventDay2);
+        materialCalendarView.addDecorator(new EventDecoratorCustom(R.color.buttonbg, type2));
         materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
