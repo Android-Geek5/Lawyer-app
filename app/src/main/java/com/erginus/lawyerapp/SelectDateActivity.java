@@ -2,6 +2,7 @@ package com.erginus.lawyerapp;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,34 +13,53 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.erginus.lawyerapp.common.EventDecoratorCustom;
 import com.erginus.lawyerapp.fragment.HomeFragment;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
-import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 
-public class SelectDateActivity extends AppCompatActivity implements OnDateSelectedListener {
-   MaterialCalendarView materialCalendarView;
+
+
+public class SelectDateActivity extends AppCompatActivity {
+
+    private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
+    private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("dd-M-yyyy hh:mm:ss a", Locale.getDefault());
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;
     FrameLayout f;
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
-    CalendarDay eventDay2;
-    List<CalendarDay> type2;
+    CompactCalendarView compactCalendar;
+    TextView txtMonth, txtCase,  txtMore;
+    ImageView imgPrevious, imgNext;
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+    List<String> list;
+    String event="", e="";
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -52,17 +72,109 @@ public class SelectDateActivity extends AppCompatActivity implements OnDateSelec
         setSupportActionBar(toolbar);
         txtTitle=(TextView)findViewById(R.id.toolbar_title);
         txtTitle.setText("Add Date");
-        materialCalendarView=(MaterialCalendarView)findViewById(R.id.calendarView);
+        compactCalendar=(CompactCalendarView)findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView)findViewById(R.id.navigation);
-        materialCalendarView.setSelectedDate(Calendar.getInstance());
-        type2=new ArrayList<>();
-        eventDay2 = CalendarDay.from(2016,10,21);
-        type2.add(eventDay2);
-        materialCalendarView.addDecorator(new EventDecoratorCustom(R.color.buttonbg, type2));
-        materialCalendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+        txtMonth=(TextView)findViewById(R.id.txt_month);
+        txtCase=(TextView)findViewById(R.id.txt_caseTitle);
+
+        txtMore=(TextView)findViewById(R.id.txt_more);
+        imgNext=(ImageView)findViewById(R.id.image_next);
+        imgPrevious=(ImageView)findViewById(R.id.image_previous);
+        compactCalendar.setLocale(TimeZone.getDefault(),Locale.ENGLISH);
+        compactCalendar.setUseThreeLetterAbbreviation(true);
+
+        list=new ArrayList<>();
+
+        imgPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+            public void onClick(View view) {
+                compactCalendar.showPreviousMonth();
+            }
+        });
+        imgNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                compactCalendar.showNextMonth();
+            }
+        });
+
+
+        txtMonth.setText(dateFormatForMonth.format(compactCalendar.getFirstDayOfCurrentMonth()));
+        loadEvents();
+        loadEventsForYear(2016);
+        compactCalendar.invalidate();
+        logEventsByMonth(compactCalendar);
+
+        // define a listener to receive callbacks when certain events happen.
+        compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
+            @Override
+            public void onDayClick(Date dateClicked) {
+
+                txtCase.setText("");
+                e="";
+                List<Event> events = compactCalendar.getEvents(dateClicked);
+               /* DateFormat dateFormat = new SimpleDateFormat("dd");
+                Calendar cal = Calendar.getInstance();
+                String slctdDt=dateFormat.format(cal.getTime());
+                DateFormat format = new SimpleDateFormat("dd", Locale.ENGLISH);
+                Date date = null;
+                try {
+                    date= format.parse(slctdDt);
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                if(dateClicked.equals(date))
+                {
+                    if(events.size()<=0)
+                    {
+                        txtCase.setText("No Case Found");
+                    }
+                    else
+                    {
+
+                        for(int i=0; i<events.size();i++)
+                        {
+
+                            event= String.valueOf(events.get(i).getData());
+                            e=e+ " \n"+event;
+                            txtCase.setText(e);
+                        }
+
+
+
+                    }
+                }*/
+                if(events.size()<=0)
+                {
+                    txtCase.setText("No Case Found");
+                }
+                else
+                {
+
+                    for(int i=0; i<events.size();i++)
+                    {
+
+                        event= String.valueOf(events.get(i).getData());
+                        e=e+ "\n "+event;
+                        txtCase.setText(e);
+                    }
+
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onMonthScroll(Date firstDayOfNewMonth) {
+                txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
+            }
+        });
+        txtMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 txtTitle.setText("Home");
                 android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
@@ -71,6 +183,7 @@ public class SelectDateActivity extends AppCompatActivity implements OnDateSelec
                 fragmentTransaction.commit();
             }
         });
+
         if (drawerLayout != null) {
             drawerLayout.setDrawerShadow(R.drawable.list_back, GravityCompat.START);
 
@@ -156,13 +269,71 @@ public class SelectDateActivity extends AppCompatActivity implements OnDateSelec
 
     }
 
-    @Override
-    public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-        txtTitle.setText("Home");
-        android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
+    private void loadEvents() {
+        addEvents(-1, -1);
+        addEvents(Calendar.DECEMBER, -1);
+        addEvents(Calendar.NOVEMBER, -1);
+    }
+
+    private void loadEventsForYear(int year) {
+        addEvents(Calendar.DECEMBER, year);
+        addEvents(Calendar.NOVEMBER, year);
+    }
+
+    private void logEventsByMonth(CompactCalendarView compactCalendarView) {
+        currentCalender.setTime(new Date());
+        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
+        currentCalender.set(Calendar.MONTH, Calendar.OCTOBER);
+        List<String> dates = new ArrayList<>();
+        for (Event e : compactCalendarView.getEventsForMonth(new Date())) {
+            dates.add(dateFormatForDisplaying.format(e.getTimeInMillis()));
+        }
+        Log.d("Select Date", "Events for Aug with simple date formatter: " + dates);
+        Log.d("Select Date", "Events for Aug month using default local and timezone: " + compactCalendarView.getEventsForMonth(currentCalender.getTime()));
+    }
+
+    private void addEvents(int month, int year) {
+        currentCalender.setTime(new Date());
+        currentCalender.set(Calendar.DAY_OF_MONTH, 1);
+        Date firstDayOfMonth = currentCalender.getTime();
+        for (int i = 0; i < 6; i++) {
+            currentCalender.setTime(firstDayOfMonth);
+            if (month > -1) {
+                currentCalender.set(Calendar.MONTH, month);
+            }
+            if (year > -1) {
+                currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
+                currentCalender.set(Calendar.YEAR, year);
+            }
+            currentCalender.add(Calendar.DATE, i);
+            setToMidnight(currentCalender);
+            long timeInMillis = currentCalender.getTimeInMillis();
+
+            List<Event> events = getEvents(timeInMillis, i);
+
+            compactCalendar.addEvents(events);
+        }
+    }
+
+    private List<Event> getEvents(long timeInMillis, int day) {
+        if (day < 2) {
+            return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)));
+        } else if ( day > 2 && day <= 4) {
+            return Arrays.asList(
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)));
+        } else {
+            return Arrays.asList(
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Event at " + new Date(timeInMillis) ),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Event 2 at " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Event 3 at " + new Date(timeInMillis)));
+        }
+    }
+
+    private void setToMidnight(Calendar calendar) {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
     }
 }
