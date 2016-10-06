@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg"
     android:scrollbars="none">
 <LinearLayout  android:layout_width="match_parent"
@@ -33,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/arrow_back"
-                />
+                android:contentDescription="" />
 
         </LinearLayout>
         <LinearLayout
@@ -47,10 +48,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Add Case"
-                android:textSize="15sp"
+                android:textSize="20sp"
                 android:gravity="center|center_vertical"
                 android:textColor="@android:color/white"
                 android:id="@+id/toolbar_title" />
+
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="60dp"
@@ -67,10 +70,12 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="16dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:orientation="horizontal">
+
             <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -78,28 +83,102 @@
             android:textColor="@android:color/white"
             android:layout_weight="0.8"
             android:hint="Previous Date"
+                android:layout_marginLeft="5dp"
             android:textColorHint="@color/colorAccent"
             android:id="@+id/tw_previous_date"
+            android:layout_gravity="center_vertical"
 
             />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+              >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_day"
-                android:layout_weight="1"/>
+                android:background="@null"
 
+                />
+                <requestFocus/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView4"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_day"
+                   />
+            </RelativeLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_month"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@null"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/dropdown"
+                        android:id="@+id/imageView5"
+                        android:layout_centerVertical="true"
+                        android:layout_alignRight="@+id/spinner_month"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_year"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@null"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/dropdown"
+                android:id="@+id/imageView6"
+                android:layout_centerVertical="true"
+                android:layout_alignRight="@+id/spinner_year"
+                />
+        </RelativeLayout>
+    </LinearLayout>
         </LinearLayout>
-
 
 
         <AutoCompleteTextView
@@ -111,26 +190,24 @@
             android:layout_marginTop="10dp"
             android:textColorHint="@color/colorAccent"
             android:id="@+id/textView_name"
+
             />
 
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
 
-        android:hint="RFA Number/Case Number"
+            android:hint="RFA Number/Case Number"
 
-        android:textColorHint="@color/colorAccent"
-        android:id="@+id/textView_number"
-      
-        />
+            android:textColorHint="@color/colorAccent"
+            android:id="@+id/textView_number"
 
-
-    
+            />
 
 
-    <AutoCompleteTextView
+        <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
@@ -141,25 +218,71 @@
         android:textColorHint="@color/colorAccent"
         android:id="@+id/textView_title"
         android:layout_marginTop="10dp"
-      
+
         />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
 
-    <AutoCompleteTextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-               android:hint="Case Type"
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:layout_weight="0.8"
+                android:hint="Case Type"
+                android:textColorHint="@color/colorAccent"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center_vertical"
 
-        android:textColorHint="@color/colorAccent"
-        android:layout_marginTop="10dp"
-      
-        android:id="@+id/textView_type"
-        />
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/spinner_type"
+                        android:background="@null"
+                        />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/dropdown"
+                        android:id="@+id/imageView99"
+                        android:layout_centerVertical="true"
+                        android:layout_alignRight="@+id/spinner_type"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+            </LinearLayout>
+
+        <AutoCompleteTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+                   android:hint="Case Type"
+             android:visibility="gone"
+            android:textColorHint="@color/colorAccent"
+            android:layout_marginTop="10dp"
+
+            android:id="@+id/textView_type"
+            />
 
 
-    <AutoCompleteTextView
+        <AutoCompleteTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
@@ -168,7 +291,7 @@
         android:textColorHint="@color/colorAccent"
         android:id="@+id/textView_position"
         android:layout_marginTop="10dp"
-      
+
         />
 
 
@@ -184,27 +307,99 @@
                 android:textColor="@android:color/white"
                 android:layout_weight="0.8"
                 android:hint="Next Date"
+                android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
                 android:textColorHint="@color/colorAccent"
                 android:id="@+id/tw_next_date"
 
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_nday"
+                android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"/>
-
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/dropdown"
+                        android:id="@+id/imageView7"
+                        android:layout_centerVertical="true"
+                        android:layout_alignRight="@+id/spinner_nday"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_nmonth"
+                android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"/>
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/dropdown"
+                            android:id="@+id/imageView8"
+                            android:layout_centerVertical="true"
+                            android:layout_alignRight="@+id/spinner_nmonth"
+                            />
+                    </RelativeLayout>
+                </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:layout_height="wrap_content">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            >
             <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner_nyear"
+                android:background="@null"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
                 android:layout_weight="1"/>
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/dropdown"
+                                android:id="@+id/imageView9"
+                                android:layout_centerVertical="true"
+                                android:layout_alignRight="@+id/spinner_nyear"
+                                />
+                        </RelativeLayout>
+                    </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -212,16 +407,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:layout_weight="1"
-        android:hint="Retain For"
-        android:textColorHint="@color/colorAccent"
-        android:id="@+id/textView_retain"
-        android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:layout_weight="1"
+                android:hint="Retain For"
+                android:layout_marginLeft="5dp"
+                android:textColorHint="@color/colorAccent"
+                android:id="@+id/textView_retain"
+                android:layout_marginTop="10dp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -229,7 +427,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
                 <AutoCompleteTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
@@ -241,7 +439,7 @@
                     />
 
                 <AutoCompleteTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
@@ -262,13 +460,14 @@
             android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
-    <AutoCompleteTextView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="@android:color/white"
        android:layout_weight="1"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:hint="Opposite Counsellor"
         android:textColorHint="@color/colorAccent"
         android:id="@+id/textView_opposite"
@@ -279,8 +478,9 @@
 
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <AutoCompleteTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
@@ -292,7 +492,7 @@
                     />
 
                 <AutoCompleteTextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
@@ -321,7 +521,7 @@
 
 
     <Button
-        android:id="@+id/email_sign_in_button"
+        android:id="@+id/add"
         style="?android:textAppearanceSmall"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

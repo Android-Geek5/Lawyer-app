@@ -159,12 +159,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         e=e+ "\n "+event;
                         txtCase.setText(e);
                     }
-
-
-
                 }
-
-
             }
 
             @Override
