@@ -1,18 +1,21 @@
-package com.erginus.lawyerapp;
+package com.erginus.lawyerapp.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.WindowManager;
-import android.widget.AutoCompleteTextView;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,111 +30,113 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.erginus.lawyerapp.AddCaseActivity;
+import com.erginus.lawyerapp.CaseListModel;
+import com.erginus.lawyerapp.LoginActivity;
+import com.erginus.lawyerapp.R;
+import com.erginus.lawyerapp.SelectDateActivity;
+import com.erginus.lawyerapp.adapter.CaseListAdapter;
 import com.erginus.lawyerapp.common.MapAppConstant;
 import com.erginus.lawyerapp.common.Prefshelper;
 import com.erginus.lawyerapp.common.VolleySingleton;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-/**
- * A login screen that offers login via email/password.
- */
-public class LoginActivity extends AppCompatActivity {
+public class ChangePasswordFragment extends Fragment {
 
-    EditText edtContact,edtPwd;
-    String strContact, strPwd;
+    EditText edtPwd,edtConfirmPwd;
+    String strPwd, strConfirmPwd;
     Prefshelper prefshelper;
 
-    TextView txtNotAUser, txtForgotPwd;
+    public ChangePasswordFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_login);
-        // Set up the login form.
-        edtContact = (EditText) findViewById(R.id.email);
-        edtPwd = (EditText) findViewById(R.id.password);
-        txtNotAUser = (TextView) findViewById(R.id.textView);
-        txtForgotPwd = (TextView) findViewById(R.id.textView_forgot);
-        prefshelper=new Prefshelper(this);
-        txtNotAUser.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, RegisterationActivity.class);
-                startActivity(intent);
-            }
-        });
-        txtForgotPwd.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-                startActivity(intent);
-            }
-        });
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootview = inflater.inflate(R.layout.fragment_change_password, container, false);
+        prefshelper=new Prefshelper(getActivity());
+        SelectDateActivity.txtTitle.setText("Change Password");
+        edtPwd = (EditText) rootview.findViewById(R.id.password);
+        edtConfirmPwd = (EditText) rootview.findViewById(R.id.cpassword);
+        Button submit = (Button)rootview.findViewById(R.id.email_sign_in_button);
+        submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 View focusView = null;
                 boolean cancelLogin = false;
 
-                strContact=edtContact.getText().toString();
                 strPwd=edtPwd.getText().toString();
-            
-                if (TextUtils.isEmpty(strContact)) {
-                    edtContact.setError("Field must not be empty.");
-                    focusView = edtContact;
-                    cancelLogin = true;
-                }else if (!isValidPhone((strContact))) {
-                    edtContact.setError("Phone number must be of digits 10.");
-                    focusView = edtContact;
-                    cancelLogin = true;
-                }
-              
+                strConfirmPwd=edtConfirmPwd.getText().toString();
+
                 if (TextUtils.isEmpty(strPwd)) {
                     edtPwd.setError("Field must not be empty.");
                     focusView = edtPwd;
                     cancelLogin = true;
-                } else if (!isValidPass(strPwd)) {
+                }else if (!isValidPass((strPwd))) {
                     edtPwd.setError("Invalid Password.");
                     focusView = edtPwd;
                     cancelLogin = true;
                 }
-               
+
+                if (TextUtils.isEmpty(strConfirmPwd)) {
+                    edtConfirmPwd.setError("Field must not be empty.");
+                    focusView = edtConfirmPwd;
+                    cancelLogin = true;
+                } else if (!isValidPass(strConfirmPwd)) {
+                    edtConfirmPwd.setError("Invalid Password.");
+                    focusView = edtConfirmPwd;
+                    cancelLogin = true;
+                }
+                if(!strConfirmPwd.equalsIgnoreCase(strPwd))
+                {
+                    edtConfirmPwd.setError("Password doesn't match.");
+                    focusView = edtConfirmPwd;
+                    cancelLogin = true;
+                }
                 if (cancelLogin) {
                     // error in login
                     focusView.requestFocus();
                 } else {
-                   
-                    login();
+
+                    changePassword();
                 }
 
             }
         });
 
 
+    
+
+        return rootview;
     }
-    private boolean isValidPhone(String pass) {
-        return pass != null && pass.length() == 10;
-    }
+ 
     private boolean isValidPass(String pass) {
         return pass != null && pass.length() >= 6;
     }
 
 
-    public void login() {
+    public void changePassword() {
         try {
-            final ProgressDialog pDialog = new ProgressDialog(LoginActivity.this);
+            final ProgressDialog pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading...");
             pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "login");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "login", new Response.Listener<String>() {
+            Log.e("", "SIGNUP " + MapAppConstant.API + "change_password");
+            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "change_password", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
@@ -142,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(LoginActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), serverMessage,Toast.LENGTH_LONG).show();
 
                         if (serverCode.equalsIgnoreCase("0")) {
 
@@ -151,31 +156,18 @@ public class LoginActivity extends AppCompatActivity {
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
-                                    String userID=jsonObject.getString("user_id");
-                                    String userSecHash=jsonObject.getString("user_security_hash");
-                                    String userName=jsonObject.getString("user_name");
-                                    String userEmail=jsonObject.getString("user_email");
-                                    String userContact=jsonObject.getString("user_contact");
-                                    String userEmailVerified=jsonObject.getString("user_email_verification_status");
-                                    String userMobileVerified=jsonObject.getString("user_mobile_verification_status");
-                                    String userStatus=jsonObject.getString("user_status");
 
-                                    prefshelper.storeUserIdToPreference(userID);
+                                    String userSecHash=jsonObject.getString("user_security_hash");
+
                                     prefshelper.storeSecHashToPreference(userSecHash);
-                                    prefshelper.storeEmailToPreference(userEmail);
-                                    prefshelper.storeUserNameToPreference(userName);
-                                    prefshelper.storeUserContactToPreference(userContact);
-                                    prefshelper.storeUserStatusToPreference(userStatus);
-                                    prefshelper.storeEmailVerification(userEmailVerified);
-                                    prefshelper.storeMobileVerification(userMobileVerified);
 
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(LoginActivity.this, SelectDateActivity.class);
+                            Intent intent = new Intent(getActivity(), SelectDateActivity.class);
                             startActivity(intent);
-                            finish();
+                            getActivity().finish();
 
                         }
 
@@ -191,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(LoginActivity.this, "Timeout Error",
+                        Toast.makeText(getActivity(), "Timeout Error",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
@@ -209,8 +201,11 @@ public class LoginActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_login", strContact);
+                    params.put("user_id", prefshelper.getUserIdFromPreference());
+                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
                     params.put("user_login_password", strPwd);
+                    params.put("confirm_login_password", strConfirmPwd);
+
                     return params;
                 }
             };
@@ -218,11 +213,41 @@ public class LoginActivity extends AppCompatActivity {
 
             sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+            VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(sr);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-}
+    @Override
+    public void onResume() {
 
+        super.onResume();
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+
+                    if(getFragmentManager().getBackStackEntryCount() > 0) {
+
+
+                        getFragmentManager().popBackStack();
+                        SelectDateActivity.txtTitle.setText("Home");
+
+                    }
+
+
+
+                    return true;
+
+                }
+
+                return false;
+            }
+        });
+    }
+}

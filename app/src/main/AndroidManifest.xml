@@ -2,10 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.erginus.lawyerapp">
 
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -27,22 +25,17 @@
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".RegisterationActivity" />
         <activity
-            android:name=".RegisterationActivity"
+            android:name=".OTPScreenActivity"
             android:windowSoftInputMode="adjustNothing" />
-
-        <activity android:name=".OTPScreenActivity"
-            android:windowSoftInputMode="adjustNothing"/>
         <activity android:name=".SelectDateActivity" />
-        <activity android:name=".AddCaseActivity"
-            android:windowSoftInputMode="adjustNothing"
-
-            />
-        <activity android:name=".CaseDetailActivity"/><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+        <activity
+            android:name=".AddCaseActivity"
+            android:windowSoftInputMode="adjustNothing" />
+        <activity android:name=".CaseDetailActivity" />
+        <activity android:name=".ExitActivity" />
+        <activity android:name=".ForgotPasswordActivity"></activity>
     </application>
 
 </manifest>

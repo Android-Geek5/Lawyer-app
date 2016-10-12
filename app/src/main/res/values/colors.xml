@@ -8,6 +8,6 @@
     <color name="buttonbg">#00bcd5</color>
     <color name="bgcolor">#f3f3f3</color>
     <color name="eventDecorator">#f44336</color>
-
+    <color name="menuBG">#303030</color>
 
 </resources>

@@ -1,0 +1,12 @@
+<spell-checker xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="Spell Checker"
+    android:settingsActivity="com.example.SpellCheckerSettingsActivity">
+    <subtype
+        android:label="Subtype Generic"
+        android:subtypeLocale="en"
+    />
+    <subtype
+            android:label="Subtype Generic"
+            android:subtypeLocale="fr"
+    />
+</spell-checker>

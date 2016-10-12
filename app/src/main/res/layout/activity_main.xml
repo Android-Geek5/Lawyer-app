@@ -21,7 +21,6 @@
         android:visibility="gone" />
 
 
-
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
@@ -58,13 +57,13 @@
 
                          android:layout_weight="1">
          -->
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:hint="Name"
                     android:layout_weight="1"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textSize="16sp"
                     android:textColor="@android:color/white"
@@ -92,7 +91,7 @@
 
                          android:layout_weight="1">
          -->
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/mobile"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -105,6 +104,7 @@
                     android:background="@color/colorText"
                     android:textColorHint="@android:color/white"
                     android:paddingLeft="10dp"
+                    android:maxLength="10"
                     android:singleLine="true" />
 
                 <!-- </android.support.design.widget.TextInputLayout>-->
@@ -126,7 +126,7 @@
 
                          android:layout_weight="1">
          -->
-                <AutoCompleteTextView
+                <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"

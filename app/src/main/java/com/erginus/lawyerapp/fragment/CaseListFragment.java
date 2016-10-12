@@ -23,13 +23,13 @@ import com.erginus.lawyerapp.adapter.CaseListAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class CaseListFragment extends Fragment {
 
     List<CaseListModel> caseList;
     ListView listView;
     FloatingActionButton fab;
 
-    public HomeFragment() {
+    public CaseListFragment() {
         // Required empty public constructor
     }
 
@@ -46,7 +46,7 @@ public class HomeFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.activity_home, container, false);
 
         listView = (ListView) rootview.findViewById(R.id.listView);
-
+        SelectDateActivity.txtTitle.setText("Case List");
         CaseListModel caseListModel = new CaseListModel();
         caseList = new ArrayList<>();
         caseList.add(caseListModel);
@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), AddCaseActivity.class);
                 startActivity(intent);
-                getActivity().finish();
+
             }
         });
         return rootview;
@@ -89,8 +89,8 @@ public class HomeFragment extends Fragment {
 
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
-                        SelectDateActivity.txtTitle.setText("Add Date");
                         getFragmentManager().popBackStack();
+                        SelectDateActivity.txtTitle.setText("Home");
 
                     }
 
@@ -102,5 +102,4 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-
 }

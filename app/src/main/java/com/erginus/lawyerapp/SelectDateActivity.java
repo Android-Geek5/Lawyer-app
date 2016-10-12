@@ -1,11 +1,13 @@
 package com.erginus.lawyerapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,19 +20,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.erginus.lawyerapp.fragment.HomeFragment;
+import com.erginus.lawyerapp.common.Prefshelper;
+import com.erginus.lawyerapp.fragment.ChangePasswordFragment;
+import com.erginus.lawyerapp.fragment.CaseListFragment;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,7 +59,7 @@ public class SelectDateActivity extends AppCompatActivity {
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
     List<String> list;
     String event="", e="";
-
+    Prefshelper prefshelper;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -71,13 +71,13 @@ public class SelectDateActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtTitle=(TextView)findViewById(R.id.toolbar_title);
-        txtTitle.setText("Add Date");
+        txtTitle.setText("Home");
         compactCalendar=(CompactCalendarView)findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView)findViewById(R.id.navigation);
         txtMonth=(TextView)findViewById(R.id.txt_month);
         txtCase=(TextView)findViewById(R.id.txt_caseTitle);
-
+          prefshelper=new Prefshelper(this);
         txtMore=(TextView)findViewById(R.id.txt_more);
         imgNext=(ImageView)findViewById(R.id.image_next);
         imgPrevious=(ImageView)findViewById(R.id.image_previous);
@@ -170,10 +170,10 @@ public class SelectDateActivity extends AppCompatActivity {
         txtMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                txtTitle.setText("Home");
+                txtTitle.setText("Case List");
                 android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
+                fragmentTransaction.replace(R.id.content_frame, new CaseListFragment());
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -222,13 +222,32 @@ public class SelectDateActivity extends AppCompatActivity {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.drawer_home:
                         txtTitle.setText("Home");
+                        Intent intent = new Intent(SelectDateActivity.this, SelectDateActivity.class);
+                        overridePendingTransition(0,0);
+                        startActivity(intent);
+                        finish();
+                        return true;
+                    case R.id.drawer_list:
+                        txtTitle.setText("Case List");
                         android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
                         android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.content_frame, new HomeFragment());
+                        fragmentTransaction.replace(R.id.content_frame, new CaseListFragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        return true;
+                    case R.id.changePwd:
+                        txtTitle.setText("Change Password");
+                        fragmentManager=getSupportFragmentManager();
+                        fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame, new ChangePasswordFragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
 
+                    case R.id.drawer_logout:
+                        ExitActivity.exitApplication(SelectDateActivity.this);
+                        prefshelper.getPreferences().edit().clear().commit();
+                        return true;
                     // For rest of the options we just show a toast on click
 
                     default:
@@ -330,5 +349,23 @@ public class SelectDateActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
+    }
+    @Override
+    public  void onBackPressed()
+    {
+        new AlertDialog.Builder(this)
+                .setTitle("Alert !")
+                .setMessage("Are you sure you want to exit?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent a = new Intent(Intent.ACTION_MAIN);
+                        a.addCategory(Intent.CATEGORY_HOME);
+                        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(a);
+
+                    }
+                }).create().show();
     }
 }
