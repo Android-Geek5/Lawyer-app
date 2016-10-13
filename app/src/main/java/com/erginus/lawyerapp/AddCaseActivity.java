@@ -1,7 +1,9 @@
 package com.erginus.lawyerapp;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -95,7 +97,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                startActivity(intent1);
                 finish();
+                SelectDateActivity.txtTitle.setText("Home");
             }
         });
         edtCourtName=(EditText) findViewById(R.id.textView_name);
@@ -630,7 +635,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     }*/
     @Override
     public void onBackPressed() {
+        Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+        startActivity(intent1);
         finish();
+        SelectDateActivity.txtTitle.setText("Home");
         super.onBackPressed();
 
     }
@@ -692,7 +700,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                e.printStackTrace();
                            }
 
-
+                           Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                           startActivity(intent1);
                            finish();
                        }
 
@@ -775,6 +784,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             }
             else
             {
+                edtCourtName.requestFocus();
                 edtCaseType.setVisibility(View.GONE);
                 strType= sprCaseType.getSelectedItem().toString();
                 Log.e("status", strType);
@@ -784,7 +794,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-              strDay="";
+                strDay="";
             }
             else {
                 strDay= sprDay.getSelectedItem().toString();
@@ -796,10 +806,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
             if (i==0)
             {
-              strMonth="";
+                strMonth="";
             }
             else {
-                strMonth= sprMonth.getSelectedItem().toString();
+                strMonth= String.valueOf(i);
                 Log.e("day", strMonth);
             }
         }
@@ -807,22 +817,24 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-                  strYear="";
+                strYear="";
             }
             else {
                 strYear=sprYear.getSelectedItem().toString();
                 Log.e("year", strYear);
+
             }
         }
         if(spinner.getId()==R.id.spinner_nday)
         {
             if (i==0)
             {
-              strNDay="";
+                strNDay="";
             }
             else {
                 strNDay=sprNDay.getSelectedItem().toString();
                 Log.e("year", strNDay);
+
             }
         }
         if(spinner.getId()==R.id.spinner_nmonth)
@@ -832,7 +844,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strNMonth="";
             }
             else {
-                strNMonth=sprNMonth.getSelectedItem().toString();
+                strNMonth=String.valueOf(i);
                 Log.e("year", strNMonth);
             }
         }
@@ -840,7 +852,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-              strNYear="";
+                strNYear="";
             }
             else {
                 strNYear= sprNYear.getSelectedItem().toString();
@@ -851,7 +863,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-              strSDay="";
+                strSDay="";
             }
             else {
                 strSDay= sprSDay.getSelectedItem().toString();
@@ -862,11 +874,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-              strSMonth="";
+                strSMonth="";
             }
             else {
-                strSMonth= sprSMonth.getSelectedItem().toString();
-                Log.e("year", strSMonth);
+                strSMonth= String.valueOf(i);
+                Log.e("year", String.valueOf(i));
             }
         }
         if(spinner.getId()==R.id.spinner_syear)
@@ -876,20 +888,40 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strSYear="";
             }
             else {
-                edtCourtName.requestFocus();
-                strSYear=  sprSYear.getSelectedItem().toString();
 
+                strSYear=  sprSYear.getSelectedItem().toString();
+                String startDt=strSYear+"-"+strSMonth+"-"+strSDay;
+                try {
+                    Date dt1=dateFormatter2.parse(startDt);
+                    strStartDate=dateFormatter2.format(dt1);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                Log.e("year", strStartDate);
             }
         }
         if(spinner.getId()==R.id.spinner_time)
         {
             if (i==0)
             {
-              strTime="";
+                strTime="";
             }
             else {
-                sprNDay.requestFocus();
+                edtCaseTitle.requestFocus();
                 strTime= sprTime.getSelectedItem().toString();
+
+                prevTime= strTime.substring(0, strTime.length()-2);
+                Log.e("year", prevTime);
+
+
+                String prevDate=strYear+"-"+strMonth+"-"+strDay+" "+prevTime;
+                try {
+                    Date date=dateFormatter.parse(prevDate);
+                    strPreviousDt=dateFormatter.format(date);
+                    Log.e("year", strPreviousDt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -898,11 +930,25 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             if (i==0)
             {
-             strNTime="";
+                strNTime="";
             }
             else {
                 edtRetainName.requestFocus();
                 strNTime=sprNtime.getSelectedItem().toString();
+
+
+                nextTime=strNTime.substring(0, strNTime.length()-2);
+                Log.e("year", nextTime);
+
+
+                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay+" "+nextTime;
+                try {
+                    Date dt=dateFormatter.parse(nextDate);
+                    strNextDt=dateFormatter.format(dt);
+                    Log.e("year", strNextDt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
 
@@ -913,4 +959,5 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
 }

@@ -98,6 +98,7 @@
             android:paddingRight="10dp"
             android:paddingLeft="10dp"
             android:layout_height="376dp"
+
             app:compactCalendarTextSize="12sp"
             app:compactCalendarBackgroundColor="@color/colorPrimary"
             app:compactCalendarTextColor="@color/colorAccent"
@@ -136,8 +137,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/colorPrimary"
-        app:itemTextColor="@color/colorPrimary"
+
+        android:background="@color/menuBG"
+        app:itemTextColor="@color/colorAccent"
         app:theme="@style/list_item_appearance"
         app:menu="@menu/drawer_menu" >
 

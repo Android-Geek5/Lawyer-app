@@ -10,6 +10,7 @@
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".SplashScreenActivity"
@@ -20,22 +21,37 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver
+            android:name="com.erginus.lawyerapp.common.AlarmReceiver"
+            />
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".RegisterationActivity" />
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".RegisterationActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".OTPScreenActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".SelectDateActivity" />
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".SelectDateActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".AddCaseActivity"
-            android:windowSoftInputMode="adjustNothing" />
-        <activity android:name=".CaseDetailActivity" />
-        <activity android:name=".ExitActivity" />
-        <activity android:name=".ForgotPasswordActivity"></activity>
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".CaseDetailActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ExitActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -1,6 +1,8 @@
 package com.erginus.lawyerapp;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,12 +27,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.erginus.lawyerapp.common.AlarmReceiver;
 import com.erginus.lawyerapp.common.Prefshelper;
+import com.erginus.lawyerapp.fragment.AboutUS;
 import com.erginus.lawyerapp.fragment.ChangePasswordFragment;
 import com.erginus.lawyerapp.fragment.CaseListFragment;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,6 +65,8 @@ public class SelectDateActivity extends AppCompatActivity {
     List<String> list;
     String event="", e="";
     Prefshelper prefshelper;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    Date newDate;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -75,9 +82,10 @@ public class SelectDateActivity extends AppCompatActivity {
         compactCalendar=(CompactCalendarView)findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView=(NavigationView)findViewById(R.id.navigation);
+        navigationView.setItemIconTintList(null);
         txtMonth=(TextView)findViewById(R.id.txt_month);
         txtCase=(TextView)findViewById(R.id.txt_caseTitle);
-          prefshelper=new Prefshelper(this);
+        prefshelper=new Prefshelper(this);
         txtMore=(TextView)findViewById(R.id.txt_more);
         imgNext=(ImageView)findViewById(R.id.image_next);
         imgPrevious=(ImageView)findViewById(R.id.image_previous);
@@ -90,21 +98,76 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showPreviousMonth();
+                prefshelper.storeFirstDay(String.valueOf(compactCalendar.getFirstDayOfCurrentMonth()));
+                String date= String.valueOf(Calendar.DAY_OF_MONTH+Calendar.MONTH+Calendar.YEAR);
+                try {
+                    newDate=dateFormat.parse(date);
+
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                if(compactCalendar.getFirstDayOfCurrentMonth().equals(newDate))
+                {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, +0);
+                    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    Date lastDayOfMonth = cal.getTime();
+                    prefshelper.storeLastDay(String.valueOf(lastDayOfMonth));
+                }
+                else {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, -1);
+                    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    Date lastDayOfMonth = cal.getTime();
+                    prefshelper.storeLastDay(String.valueOf(lastDayOfMonth));
+                }
             }
         });
         imgNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
+                prefshelper.storeFirstDay(String.valueOf(compactCalendar.getFirstDayOfCurrentMonth()));
+
+                String date= String.valueOf(Calendar.DAY_OF_MONTH+Calendar.MONTH+Calendar.YEAR);
+                try {
+                    newDate=dateFormat.parse(date);
+
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+
+                if(compactCalendar.getFirstDayOfCurrentMonth().equals(newDate))
+                {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, +0);
+                    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    Date lastDayOfMonth = cal.getTime();
+                    prefshelper.storeLastDay(String.valueOf(lastDayOfMonth));
+                }
+                else {
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.MONTH, +1);
+                    cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+                    Date lastDayOfMonth = cal.getTime();
+                    prefshelper.storeLastDay(String.valueOf(lastDayOfMonth));
+                }
             }
         });
 
 
         txtMonth.setText(dateFormatForMonth.format(compactCalendar.getFirstDayOfCurrentMonth()));
         loadEvents();
-        loadEventsForYear(2016);
+        loadEventsForYear(Calendar.YEAR);
         compactCalendar.invalidate();
         logEventsByMonth(compactCalendar);
+        prefshelper.storeFirstDay(String.valueOf(compactCalendar.getFirstDayOfCurrentMonth()));
+
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, +0);
+        cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date lastDayOfMonth = cal.getTime();
+        prefshelper.storeLastDay(String.valueOf(lastDayOfMonth));
 
         // define a listener to receive callbacks when certain events happen.
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -170,10 +233,21 @@ public class SelectDateActivity extends AppCompatActivity {
         txtMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+                Date lastDayOfMonth = cal.getTime();
+
+
                 txtTitle.setText("Case List");
+               /* Bundle bundle = new Bundle();
+                bundle.putString("istDate", String.valueOf(compactCalendar.getFirstDayOfCurrentMonth()) );
+                bundle.putString("lastDate",String.valueOf(lastDayOfMonth));*/
                 android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.content_frame, new CaseListFragment());
+                CaseListFragment caseListFragment=new CaseListFragment();
+                //caseListFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.content_frame, caseListFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -243,10 +317,27 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
-
+                    case R.id.about_us:
+                        txtTitle.setText("About us");
+                        fragmentManager=getSupportFragmentManager();
+                        fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame, new AboutUS());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        return true;
+                    case R.id.drawer_add:
+                        txtTitle.setText("Add Case");
+                        Intent intent1 = new Intent(SelectDateActivity.this, AddCaseActivity.class);
+                        startActivity(intent1);
+                        finish();
+                        return true;
                     case R.id.drawer_logout:
                         ExitActivity.exitApplication(SelectDateActivity.this);
                         prefshelper.getPreferences().edit().clear().commit();
+                        return true;
+
+                    case R.id.drawer_share:
+                        shareapp();
                         return true;
                     // For rest of the options we just show a toast on click
 
@@ -257,7 +348,21 @@ public class SelectDateActivity extends AppCompatActivity {
                 }
             }
         });
+        Calendar calendar =  Calendar.getInstance();
+        //calendar.set(2014,Calendar.getInstance().get(Calendar.MONTH),Calendar.SUNDAY , 8, 00, 00);
+        calendar.set(2016,10,13,12,22,00);
+        long when = calendar.getTimeInMillis();
+        // notification time
+        Log.d("time", when+" ");
+        Intent intentAlarm = new Intent(this, AlarmReceiver.class);
+
+         // create the object
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC, when, AlarmManager.INTERVAL_DAY * 7, PendingIntent.getBroadcast(this,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        //set the alarm for particular time
+        //alarmManager.set(AlarmManager.RTC_WAKEUP,when, PendingIntent.getBroadcast(this,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
+
     @Override
 
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -367,5 +472,13 @@ public class SelectDateActivity extends AppCompatActivity {
 
                     }
                 }).create().show();
+    }
+    public void shareapp(){
+        String message = "http://erginus.com/";
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("text/plain");
+        share.putExtra(Intent.EXTRA_TEXT, message);
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(share, "Share Via"));
     }
 }

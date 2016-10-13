@@ -80,7 +80,27 @@ public class Prefshelper {
 
     }
 
+    public void storeFirstDay(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("first_day", contact);
+        edit.commit();
 
+    }
+    public String getIstDay() {
+
+        return getPreferences().getString("first_day", "");
+    }
+    public void storeLastDay(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("last_day", contact);
+        edit.commit();
+
+    }
+
+    public String getlastDay() {
+
+        return getPreferences().getString("last_day", "");
+    }
 
 
     public String getUserIdFromPreference() {

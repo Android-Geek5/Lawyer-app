@@ -2,19 +2,17 @@ package com.erginus.lawyerapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.erginus.lawyerapp.CaseDetailActivity;
-import com.erginus.lawyerapp.CaseListModel;
+import com.erginus.lawyerapp.model.CaseListModel;
 import com.erginus.lawyerapp.R;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -66,18 +64,31 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtCourt=(TextView) rowView.findViewById(R.id.textView_name);
         holder.txtCaseType=(TextView) rowView.findViewById(R.id.textView_type);
         holder.txtLearn=(TextView) rowView.findViewById(R.id.textView_learnmore);
-      /*  holder.txtUniversity.setText(universities[position]);
-        holder.txtCity.setText(cities[position]);
-        holder.txtDueDate.setText(duedates[position]);
+        holder.txtCase.setText("Case Title: "+caseList.get(position).getCaseTitle());
+        holder.txtNumber.setText("Case Number: "+caseList.get(position).getCaseNumber());
+        holder.txtCourt.setText("Court Name: "+caseList.get(position).getCourtName());
+        holder.txtCaseType.setText("Case Type: "+caseList.get(position).getCaseType());
 
-       */
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Intent intent=new Intent(context, CaseDetailActivity.class);
-
+                intent.putExtra("cnumber",caseList.get(position).getCaseNumber());
+                intent.putExtra("id", caseList.get(position).getCaseId());
+                intent.putExtra("ctype",caseList.get(position).getCaseType());
+                intent.putExtra("ctitle", caseList.get(position).getCaseTitle());
+                intent.putExtra("court",caseList.get(position).getCourtName());
+                intent.putExtra("status", caseList.get(position).getCaseStatus());
+                intent.putExtra("pdate",caseList.get(position).getCasePrevDate());
+                intent.putExtra("ndate", caseList.get(position).getNextDate());
+                intent.putExtra("sdate",caseList.get(position).getCaseStartDate());
+                intent.putExtra("oname", caseList.get(position).getCounsellorName());
+                intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
+                intent.putExtra("rname", caseList.get(position).getRetainName());
+                intent.putExtra("rcontact",caseList.get(position).getRetainContact());
+                intent.putExtra("comment", caseList.get(position).getComment());
                 context.startActivity(intent);
             }
         });

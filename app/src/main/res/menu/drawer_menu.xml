@@ -7,33 +7,38 @@
         <item
             android:checked="true"
             android:id="@+id/drawer_home"
-            android:icon="@drawable/password"
+            android:icon="@drawable/home"
             android:title="Home"/>
         <item
             android:id="@+id/about_us"
              android:title="About Us"
-            android:icon="@drawable/password">
+            android:icon="@drawable/about">
         </item>
         <item
             android:checked="true"
             android:id="@+id/drawer_list"
-            android:icon="@drawable/password"
+            android:icon="@drawable/case_list"
             android:title="Case List"/>
+        <item
+            android:id="@+id/drawer_add"
+            android:icon="@drawable/add_case"
+            android:title="Add Case" >
+        </item>
         <item
             android:id="@+id/changePwd"
             android:title="Change Password"
-            android:icon="@drawable/password">
+            android:icon="@drawable/change_pwd">
         </item>
 
           <item
             android:id="@+id/drawer_logout"
-              android:icon="@drawable/password"
+              android:icon="@drawable/logout"
             android:title="Logout" >
         </item>
 
         <item
             android:id="@+id/drawer_share"
-            android:icon="@drawable/password"
+            android:icon="@drawable/share"
             android:title="Share App" >
         </item>
     </group>

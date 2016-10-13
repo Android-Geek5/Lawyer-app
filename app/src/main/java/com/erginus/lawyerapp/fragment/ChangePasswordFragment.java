@@ -2,10 +2,7 @@ package com.erginus.lawyerapp.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -30,21 +26,15 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.erginus.lawyerapp.AddCaseActivity;
-import com.erginus.lawyerapp.CaseListModel;
-import com.erginus.lawyerapp.LoginActivity;
 import com.erginus.lawyerapp.R;
 import com.erginus.lawyerapp.SelectDateActivity;
-import com.erginus.lawyerapp.adapter.CaseListAdapter;
 import com.erginus.lawyerapp.common.MapAppConstant;
 import com.erginus.lawyerapp.common.Prefshelper;
 import com.erginus.lawyerapp.common.VolleySingleton;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ChangePasswordFragment extends Fragment {
