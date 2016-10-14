@@ -63,6 +63,7 @@ android:layout_weight="0.3"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|left"
             android:src="@drawable/search"
+            android:visibility="gone"
             /></LinearLayout>
     </LinearLayout>
  </android.support.v7.widget.Toolbar>

@@ -27,6 +27,6 @@
     </style>
 
     <style name="ToolbarSearchView" parent="Base.ThemeOverlay.AppCompat.Dark.ActionBar">
-    <item name="searchViewStyle">@style/CustomSearchView</item>
-</style>
+        <item name="searchViewStyle">@style/CustomSearchView</item>
+    </style>
 </resources>
