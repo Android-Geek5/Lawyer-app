@@ -77,7 +77,7 @@ public class ChangePasswordFragment extends Fragment {
                     focusView = edtPwd;
                     cancelLogin = true;
                 }else if (!isValidPass((strPwd))) {
-                    edtPwd.setError("Invalid Password.");
+                    edtPwd.setError("Password must be of digits 6.");
                     focusView = edtPwd;
                     cancelLogin = true;
                 }
@@ -87,7 +87,7 @@ public class ChangePasswordFragment extends Fragment {
                     focusView = edtConfirmPwd;
                     cancelLogin = true;
                 } else if (!isValidPass(strConfirmPwd)) {
-                    edtConfirmPwd.setError("Invalid Password.");
+                    edtConfirmPwd.setError("Password must be of digits 6.");
                     focusView = edtConfirmPwd;
                     cancelLogin = true;
                 }

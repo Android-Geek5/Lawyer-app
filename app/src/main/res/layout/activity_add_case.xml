@@ -32,6 +32,7 @@
                 android:contentDescription="" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,6 +51,7 @@
 
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="60dp"
             android:layout_height="match_parent"
@@ -71,12 +73,7 @@
         android:orientation="vertical"
         android:layout_margin="10dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
+
 
             <TextView
             android:layout_width="match_parent"
@@ -84,32 +81,40 @@
             android:textSize="15sp"
             android:textColor="@android:color/white"
             android:layout_weight="1"
-            android:hint="Start Date"
+            android:text="Start Date"
             android:layout_marginLeft="5dp"
             android:textColorHint="@color/colorAccent"
             android:id="@+id/tw_start_date"
             android:layout_gravity="center_vertical"
-
+            android:layout_marginBottom="10dp"
             />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:focusable="true"
+            android:focusableInTouchMode="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1.2"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              >
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_sday"
-                android:background="@null"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_sday"
+                    android:background="@null"
 
-                />
+                    />
                 <requestFocus/>
                 <ImageView
                     android:layout_width="wrap_content"
@@ -118,76 +123,96 @@
                     android:id="@+id/imageView_s"
                     android:layout_centerVertical="true"
                     android:layout_alignRight="@+id/spinner_sday"
-                   />
+                    />
             </RelativeLayout>
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_smonth"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@null"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageView"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_smonth"
-                        />
-                </RelativeLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0.9"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner_syear"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@null"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/dropdown"
-                android:id="@+id/imageView6s"
-                android:layout_centerVertical="true"
-                android:layout_alignRight="@+id/spinner_syear"
-                />
-        </RelativeLayout>
-    </LinearLayout>
+        </LinearLayout>
 
-</LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_smonth"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_smonth"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_syear"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView6s"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_syear"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_weight="1"
+            android:text="Please Select Start Date"
+            android:layout_marginLeft="5dp"
+                      android:layout_marginTop="10dp"
+            android:id="@+id/tw_start_error"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            android:layout_marginBottom="10dp"
+            />
+
+
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="15sp"
             android:textColor="@android:color/white"
-            android:hint="Previous Date"
+            android:text="Previous Date"
             android:layout_marginLeft="5dp"
             android:textColorHint="@color/colorAccent"
             android:id="@+id/tw_previous_date"
@@ -204,7 +229,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_marginLeft="5dp"
-                android:layout_weight="1"
+                android:layout_weight="1.2"
                 android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content">
@@ -241,6 +266,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     >
                     <Spinner
                         android:layout_width="match_parent"
@@ -270,6 +296,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     >
                     <Spinner
                         android:layout_width="match_parent"
@@ -289,7 +316,7 @@
                         />
                 </RelativeLayout>
             </LinearLayout>
-            <LinearLayout
+          <!--  <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_marginLeft="5dp"
                 android:layout_weight="0.8"
@@ -317,9 +344,23 @@
                         android:layout_alignRight="@+id/spinner_time"
                         />
                 </RelativeLayout>
-            </LinearLayout>
+            </LinearLayout>-->
         </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:text="Please Select Previous Date"
+            android:layout_marginLeft="5dp"
 
+            android:id="@+id/tw_prev_error"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"
+            />
 
         <EditText
         android:layout_width="match_parent"
@@ -327,9 +368,10 @@
         android:textSize="15sp"
         android:textColor="@android:color/white"
         android:hint="Case Title"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_title"
         android:layout_marginTop="10dp"
+        android:inputType="textAutoCorrect"
 
         />
 
@@ -344,7 +386,7 @@
                 android:textSize="15sp"
                 android:textColor="@android:color/white"
                 android:layout_weight="0.8"
-                android:hint="Case Type"
+                android:text="Case Type"
                 android:textColorHint="@color/colorAccent"
                 android:layout_marginLeft="5dp"
                 android:layout_gravity="center_vertical"
@@ -379,19 +421,6 @@
                 </RelativeLayout>
             </LinearLayout>
             </LinearLayout>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:textSize="15sp"
-            android:textColor="@android:color/white"
-            android:hint="Court Name"
-            android:layout_marginTop="10dp"
-            android:textColorHint="@color/colorAccent"
-            android:id="@+id/textView_name"
-
-            />
-
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -399,9 +428,9 @@
             android:textColor="@android:color/white"
             android:hint="Case Type"
             android:visibility="gone"
-            android:textColorHint="@color/colorAccent"
+            android:textColorHint="@android:color/darker_gray"
             android:layout_marginTop="10dp"
-
+            android:inputType="textAutoCorrect"
             android:id="@+id/textView_type"
             />
         <EditText
@@ -409,9 +438,25 @@
             android:layout_height="45dp"
             android:textSize="15sp"
             android:textColor="@android:color/white"
+            android:hint="Court Name"
+            android:layout_marginTop="10dp"
+            android:textColorHint="@android:color/darker_gray"
+            android:id="@+id/textView_name"
+            android:inputType="textAutoCorrect"
+
+            />
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
             android:hint="RFA Number/Case Number"
-            android:textColorHint="@color/colorAccent"
+            android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_number"
+            android:inputType="textAutoCorrect"
+
 
             />
         <EditText
@@ -420,25 +465,28 @@
         android:textSize="15sp"
         android:textColor="@android:color/white"
         android:hint="Status Of Case"
-        android:textColorHint="@color/colorAccent"
+            android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_position"
         android:layout_marginTop="10dp"
+            android:inputType="textAutoCorrect"
 
-        />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:hint="Next Date"
-        android:layout_marginLeft="5dp"
-        android:gravity="center_vertical"
-        android:textColorHint="@color/colorAccent"
-        android:id="@+id/tw_next_date"
+            />
 
-        />
-    <LinearLayout
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="Next Date"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColorHint="@color/colorAccent"
+            android:id="@+id/tw_next_date"
+
+            />
+
+        <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
@@ -447,13 +495,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_marginLeft="5dp"
-            android:layout_weight="1"
+            android:layout_weight="1.2"
             android:layout_marginRight="5dp"
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+
                 >
         <Spinner
             android:layout_width="match_parent"
@@ -480,9 +529,11 @@
                 android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     >
         <Spinner
             android:layout_width="match_parent"
@@ -512,6 +563,7 @@
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         >
         <Spinner
             android:layout_width="match_parent"
@@ -531,7 +583,7 @@
                             />
                     </RelativeLayout>
                 </LinearLayout>
-        <LinearLayout
+       <!-- <LinearLayout
             android:layout_width="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_weight="0.8"
@@ -559,10 +611,25 @@
                     android:layout_alignRight="@+id/spinner_ntime"
                     />
             </RelativeLayout>
-        </LinearLayout>
+        </LinearLayout>-->
     </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@android:color/holo_red_light"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:text="Please Select Next Date"
+            android:layout_marginLeft="5dp"
+            android:layout_marginBottom="10dp"
+            android:id="@+id/tw_next_error"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
 
-    <LinearLayout
+            />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -574,7 +641,7 @@
                 android:textSize="15sp"
                 android:textColor="@android:color/white"
                 android:layout_weight="1"
-                android:hint="Retain For"
+                android:text="Retain For"
                 android:layout_marginLeft="5dp"
                 android:textColorHint="@color/colorAccent"
                 android:id="@+id/textView_retain"
@@ -591,9 +658,10 @@
                     android:layout_height="45dp"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
+                    android:inputType="textAutoCorrect"
 
                     android:hint="Name"
-                    android:textColorHint="@color/colorAccent"
+                    android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_nm"
                     />
 
@@ -606,14 +674,12 @@
                     android:layout_marginTop="10dp"
                     android:hint="Mobile Number"
                     android:maxLength="10"
-                    android:textColorHint="@color/colorAccent"
+                    android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_mobile"
                     />
 
             </LinearLayout>
-            </LinearLayout>
-
-
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -628,7 +694,7 @@
        android:layout_weight="1"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:hint="Opposite Counsellor"
+        android:text="Opposite Counselor"
         android:textColorHint="@color/colorAccent"
         android:id="@+id/textView_opposite"
         />
@@ -644,9 +710,10 @@
                     android:layout_height="45dp"
                     android:textSize="15sp"
                     android:textColor="@android:color/white"
+                    android:inputType="textAutoCorrect"
 
                     android:hint="Name"
-                    android:textColorHint="@color/colorAccent"
+                    android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cname"
                     />
 
@@ -657,8 +724,8 @@
                     android:textColor="@android:color/white"
                     android:inputType="number"
                     android:layout_marginTop="10dp"
-                    android:hint="Mobile Number(optional)"
-                    android:textColorHint="@color/colorAccent"
+                    android:hint="Mobile Number"
+                    android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cmobile"
                     android:maxLength="10"
                     />
@@ -671,9 +738,10 @@
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="@android:color/white"
+        android:inputType="textAutoCorrect|textMultiLine"
 
         android:hint="Comments(optional)"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_comments"
         android:layout_marginTop="10dp"
 

@@ -49,7 +49,7 @@ public class CaseListAdapter  extends BaseAdapter {
 
     public class Holder
     {
-        TextView txtCase, txtNumber, txtCourt, txtCaseType, txtLearn;
+        TextView txtCase, txtNumber, txtCourt, txtCaseType, txtLearn, txtStatus;
 
     }
     @Override
@@ -62,12 +62,13 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
         holder.txtCourt=(TextView) rowView.findViewById(R.id.textView_name);
         holder.txtCaseType=(TextView) rowView.findViewById(R.id.textView_type);
+        holder.txtStatus=(TextView) rowView.findViewById(R.id.textView_status);
         holder.txtLearn=(TextView) rowView.findViewById(R.id.textView_learnmore);
         holder.txtCase.setText("Case Title: "+caseList.get(position).getCaseTitle());
         holder.txtNumber.setText("Case Number: "+caseList.get(position).getCaseNumber());
         holder.txtCourt.setText("Court Name: "+caseList.get(position).getCourtName());
         holder.txtCaseType.setText("Case Type: "+caseList.get(position).getCaseType());
-
+        holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override

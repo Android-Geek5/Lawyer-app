@@ -17,7 +17,7 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string-array name="day">
-        <item>dd</item>
+        <item>Day</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -51,7 +51,7 @@
         <item>31</item>
     </string-array>
     <string-array name="month">
-        <item>MM</item>
+        <item>Month</item>
         <item>Jan</item>
         <item>Feb</item>
         <item>Mar</item>
@@ -67,7 +67,7 @@
 
     </string-array>
     <string-array name="year">
-        <item>yyyy</item>
+        <item>Year</item>
         <item>2000</item>
         <item>2001</item>
         <item>2002</item>

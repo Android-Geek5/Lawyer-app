@@ -34,17 +34,18 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
+                android:layout_width="115dp"
+                android:layout_height="115dp"
                 android:id="@+id/imageView2"
                 android:src="@drawable/logo_white"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="40dp">
+                android:layout_marginTop="30dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
@@ -63,14 +64,14 @@
                     android:layout_height="45dp"
                     android:hint="Name"
                     android:layout_weight="1"
-                    android:inputType="text"
+                    android:inputType="textAutoCorrect|textAutoComplete"
                     android:maxLines="1"
                     android:textSize="16sp"
                     android:textColor="@android:color/white"
                     android:background="@color/colorText"
-                    android:textColorHint="@android:color/white"
+                    android:textColorHint="@android:color/darker_gray"
                     android:paddingLeft="10dp"
-                    android:singleLine="true" />
+                    />
 
                 <!-- </android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
@@ -78,7 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
@@ -102,10 +103,10 @@
                     android:textSize="16sp"
                     android:textColor="@android:color/white"
                     android:background="@color/colorText"
-                    android:textColorHint="@android:color/white"
+                    android:textColorHint="@android:color/darker_gray"
                     android:paddingLeft="10dp"
                     android:maxLength="10"
-                    android:singleLine="true" />
+                     />
 
                 <!-- </android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
@@ -113,33 +114,35 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:padding="10dp"
                     android:background="@color/colorIcon"
                     android:src="@drawable/mail"/>
-                <!--     <android.support.design.widget.TextInputLayout
-                         android:layout_width="match_parent"
-                         android:layout_height="45dp"
-
-                         android:layout_weight="1">
-         -->
                 <EditText
                     android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:hint="Email"
                     android:layout_weight="1"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textAutoCorrect|textAutoComplete|textEmailAddress"
                     android:maxLines="1"
                     android:textSize="16sp"
                     android:textColor="@android:color/white"
                     android:background="@color/colorText"
-                    android:textColorHint="@android:color/white"
+                    android:textColorHint="@android:color/darker_gray"
                     android:paddingLeft="10dp"
-                    android:singleLine="true" />
+                     />
+
+               
+                <!--     <android.support.design.widget.TextInputLayout
+                         android:layout_width="match_parent"
+                         android:layout_height="45dp"
+
+                         android:layout_weight="1">
+         -->
 
                 <!-- </android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
@@ -147,18 +150,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:padding="10dp"
                     android:background="@color/colorIcon"
                     android:src="@drawable/password"/>
-                <!--  <android.support.design.widget.TextInputLayout
-                      android:layout_width="match_parent"
-                      android:layout_height="45dp"
-
-                      android:layout_weight="1">-->
                 <EditText
                     android:id="@+id/password"
                     android:layout_width="match_parent"
@@ -173,9 +171,16 @@
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"
+                    android:textColorHint="@android:color/darker_gray"
                     android:background="@color/colorText"
-                    android:singleLine="true" />
+                     />
+
+               
+                <!--  <android.support.design.widget.TextInputLayout
+                      android:layout_width="match_parent"
+                      android:layout_height="45dp"
+
+                      android:layout_weight="1">-->
 
                 <!--  </android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
@@ -183,7 +188,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="15dp">
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
@@ -209,9 +214,9 @@
                     android:textSize="16sp"
                     android:paddingLeft="10dp"
                     android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"
+                    android:textColorHint="@android:color/darker_gray"
                     android:background="@color/colorText"
-                    android:singleLine="true" />
+                     />
 
                 <!--  </android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
@@ -220,7 +225,7 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:background="@color/buttonbg"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"

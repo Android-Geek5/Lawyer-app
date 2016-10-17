@@ -47,7 +47,7 @@ import java.util.Map;
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     LinearLayout linearLayout;
-    Spinner sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear, sprCaseType, sprSDay, sprSMonth, sprSYear, sprTime, sprNtime;
+    Spinner sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear, sprCaseType, sprSDay, sprSMonth, sprSYear;
     //private SpellCheckerSession mScs;
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
@@ -57,8 +57,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName,strOCContact, strRName, strRContact,
     strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth,strSYear, strTime, strNTime,
             prevTime, nextTime;
-    DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+   // DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
+    TextView txtStartError, txtPrevError, txtNextError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +77,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSDay = (Spinner) findViewById(R.id.spinner_sday);
         sprSMonth = (Spinner) findViewById(R.id.spinner_smonth);
         sprSYear = (Spinner) findViewById(R.id.spinner_syear);
-        sprTime = (Spinner) findViewById(R.id.spinner_time);
-        sprNtime = (Spinner) findViewById(R.id.spinner_ntime);
+     //   sprTime = (Spinner) findViewById(R.id.spinner_time);
+    //    sprNtime = (Spinner) findViewById(R.id.spinner_ntime);
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
         btnAdd=(Button)findViewById(R.id.add);
+        txtStartError=(TextView)findViewById(R.id.tw_start_error);
+        txtPrevError=(TextView)findViewById(R.id.tw_prev_error);
+        txtNextError=(TextView)findViewById(R.id.tw_next_error);
         linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,22 +134,40 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     strType=edtCaseType.getText().toString();
                 }
 
-              /*  if(strStartDate.equalsIgnoreCase(""))
+                if(strStartDate==null)
                 {
-                    Toast.makeText(AddCaseActivity.this,"Please Select Start Date", Toast.LENGTH_SHORT).show();
+                    txtStartError.setVisibility(View.VISIBLE);
+
                 }
-                if(strPreviousDt.equalsIgnoreCase(""))
+                else
                 {
-                    Toast.makeText(AddCaseActivity.this,"Please Select Previous Date", Toast.LENGTH_SHORT).show();
+                    txtStartError.setVisibility(View.GONE);
+                }
+                if(strPreviousDt==null && prevTime==null)
+                {
+                    txtPrevError.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    txtPrevError.setVisibility(View.GONE);
+                }
+                if(strNextDt==null && nextTime==null)
+                {
+                    txtNextError.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    txtNextError.setVisibility(View.GONE);
                 }
 
-
-*/              if(prevTime!=null)
+              if(prevTime!=null)
                 {
+
                     prevTime= strTime.substring(0, strTime.length()-2);
                 }
                 if(nextTime!=null)
                 {
+
                     nextTime=strNTime.substring(0, strNTime.length()-2);
                 }
 
@@ -157,17 +179,17 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     e.printStackTrace();
                 }
                 Log.e("year", strSYear);
-                String prevDate=strYear+"-"+strMonth+"-"+strDay+" "+prevTime;
+                String prevDate=strYear+"-"+strMonth+"-"+strDay;
                 try {
-                    Date date=dateFormatter.parse(prevDate);
-                    strPreviousDt=dateFormatter.format(date);
+                    Date date=dateFormatter2.parse(prevDate);
+                    strPreviousDt=dateFormatter2.format(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay+" "+nextTime;
+                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
                 try {
-                    Date dt=dateFormatter.parse(nextDate);
-                    strNextDt=dateFormatter.format(dt);
+                    Date dt=dateFormatter2.parse(nextDate);
+                    strNextDt=dateFormatter2.format(dt);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -198,9 +220,29 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     focusView = edtRetainName;
                     cancelLogin = true;
                 }
+                if (TextUtils.isEmpty(strOCName)) {
+                    edtOppositeName.setError("Field must not be empty.");
+                    focusView = edtOppositeName;
+                    cancelLogin = true;
+                }
                 if (TextUtils.isEmpty(strRContact)) {
                     edtRetainMobile.setError("Field must not be empty.");
                     focusView = edtRetainMobile;
+                    cancelLogin = true;
+                }
+                else if (!isValidPhone((strRContact))) {
+                    edtRetainMobile.setError("Mobile number must be of digits 10.");
+                    focusView = edtRetainMobile;
+                    cancelLogin = true;
+                }
+                if (TextUtils.isEmpty(strOCContact)) {
+                    edtOppositeNumber.setError("Field must not be empty.");
+                    focusView = edtOppositeNumber;
+                    cancelLogin = true;
+                }
+                else if (!isValidPhone((strOCContact))) {
+                    edtOppositeNumber.setError("Mobile number must be of digits 10.");
+                    focusView = edtOppositeNumber;
                     cancelLogin = true;
                 }
 
@@ -249,70 +291,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
             sprCaseType.setAdapter(stringArrayAdapter);
         }
-        if (sprTime.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.time)) {
 
-                @Override
-                public boolean isEnabled(int position) {
-
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprTime.setAdapter(stringArrayAdapter);
-        }
-        if (sprNtime.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.time)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNtime.setAdapter(stringArrayAdapter);
-        }
         if (sprSDay.getAdapter() == null) {
            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
@@ -602,10 +581,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSDay.setOnItemSelectedListener(AddCaseActivity.this);
         sprSMonth.setOnItemSelectedListener(AddCaseActivity.this);
         sprSYear.setOnItemSelectedListener(AddCaseActivity.this);
-        sprTime.setOnItemSelectedListener(AddCaseActivity.this);
-        sprNtime.setOnItemSelectedListener(AddCaseActivity.this);
-
-
 
     }
    /* public void onResume() {
@@ -807,8 +782,21 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strYear="";
             }
             else {
+                if(txtPrevError.getVisibility()==View.VISIBLE)
+                {
+                    txtPrevError.setVisibility(View.GONE);
+                }
+                edtCaseTitle.requestFocus();
                 strYear=sprYear.getSelectedItem().toString();
                 Log.e("year", strYear);
+                String prevDate=strYear+"-"+strMonth+"-"+strDay;
+                try {
+                    Date date=dateFormatter2.parse(prevDate);
+                    strPreviousDt=dateFormatter2.format(date);
+                    Log.e("year", strPreviousDt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
 
             }
         }
@@ -842,8 +830,21 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strNYear="";
             }
             else {
+                if(txtNextError.getVisibility()==View.VISIBLE)
+                {
+                    txtNextError.setVisibility(View.GONE);
+                }
+                edtRetainName.requestFocus();
                 strNYear= sprNYear.getSelectedItem().toString();
                 Log.e("year", strNYear);
+                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
+                try {
+                    Date dt=dateFormatter2.parse(nextDate);
+                    strNextDt=dateFormatter2.format(dt);
+                    Log.e("year", strNextDt);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         }
         if(spinner.getId()==R.id.spinner_sday)
@@ -875,6 +876,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strSYear="";
             }
             else {
+                if(txtStartError.getVisibility()==View.VISIBLE)
+                {
+                    txtStartError.setVisibility(View.GONE);
+                }
 
                 strSYear=  sprSYear.getSelectedItem().toString();
                 String startDt=strSYear+"-"+strSMonth+"-"+strSDay;
@@ -887,7 +892,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 Log.e("year", strStartDate);
             }
         }
-        if(spinner.getId()==R.id.spinner_time)
+      /*  if(spinner.getId()==R.id.spinner_time)
         {
             if (i==0)
             {
@@ -939,12 +944,14 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
             }
 
-        }
+        }*/
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-
+    private boolean isValidPhone(String pass) {
+        return pass != null && pass.length() == 10;
+    }
 }

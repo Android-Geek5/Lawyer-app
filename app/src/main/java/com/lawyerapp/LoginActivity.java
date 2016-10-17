@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
                     focusView = edtContact;
                     cancelLogin = true;
                 }else if (!isValidPhone((strContact))) {
-                    edtContact.setError("Phone number must be of digits 10.");
+                    edtContact.setError("Mobile number must be of digits 10.");
                     focusView = edtContact;
                     cancelLogin = true;
                 }
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                     focusView = edtPwd;
                     cancelLogin = true;
                 } else if (!isValidPass(strPwd)) {
-                    edtPwd.setError("Invalid Password.");
+                    edtPwd.setError("Password must be of digits 6.");
                     focusView = edtPwd;
                     cancelLogin = true;
                 }

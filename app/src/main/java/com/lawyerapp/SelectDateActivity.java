@@ -124,11 +124,11 @@ public class SelectDateActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.MINUTE, 58);
-        calendar.set(Calendar.HOUR, 8);
+        calendar.set(Calendar.HOUR, 5);
         calendar.set(Calendar.AM_PM, Calendar.PM);
         Intent myIntent = new Intent(this , AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-        Log.e("ucrt iiiiiiit","dnkjbqe uq");
+
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
@@ -152,7 +152,6 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
-
                 String ist = dateFormat.format(compactCalendar.getFirstDayOfCurrentMonth());
                 prefshelper.storeFirstDay(ist);
                  caseList();
@@ -185,7 +184,10 @@ public class SelectDateActivity extends AppCompatActivity {
                     {
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
-                        e=e+ "\n "+event;
+                        String event1=event.substring(0, event.length()-24);
+                        String event2=event.substring(38,42);
+                        String newEvent=event1+", "+event2;
+                        e = e + "\n " + newEvent;
                         txtCase.setText(e);
                     }
                 }
@@ -215,7 +217,10 @@ public class SelectDateActivity extends AppCompatActivity {
                     {
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
-                        e=e+ "\n "+event;
+                        String event1=event.substring(0, event.length()-24);
+                        String event2=event.substring(38,42);
+                        String newEvent=event1+", "+event2;
+                        e = e + "\n " + newEvent;
                         txtCase.setText(e);
                     }
                 }
@@ -416,7 +421,10 @@ public class SelectDateActivity extends AppCompatActivity {
                         e = "";
                         Log.e("eventss sizeeee", events.size() + "");
                         event = String.valueOf(events.get(i).getData());
-                        e = e + "\n " + event;
+                        String event1=event.substring(0, event.length()-24);
+                        String event2=event.substring(38,42);
+                        String newEvent=event1+", "+event2;
+                        e = e + "\n " + newEvent;
                         txtCase.setText(e);
                     }
                 }

@@ -42,6 +42,7 @@ public class RegisterationActivity extends AppCompatActivity {
     EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd;
     String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash, userEmailVerified,userMobileVerified, userStatus;
     Prefshelper prefshelper;
+    String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,72 +60,14 @@ public class RegisterationActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View focusView = null;
-                boolean cancelLogin = false;
+
 
                 strName=edtName.getText().toString();
                 strEmail=edtEmail.getText().toString();
                 strContact=edtContact.getText().toString();
                 strPwd=edtPwd.getText().toString();
                 strCPwd=edtCPwd.getText().toString();
-
-
-                if (TextUtils.isEmpty(strName)) {
-                    edtName.setError("Field must not be empty.");
-                    focusView = edtName;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strContact)) {
-                    edtContact.setError("Field must not be empty.");
-                    focusView = edtContact;
-                    cancelLogin = true;
-                }else if (!isValidPhone((strContact))) {
-                    edtContact.setError("Phone number must be of digits 10.");
-                    focusView = edtContact;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strEmail)) {
-                    edtEmail.setError("Field must not be empty.");
-                    focusView = edtEmail;
-                    cancelLogin = true;
-                } else if (!isValidEmail(strEmail)) {
-                    edtEmail.setError("Invalid Email.");
-                    focusView = edtEmail;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strPwd)) {
-                    edtPwd.setError("Field must not be empty.");
-                    focusView = edtPwd;
-                    cancelLogin = true;
-                } else if (!isValidPass(strPwd)) {
-                    edtPwd.setError("Invalid Password.");
-                    focusView = edtPwd;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strCPwd)) {
-                    edtCPwd.setError("Field must not be empty.");
-                    focusView = edtCPwd;
-                    cancelLogin = true;
-                }
-                else if (!isValidPass(strCPwd)) {
-                    edtCPwd.setError("Invalid Password.");
-                    focusView = edtCPwd;
-                    cancelLogin = true;
-                }
-                if(!strCPwd.equalsIgnoreCase(strPwd))
-                {
-                    edtCPwd.setError("Password doesn't match.");
-                    focusView = edtCPwd;
-                    cancelLogin = true;
-                }
-                if (cancelLogin) {
-                    // error in login
-                    focusView.requestFocus();
-                } else {
-                    Log.d("entered vaues",strContact+" "+strName+" "+strEmail+" "+strPwd);
-                    signUp();
-                }
-
+                signUp();
 
 
             }
@@ -180,12 +123,120 @@ public class RegisterationActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                         Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+
 
                         if (serverCode.equalsIgnoreCase("0")) {
+                            View focusView = null;
+                            boolean cancelLogin = false;
+                         //   Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                            JSONObject jsonObject=object.getJSONObject("data");
+                            String error1=jsonObject.getString("user_name");
+                            String error2=jsonObject.getString("user_email");
+                            String error3=jsonObject.getString("user_contact");
+                            String error4=jsonObject.getString("user_login_password");
+                            String error5=jsonObject.getString("confirm_login_password");
+                            if(error1!=null)
+                            {
+                                errorName=error1;
+                            }
+                            if(error2!=null)
+                            {
+                                errorEmail=error2;
+                            }
+                            if(error3!=null)
+                            {
+                                errorMobile=error3;
+                            }
+                            if(error4!=null)
+                            {
+                                errorPassword=error4;
+                            }
+                            if(error5!=null)
+                            {
+                                errorConfirm=error5;
+                            }
+
+                            if (TextUtils.isEmpty(strName)) {
+                                edtName.setError(errorName);
+                                focusView = edtName;
+                                cancelLogin = true;
+                            }
+                            else if(strName.length()<2)
+                            {
+                                edtName.setError(errorName);
+                                focusView = edtName;
+                                cancelLogin = true;
+                            }
+                            if (TextUtils.isEmpty(strContact)) {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+                            }
+                            else if(!isValidPhone(strContact))
+                            {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+                            }
+                            if(errorMobile.equalsIgnoreCase("The Phone field must contain a unique value."))
+                            {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+
+                            }
+                            if (TextUtils.isEmpty(strEmail)) {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidEmail(strEmail)) {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }
+                            if(errorEmail.equalsIgnoreCase("The Email field must contain a unique value."))
+                            {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }
+                            if (TextUtils.isEmpty(strPwd)) {
+                                edtPwd.setError(errorPassword);
+                                focusView = edtPwd;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidPass(strPwd)) {
+                                edtPwd.setError(errorPassword);
+                                focusView = edtPwd;
+                                cancelLogin = true;
+                            }
+                            if (TextUtils.isEmpty(strCPwd)) {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidPass(strCPwd)) {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }
+                             if(strCPwd.equalsIgnoreCase("The Confirm Password field does not match the Password field."))
+                            {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }
+
+                          if(cancelLogin) {
+                                // error in login
+                                focusView.requestFocus();
+                            }
+
 
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
+                            Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");

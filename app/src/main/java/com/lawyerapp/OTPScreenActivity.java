@@ -72,7 +72,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     focusView = edtOtp;
                     cancelLogin = true;
                 }else if (!isValidOTP((otp))) {
-                    edtOtp.setError("Phone number must be of digits 6.");
+                    edtOtp.setError("Mobile number must be of digits 6.");
                     focusView = edtOtp;
                     cancelLogin = true;
                 }

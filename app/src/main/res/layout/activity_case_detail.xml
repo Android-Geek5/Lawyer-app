@@ -352,10 +352,7 @@
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
   android:background="@android:color/darker_gray"/>
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:orientation="horizontal">
+
 <TextView
   android:layout_width="wrap_content"
   android:layout_height="40dp"
@@ -368,52 +365,74 @@ android:orientation="horizontal">
   android:layout_marginTop="10dp"
   android:layout_marginBottom="3dp"
   />
-<LinearLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_weight="1"
-android:layout_marginLeft="10dp"
-android:orientation="vertical">
-<TextView
-  android:layout_width="match_parent"
-  android:layout_height="40dp"
-  android:textSize="16sp"
-  android:textColor="@android:color/black"
-  android:text="Name"
-  android:id="@+id/textView_retainNm"
-  android:gravity="center_vertical"
-  android:layout_marginTop="10dp"
-  android:layout_marginBottom="3dp"
-  />
-<TextView
-  android:layout_width="match_parent"
-  android:layout_height="40dp"
-  android:textSize="16sp"
-  android:textColor="@android:color/black"
-  android:text="RContact"
-  android:id="@+id/textView_retainContact"
-  android:gravity="center_vertical"
-  android:layout_marginTop="10dp"
-  android:layout_marginBottom="3dp"
-  />
-</LinearLayout>
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                  android:layout_gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Name: "
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Name:"
+                    android:id="@+id/textView_retainNm"
+                    android:gravity="center_vertical"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Contact: "
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="RContact"
+                    android:id="@+id/textView_retainContact"
+                    android:gravity="center_vertical"
+
+                    />
+
+            </LinearLayout>
+
 
 <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
   android:background="@android:color/darker_gray"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+
 <TextView
   android:layout_width="wrap_content"
   android:layout_height="40dp"
   android:textSize="16sp"
   android:textColor="@android:color/black"
-  android:text="Opposite Counsellor"
+  android:text="Opposite Counselor: "
   android:gravity="center_vertical"
   android:layout_marginTop="10dp"
   android:layout_marginBottom="3dp"
@@ -421,37 +440,64 @@ android:orientation="vertical">
   android:id="@+id/textView_opposite"
   />
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                   android:layout_gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Name: "
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    />
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="10dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="Name"
-                        android:id="@+id/textView_cname"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="10dp"
-                   
-                        />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:textSize="16sp"
-                        android:textColor="@android:color/black"
-                        android:text="RContact"
-                        android:id="@+id/textView_cContact"
-                        android:gravity="center_vertical"
-                        android:layout_marginTop="10dp"
-                   
-                        />
-                </LinearLayout>
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="RContact"
+                    android:id="@+id/textView_cname"
+                    android:gravity="center_vertical"
+
+                    />
+
             </LinearLayout>
-<View
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+
+                android:layout_gravity="center_vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Contact: "
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="RContact"
+                    android:id="@+id/textView_cContact"
+                    android:gravity="center_vertical"
+
+                    />
+
+            </LinearLayout>
+
+            <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"

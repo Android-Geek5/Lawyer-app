@@ -61,7 +61,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     focusView = editText;
                     cancelLogin = true;
                 }else if (!isValidOTP((strMobile))) {
-                    editText.setError("Phone number must be of digits 6.");
+                    editText.setError("Mobile number must be of digits 6.");
                     focusView = editText;
                     cancelLogin = true;
                 }
