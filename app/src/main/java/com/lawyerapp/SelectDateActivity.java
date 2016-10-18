@@ -27,7 +27,6 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,7 +42,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.adapter.CaseListAdapter;
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.lawyerapp.common.AlarmReceiver;
 import com.lawyerapp.common.MapAppConstant;
 import com.lawyerapp.common.Prefshelper;
@@ -51,22 +51,18 @@ import com.lawyerapp.common.VolleySingleton;
 import com.lawyerapp.fragment.AboutUS;
 import com.lawyerapp.fragment.CaseListFragment;
 import com.lawyerapp.fragment.ChangePasswordFragment;
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.lawyerapp.model.CaseListModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -123,7 +119,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MINUTE, 58);
+        calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.HOUR, 5);
         calendar.set(Calendar.AM_PM, Calendar.PM);
         Intent myIntent = new Intent(this , AlarmReceiver.class);
@@ -540,6 +536,7 @@ public class SelectDateActivity extends AppCompatActivity {
                                             }
                                         }
                                         setlist(caseList);
+
 
                                     }
                                 
