@@ -455,7 +455,7 @@
             android:hint="RFA Number/Case Number"
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_number"
-            android:inputType="textAutoCorrect"
+            android:inputType="number"
 
 
             />

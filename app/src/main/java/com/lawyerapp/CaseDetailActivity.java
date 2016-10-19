@@ -1,6 +1,7 @@
 package com.lawyerapp;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +42,7 @@ import java.util.Map;
 
 public class CaseDetailActivity extends AppCompatActivity {
     LinearLayout linearLayout;
-
+    Button btnAdd;
     FloatingActionButton fab;
     Prefshelper prefshelper;
     TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus, txtPrevDate, txtNextDt, txtCName, txtCContact
@@ -64,7 +66,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         });
         fab = (FloatingActionButton)findViewById(R.id.fab);
         prefshelper=new Prefshelper(this);
-
+        btnAdd=(Button)findViewById(R.id.add);
         caseId=getIntent().getStringExtra("id");
         caseNumber=getIntent().getStringExtra("cnumber");
         caseType=getIntent().getStringExtra("ctype");
@@ -142,6 +144,14 @@ public class CaseDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                   sendCaseDetail();
+            }
+        });
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(CaseDetailActivity.this, AddCommentActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

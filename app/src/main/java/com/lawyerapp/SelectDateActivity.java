@@ -75,7 +75,7 @@ public class SelectDateActivity extends AppCompatActivity {
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-    SimpleDateFormat formatter = new SimpleDateFormat("EEEE,dd MMMM yyyy- hh:mm a",Locale.getDefault());
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE,dd MMM yyyy",Locale.getDefault());
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;
@@ -86,14 +86,17 @@ public class SelectDateActivity extends AppCompatActivity {
     TextView txtMonth, txtCase;
     ImageView imgPrevious, imgNext;
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-    String event="", e="", nextDate;
+    String event="", e="", nextDate, previousDate, comment;
     Prefshelper prefshelper;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
     List<CaseListModel> caseList;
     FloatingActionButton fab;
-    List<String> dates = new ArrayList<>();
+    List<String> nextDates = new ArrayList<>();
+    List<String> prevDates = new ArrayList<>();
+    List<String> comments = new ArrayList<>();
+    List<String> displayingDates = new ArrayList<>();
     List<Event> events;
-    Date newDt, date;
+    Date newDt;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -138,8 +141,7 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showPreviousMonth();
-                String ist = dateFormat.format(compactCalendar.getFirstDayOfCurrentMonth());
-                prefshelper.storeFirstDay(ist);
+
                 caseList();
 
             }
@@ -148,8 +150,7 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
-                String ist = dateFormat.format(compactCalendar.getFirstDayOfCurrentMonth());
-                prefshelper.storeFirstDay(ist);
+
                  caseList();
 
             }
@@ -158,10 +159,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
         txtMonth.setText(dateFormatForMonth.format(compactCalendar.getFirstDayOfCurrentMonth()));
 
-        String ist = dateFormat.format(compactCalendar.getFirstDayOfCurrentMonth());
-        Log.e("firstday",ist);
 
-        prefshelper.storeFirstDay(ist);
 
         // define a listener to receive callbacks when certain events happen.
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
@@ -187,18 +185,12 @@ public class SelectDateActivity extends AppCompatActivity {
                         txtCase.setText(e);
                     }
                 }
-
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
                 txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.DAY_OF_MONTH, c.getActualMinimum(Calendar.DAY_OF_MONTH));
-                Date istDayOfMonth = c.getTime();
-                String formattedDate = dateFormat.format(istDayOfMonth);
-                String ist = dateFormat.format(compactCalendar.getFirstDayOfCurrentMonth());
-                prefshelper.storeFirstDay(ist);
+
                 caseList();
                 List<Event> events = compactCalendar.getEvents(firstDayOfNewMonth);
                 txtCase.setText("");
@@ -382,12 +374,19 @@ public class SelectDateActivity extends AppCompatActivity {
 
     private void addEvents(int month, int year) {
 
-        Log.e("size", dates.size()+"");
-        if(dates.size()>0) {
-            for (int i = 0; i < dates.size(); i++) {
+        Log.e("size", nextDates.size()+"");
+       if(caseList.size()>0)
+       {
+           for(int j=0; j<caseList.size(); j++)
+           {
+               displayingDates=caseList.get(j).getNextDateArray();
+           }
+       }
+        if(displayingDates.size()>0) {
+            for (int i = 0; i < displayingDates.size(); i++) {
 
                 try {
-                    newDt = dateFormatForDisplaying.parse(dates.get(i));
+                    newDt = dateFormatForDisplaying.parse(displayingDates.get(i));
 
                     currentCalender.setTime(formatter.parse(formatter.format(newDt)));
 
@@ -416,9 +415,9 @@ public class SelectDateActivity extends AppCompatActivity {
                         txtCase.setText("");
                         e = "";
                         Log.e("eventss sizeeee", events.size() + "");
-                        event = String.valueOf(events.get(i).getData());
-                        String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(38,42);
+                        event = String.valueOf(events.get(j).getData());
+                        String event1=event.substring(0, event.length()-23);
+                        String event2=event.substring(39,42);
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
                         txtCase.setText(e);
@@ -479,15 +478,14 @@ public class SelectDateActivity extends AppCompatActivity {
             pDialog.setMessage("Loading...");
             pDialog.show();
 
-            Log.e("", "list " + MapAppConstant.API + "get_user_cases_by_date");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_user_cases_by_date", new Response.Listener<String>() {
+            Log.e("", "list " + MapAppConstant.API + "get_user_cases");
+            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_user_cases", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
                     Log.d("", ".......response====" + response.toString());
                     getlist().clear();
-                    dates.clear();
-                    ////////
+                     ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
@@ -509,50 +507,57 @@ public class SelectDateActivity extends AppCompatActivity {
                                         {
                                             JSONObject jsonObject=jsonArray.getJSONObject(i);
 
-                                            JSONArray jsonArray1=jsonObject.getJSONArray("case_details");
-                                            if(jsonArray1.length()>0)
-                                            {
-                                                for(int j=0; j<jsonArray1.length(); j++) {
-                                                    JSONObject jsonObject1=jsonArray1.getJSONObject(j);
-                                                    String previousDate=jsonObject1.getString("case_detail_previous_date");
-                                                    nextDate=jsonObject1.getString("case_detail_next_date");
-                                                    String comment=jsonObject1.getString("case_detail_comment");
-                                                    String caseId=jsonObject1.getString("case_id");
-                                                    String caseNumber=jsonObject1.getString("case_number");
-                                                    String caseTitle=jsonObject1.getString("case_title");
-                                                    String caseType=jsonObject1.getString("case_type");
-                                                    String casePositionStatus=jsonObject1.getString("case_position_status");
-                                                    String retainedName=jsonObject1.getString("case_retained_name");
-                                                    String retainedContact=jsonObject1.getString("case_retained_contact");
-                                                    String counselorName=jsonObject1.getString("case_opposite_counselor_name");
-                                                    String counselorContact=jsonObject1.getString("case_opposite_counselor_contact");
-                                                    String courtName=jsonObject1.getString("case_court_name");
-                                                    String caseStarted=jsonObject1.getString("case_started");
-                                                    dates.add(nextDate);
-                                                    Log.e("dates...", dates.size()+"");
-                                                    caseList.add(model(previousDate,nextDate,comment,caseId,caseNumber,caseTitle,caseType,casePositionStatus,
-                                                            retainedName,retainedContact,counselorName,counselorContact,courtName,caseStarted));
-                                                }
-                                            }
-                                        }
-                                        setlist(caseList);
+                                                    String caseId=jsonObject.getString("case_id");
+                                                    String caseNumber=jsonObject.getString("case_number");
+                                                    String caseTitle=jsonObject.getString("case_title");
+                                                    String caseType=jsonObject.getString("case_type");
+                                                    String casePositionStatus=jsonObject.getString("case_position_status");
+                                                    String retainedName=jsonObject.getString("case_retained_name");
+                                                    String retainedContact=jsonObject.getString("case_retained_contact");
+                                                    String counselorName=jsonObject.getString("case_opposite_counselor_name");
+                                                    String counselorContact=jsonObject.getString("case_opposite_counselor_contact");
+                                                    String courtName=jsonObject.getString("case_court_name");
+                                                    String caseStarted=jsonObject.getString("case_started");
+                                                    JSONArray jsonArray2=jsonObject.getJSONArray("case_comments_array");
+                                                    if(jsonArray2.length()>0)
+                                                    {
+                                                        for(int k=0; k<jsonArray2.length(); k++)
+                                                        {
+                                                            JSONObject jsonObject2=jsonArray2.getJSONObject(k);
+                                                            previousDate=jsonObject2.getString("case_detail_previous_date");
+                                                            nextDate=jsonObject2.getString("case_detail_next_date");
+                                                            comment=jsonObject2.getString("case_detail_comment");
+                                                            nextDates.add(k, nextDate);
+                                                            prevDates.add(k, previousDate);
+                                                            comments.add(k, comment);
 
+                                                        }
+
+                                                    }
+
+                                                    caseList.add(model(caseId,caseNumber,caseTitle,caseType,casePositionStatus,
+                                                            retainedName,retainedContact,counselorName,counselorContact,courtName,
+                                                            caseStarted, nextDates, prevDates,comments));
+
+                                                }
 
                                     }
-                                
+                                    setlist(caseList);
+
                                 }
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
                     compactCalendar.removeAllEvents();
                     loadEvents();
-
                     compactCalendar.invalidate();
 
                 }
@@ -580,10 +585,9 @@ public class SelectDateActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    Log.e("Variabless",prefshelper.getIstDay());
+
                     params.put("user_id", prefshelper.getUserIdFromPreference());
                     params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
-                    params.put("start_date", prefshelper.getIstDay());
 
                     return params;
                 }
@@ -604,14 +608,15 @@ public class SelectDateActivity extends AppCompatActivity {
     public void setlist(List<CaseListModel> list) {
         this.caseList = list;
     }
-    private CaseListModel model(String previousDt,String nextDt,String commnt,String casId, String caseNmber, String casTitle,
-                                String casType,String casePstnStatus,String retainedNm, String retainedCntact,
-                                String counselorNm,String counselorContct,String courtNm,String caseStrted)
+
+
+    private CaseListModel model(String casId, String caseNmber, String casTitle,
+                                   String casType,String casePstnStatus,String retainedNm, String retainedCntact,
+                                   String counselorNm,String counselorContct,String courtNm,String caseStrted,
+                             List<String> nextDate,List<String> previousDate, List<String> comment)
     {
         CaseListModel model=new CaseListModel();
-        model.setCasePrevDate(previousDt);
-        model.setNextDate(nextDt);
-        model.setComment(commnt);
+
         model.setCaseId(casId);
         model.setCaseNumber(caseNmber);
         model.setCaseTitle(casTitle);
@@ -623,7 +628,11 @@ public class SelectDateActivity extends AppCompatActivity {
         model.setCounsellorContact(counselorContct);
         model.setCourtName(courtNm);
         model.setCaseStartDate(caseStrted);
+        model.setNextDateArray(nextDate);
+        model.setPrevDateArray(previousDate);
+        model.setCommentsArray(comment);
 
         return  model;
     }
+
 }

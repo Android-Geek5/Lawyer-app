@@ -2,10 +2,12 @@ package com.lawyerapp.model;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CaseListModel implements Serializable{
     String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
     retainContact, caseStatus , comment, nextDate;
+    List<String> nextDt, prevDt, comments;
 
     public String getCaseTitle() {
         return caseTitle;
@@ -118,5 +120,30 @@ public class CaseListModel implements Serializable{
     public void setNextDate(String name) {
         this.nextDate = name;
     }
+
+    public List<String> getNextDateArray() {
+        return nextDt;
+    }
+
+    public void setNextDateArray(List name) {
+        this.nextDt = name;
+    }
+
+
+    public List<String> getPrevDateArray() {
+        return prevDt;
+    }
+
+    public void setPrevDateArray(List name) {
+        this.prevDt = name;
+    }
+    public List<String> getNCommentsArray() {
+        return comments;
+    }
+
+    public void setCommentsArray(List name) {
+        this.comments = name;
+    }
+
 
 }

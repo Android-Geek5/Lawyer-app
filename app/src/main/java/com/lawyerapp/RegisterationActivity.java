@@ -60,8 +60,6 @@ public class RegisterationActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 strName=edtName.getText().toString();
                 strEmail=edtEmail.getText().toString();
                 strContact=edtContact.getText().toString();
