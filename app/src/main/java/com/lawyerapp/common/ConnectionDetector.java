@@ -3,33 +3,35 @@ package com.lawyerapp.common;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
-/**
- * Created by paramjeet on 26/6/15.
- */
+
 public class ConnectionDetector {
 
-    private Context _context;
+    private Context context;
 
     public ConnectionDetector(Context context){
-        this._context = context;
+        this.context = context;
     }
 
     /**
      * Checking for all possible internet providers
      * **/
     public boolean isConnectingToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager) _context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivity != null)
-        {
-            NetworkInfo[] info = connectivity.getAllNetworkInfo();
-            if (info != null)
-                for (int i = 0; i < info.length; i++)
-                    if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                    {
-                        return true;
-                    }
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (activeNetwork != null) { // connected to the internet
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                // connected to wifi
+               return true;
 
+            } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                // connected to the mobile provider's data plan
+                return true;
+
+            }
+        } else {
+            // not connected to the internet
         }
         return false;
     }

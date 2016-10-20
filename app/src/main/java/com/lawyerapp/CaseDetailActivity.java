@@ -73,8 +73,8 @@ public class CaseDetailActivity extends AppCompatActivity {
         caseTitle=getIntent().getStringExtra("ctitle");
         courtName=getIntent().getStringExtra("court");
         status=getIntent().getStringExtra("status");
-        prevDate=getIntent().getStringExtra("pdate");
-        nextDate=getIntent().getStringExtra("ndate");
+      //  prevDate=getIntent().getStringExtra("pdate");
+      //  nextDate=getIntent().getStringExtra("ndate");
         startDate=getIntent().getStringExtra("sdate");
         counsellorName=getIntent().getStringExtra("oname");
         counsellorContact=getIntent().getStringExtra("ocontact");
@@ -101,7 +101,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             // set date string
             String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
             // set time string
-            txtPrevDate.setText(stringDate);
+           // txtPrevDate.setText(stringDate);
         } catch (ParseException e) {
             // wrong input
         }
@@ -111,7 +111,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             // set date string
             String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
             // set time string
-            txtNextDt.setText(stringDate);
+        //   txtNextDt.setText(stringDate);
         } catch (ParseException e) {
             // wrong input
         }

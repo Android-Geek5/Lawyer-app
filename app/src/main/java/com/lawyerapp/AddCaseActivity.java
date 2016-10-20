@@ -77,8 +77,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSDay = (Spinner) findViewById(R.id.spinner_sday);
         sprSMonth = (Spinner) findViewById(R.id.spinner_smonth);
         sprSYear = (Spinner) findViewById(R.id.spinner_syear);
-     //   sprTime = (Spinner) findViewById(R.id.spinner_time);
-    //    sprNtime = (Spinner) findViewById(R.id.spinner_ntime);
+
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
         btnAdd=(Button)findViewById(R.id.add);
         txtStartError=(TextView)findViewById(R.id.tw_start_error);

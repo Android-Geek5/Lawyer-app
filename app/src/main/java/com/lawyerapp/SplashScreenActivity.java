@@ -49,30 +49,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
-        prefshelper=new Prefshelper(SplashScreenActivity.this);
+        prefshelper = new Prefshelper(SplashScreenActivity.this);
         cd = new ConnectionDetector(getApplicationContext());
-        if (!cd.isConnectingToInternet()) {
-            AlertDialog alertDialog=new AlertDialog.Builder(SplashScreenActivity.this).create();
-            alertDialog.setTitle("Alert!");
-            alertDialog.setMessage("Internet Connection Error, Please connect to working Internet connection");
-            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    finish();
-                    Intent intent=new Intent(SplashScreenActivity.this, SplashScreenActivity.class);
-                    startActivity(intent);
-                }
-            });
-
-            // Showing Alert Message
-            alertDialog.show();
-
-        }
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
 
                     if (cd.isConnectingToInternet()) {
                         if ((prefshelper.getUserIdFromPreference().equals("")) || (prefshelper.getUserSecHashFromPreference().equals(""))) {
@@ -82,25 +64,47 @@ public class SplashScreenActivity extends AppCompatActivity {
                             finish();
 
                         }
-                        else if ((!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase(""))&&
+                        else if ((!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
                                 prefshelper.getMobileVerification().equalsIgnoreCase("0"))) {
 
                             Intent intent = new Intent(SplashScreenActivity.this, OTPScreenActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                        else
-                        {
+                        else {
                             sessionLogin();
                         }
+                    } else {
+                        prefshelper.offlineMode("offline");
+                        if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) || !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")))
+                        {
+                            Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else
+                        {
+                            AlertDialog alertDialog = new AlertDialog.Builder(SplashScreenActivity.this).create();
+                            alertDialog.setTitle("Alert!");
+                            alertDialog.setMessage("Internet Connection Error, Please connect to working Internet connection");
+                            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                    Intent intent = new Intent(SplashScreenActivity.this, SplashScreenActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+
+                            // Showing Alert Message
+                            alertDialog.show();
+                        }
                     }
+                }
 
+            }, SPLASH_TIME_OUT);
+        }
 
-
-
-       }
-        }, SPLASH_TIME_OUT);
-    }
 
     public void sessionLogin() {
         try {

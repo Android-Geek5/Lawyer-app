@@ -159,8 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
 
-
-
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();

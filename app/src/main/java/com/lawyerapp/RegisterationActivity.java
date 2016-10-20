@@ -40,7 +40,7 @@ public class RegisterationActivity extends AppCompatActivity {
 
     Button btnRegister;
     EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd;
-    String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash, userEmailVerified,userMobileVerified, userStatus;
+    String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash;
     Prefshelper prefshelper;
     String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
 
@@ -239,22 +239,15 @@ public class RegisterationActivity extends AppCompatActivity {
                                 if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
-
                                     userSecHash=jsonObject.getString("user_security_hash");
-                                    userEmailVerified=jsonObject.getString("user_email_verification_status");
-                                    userMobileVerified=jsonObject.getString("user_mobile_verification_status");
-                                    userStatus=jsonObject.getString("user_status");
+
 
                                 }
 
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            prefshelper.storeUserIdToPreference(userID);
-                            prefshelper.storeSecHashToPreference(userSecHash);
-                            prefshelper.storeUserStatusToPreference(userStatus);
-                            prefshelper.storeEmailVerification(userEmailVerified);
-                            prefshelper.storeMobileVerification(userMobileVerified);
+
                             Intent intent = new Intent(RegisterationActivity.this, OTPScreenActivity.class);
                             startActivity(intent);
                             finish();

@@ -81,8 +81,8 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("ctitle", caseList.get(position).getCaseTitle());
                 intent.putExtra("court",caseList.get(position).getCourtName());
                 intent.putExtra("status", caseList.get(position).getCaseStatus());
-                intent.putExtra("pdate",caseList.get(position).getCasePrevDate());
-                intent.putExtra("ndate", caseList.get(position).getNextDate());
+               // intent.putExtra("pdate",caseList.get(position).getCasePrevDate());
+              //  intent.putExtra("ndate", caseList.get(position).getNextDate());
                 intent.putExtra("sdate",caseList.get(position).getCaseStartDate());
                 intent.putExtra("oname", caseList.get(position).getCounsellorName());
                 intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());

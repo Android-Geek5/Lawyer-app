@@ -4,16 +4,13 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.lawyerapp.R;
 import com.lawyerapp.SelectDateActivity;
-import com.lawyerapp.SplashScreenActivity;
 
 public class MyAlarmService extends Service
 {
@@ -41,7 +38,7 @@ public class MyAlarmService extends Service
        super.onStart(intent, startId);
       Notification.Builder mBuilder =
            new Notification.Builder(this.getApplicationContext())
-                   .setSmallIcon(R.drawable.logo)
+                   .setSmallIcon(R.mipmap.elogo)
                    .setContentTitle("Reminder")
                    .setContentText("Please check the cases for tomorrow.")
               .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify));

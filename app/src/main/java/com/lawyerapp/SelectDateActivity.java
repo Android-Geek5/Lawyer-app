@@ -75,7 +75,7 @@ public class SelectDateActivity extends AppCompatActivity {
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-    SimpleDateFormat formatter = new SimpleDateFormat("EEE,dd MMM yyyy",Locale.getDefault());
+    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;
@@ -97,6 +97,7 @@ public class SelectDateActivity extends AppCompatActivity {
     List<String> displayingDates = new ArrayList<>();
     List<Event> events;
     Date newDt;
+
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -141,8 +142,15 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showPreviousMonth();
+                if(prefshelper.getMode().equalsIgnoreCase("offline"))
+                {
 
-                caseList();
+                }
+                else
+                {
+                    caseList();
+                }
+
 
             }
         });
@@ -150,8 +158,15 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
+                if(prefshelper.getMode().equalsIgnoreCase("offline"))
+                {
 
-                 caseList();
+                }
+                else
+                {
+                    caseList();
+                }
+
 
             }
         });
@@ -179,7 +194,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
                         String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(38,42);
+                        String event2=event.substring(39,42);
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
                         txtCase.setText(e);
@@ -206,7 +221,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
                         String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(38,42);
+                        String event2=event.substring(39,42);
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
                         txtCase.setText(e);
@@ -337,8 +352,13 @@ public class SelectDateActivity extends AppCompatActivity {
                 }
             }
         });
-        caseList();
+        if(prefshelper.getMode().equalsIgnoreCase("offline"))
+        {
 
+        }
+        else {
+            caseList();
+        }
 
     }
 
@@ -375,18 +395,12 @@ public class SelectDateActivity extends AppCompatActivity {
     private void addEvents(int month, int year) {
 
         Log.e("size", nextDates.size()+"");
-       if(caseList.size()>0)
-       {
-           for(int j=0; j<caseList.size(); j++)
-           {
-               displayingDates=caseList.get(j).getNextDateArray();
-           }
-       }
-        if(displayingDates.size()>0) {
-            for (int i = 0; i < displayingDates.size(); i++) {
 
-                try {
-                    newDt = dateFormatForDisplaying.parse(displayingDates.get(i));
+               if(nextDates.size()>0) {
+                   for (int i = 0; i < nextDates.size(); i++) {
+
+                   try {
+                    newDt = dateFormatForDisplaying.parse(nextDates.get(i));
 
                     currentCalender.setTime(formatter.parse(formatter.format(newDt)));
 
@@ -397,9 +411,9 @@ public class SelectDateActivity extends AppCompatActivity {
 
                         currentCalender.set(Calendar.YEAR, year);
                     }
-                } catch (ParseException e1) {
+                    } catch (ParseException e1) {
                     e1.printStackTrace();
-                }
+                    }
 
 
                 long timeInMillis = currentCalender.getTimeInMillis();
@@ -411,12 +425,12 @@ public class SelectDateActivity extends AppCompatActivity {
                     e = "";
                     txtCase.setText("No Case Found");
                 } else {
-                    for (int j = 0; j < events.size(); j++) {
+                    for (int k = 0; k < events.size(); k++) {
                         txtCase.setText("");
                         e = "";
                         Log.e("eventss sizeeee", events.size() + "");
-                        event = String.valueOf(events.get(j).getData());
-                        String event1=event.substring(0, event.length()-23);
+                        event = String.valueOf(events.get(k).getData());
+                        String event1=event.substring(0, event.length()-24);
                         String event2=event.substring(39,42);
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
@@ -424,7 +438,9 @@ public class SelectDateActivity extends AppCompatActivity {
                     }
                 }
 
-            }
+              }
+
+
             compactCalendar.addEvents(events);
         }
     }
@@ -527,9 +543,9 @@ public class SelectDateActivity extends AppCompatActivity {
                                                             previousDate=jsonObject2.getString("case_detail_previous_date");
                                                             nextDate=jsonObject2.getString("case_detail_next_date");
                                                             comment=jsonObject2.getString("case_detail_comment");
-                                                            nextDates.add(k, nextDate);
-                                                            prevDates.add(k, previousDate);
-                                                            comments.add(k, comment);
+                                                            nextDates.add(nextDate);
+                                                            prevDates.add(previousDate);
+                                                            comments.add(comment);
 
                                                         }
 

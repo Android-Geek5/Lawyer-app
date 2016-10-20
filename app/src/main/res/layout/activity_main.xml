@@ -37,7 +37,7 @@
                 android:layout_width="115dp"
                 android:layout_height="115dp"
                 android:id="@+id/imageView2"
-                android:src="@drawable/logo_white"
+                android:src="@mipmap/elogow"
                 android:layout_marginTop="30dp"
                 android:layout_gravity="center_horizontal" />
 
