@@ -88,7 +88,7 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
                 intent.putExtra("rname", caseList.get(position).getRetainName());
                 intent.putExtra("rcontact",caseList.get(position).getRetainContact());
-                intent.putExtra("comment", caseList.get(position).getComment());
+           //     intent.putExtra("comment", caseList.get(position).getComment());
                 context.startActivity(intent);
             }
         });

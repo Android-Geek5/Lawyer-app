@@ -63,6 +63,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -96,7 +97,7 @@ public class SelectDateActivity extends AppCompatActivity {
     List<String> comments = new ArrayList<>();
     List<String> displayingDates = new ArrayList<>();
     List<Event> events;
-    Date newDt;
+    Date newDt, dateEvent;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -185,16 +186,21 @@ public class SelectDateActivity extends AppCompatActivity {
                 e="";
                 if(events.size()<=0)
                 {
+                    txtCase.setText("");
+                    e="";
                     txtCase.setText("No Case Found");
                 }
                 else
                 {
+
                     for(int i=0; i<events.size();i++)
                     {
+                        txtCase.setText("");
+                        e="";
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
                         String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(39,42);
+                        String event2 = event.substring(38, event.length());
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
                         txtCase.setText(e);
@@ -204,6 +210,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
+                dateEvent=firstDayOfNewMonth;
                 txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
 
                 caseList();
@@ -212,16 +219,20 @@ public class SelectDateActivity extends AppCompatActivity {
                 e="";
                 if(events.size()<=0)
                 {
+                    txtCase.setText("");
+                    e="";
                     txtCase.setText("No Case Found");
                 }
                 else
                 {
                     for(int i=0; i<events.size();i++)
                     {
+                        txtCase.setText("");
+                        e="";
                         Log.e("eventss sizeeee", events.size()+"");
                         event= String.valueOf(events.get(i).getData());
                         String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(39,42);
+                        String event2 = event.substring(38, event.length());
                         String newEvent=event1+", "+event2;
                         e = e + "\n " + newEvent;
                         txtCase.setText(e);
@@ -237,6 +248,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
             mDrawerToggle = new ActionBarDrawerToggle(SelectDateActivity.this, drawerLayout,
                     toolbar, R.string.drawer_open, R.string.drawer_close) {
+
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     invalidateOptionsMenu();
@@ -357,9 +369,10 @@ public class SelectDateActivity extends AppCompatActivity {
 
         }
         else {
-            caseList();
-        }
 
+
+        }
+           caseList();
     }
 
     @Override
@@ -399,49 +412,52 @@ public class SelectDateActivity extends AppCompatActivity {
                if(nextDates.size()>0) {
                    for (int i = 0; i < nextDates.size(); i++) {
 
-                   try {
-                    newDt = dateFormatForDisplaying.parse(nextDates.get(i));
+                       try {
+                           newDt = dateFormatForDisplaying.parse(nextDates.get(i));
 
-                    currentCalender.setTime(formatter.parse(formatter.format(newDt)));
+                           currentCalender.setTime(formatter.parse(formatter.format(newDt)));
 
-                    if (month > -1) {
-                        currentCalender.set(Calendar.MONTH, month);
-                    }
-                    if (year > -1) {
+                           if (month > -1) {
+                               currentCalender.set(Calendar.MONTH, month);
+                           }
+                           if (year > -1) {
+                               currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
+                               currentCalender.set(Calendar.YEAR, year);
+                           }
+                       } catch (ParseException e1) {
+                           e1.printStackTrace();
+                       }
 
-                        currentCalender.set(Calendar.YEAR, year);
-                    }
-                    } catch (ParseException e1) {
-                    e1.printStackTrace();
-                    }
-
-
-                long timeInMillis = currentCalender.getTimeInMillis();
-
-                events = getEvents(timeInMillis, i);
-
-                if (events.size() <= 0) {
-                    txtCase.setText("");
-                    e = "";
-                    txtCase.setText("No Case Found");
-                } else {
-                    for (int k = 0; k < events.size(); k++) {
-                        txtCase.setText("");
-                        e = "";
-                        Log.e("eventss sizeeee", events.size() + "");
-                        event = String.valueOf(events.get(k).getData());
-                        String event1=event.substring(0, event.length()-24);
-                        String event2=event.substring(39,42);
-                        String newEvent=event1+", "+event2;
-                        e = e + "\n " + newEvent;
-                        txtCase.setText(e);
-                    }
-                }
-
-              }
+                       long timeInMillis = currentCalender.getTimeInMillis();
 
 
-            compactCalendar.addEvents(events);
+                       events = getEvents(timeInMillis, i);
+
+                       compactCalendar.addEvents(events);
+                   }
+                   if (events.size() <= 0) {
+                       txtCase.setText("");
+                       e = "";
+                       txtCase.setText("No Case Found");
+                   } else {
+
+                       for (int k = 0; k <events.size(); k++) {
+                           txtCase.setText("");
+                           e = "";
+                           Log.e("eventss sizeeee", events.size() + "");
+                           event = String.valueOf(events.get(k).getData());
+
+                              String event1 = event.substring(0, event.length() - 24);
+
+                              String event2 = event.substring(38, event.length());
+
+                              String newEvent = event1 + ", " + event2;
+                              e = e + "\n " + newEvent;
+                              txtCase.setText(e);
+
+                       }
+                   }
+
         }
     }
 
@@ -451,13 +467,13 @@ public class SelectDateActivity extends AppCompatActivity {
             return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         } else if ( day > 2 && day <= 4) {
             return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case 1 on " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case 2 on " + new Date(timeInMillis)));
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         } else {
             return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case 1 on " + new Date(timeInMillis) ),
-                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case 2 on " + new Date(timeInMillis)),
-                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Case 3 on " + new Date(timeInMillis)));
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis) ),
+                    new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)),
+                    new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         }
     }
 
@@ -501,6 +517,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     Log.d("", ".......response====" + response.toString());
                     getlist().clear();
+                    nextDates.clear();
                      ////////
                     try {
                         JSONObject object = new JSONObject(response);
@@ -565,16 +582,15 @@ public class SelectDateActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
+                            compactCalendar.removeAllEvents();
+                            loadEvents();
+                            compactCalendar.invalidate();
                         }
 
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
-                    compactCalendar.removeAllEvents();
-                    loadEvents();
-                    compactCalendar.invalidate();
 
                 }
             }

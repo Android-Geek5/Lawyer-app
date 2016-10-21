@@ -75,10 +75,10 @@ public class CaseDetailActivity extends AppCompatActivity {
         status=getIntent().getStringExtra("status");
       //  prevDate=getIntent().getStringExtra("pdate");
       //  nextDate=getIntent().getStringExtra("ndate");
-        startDate=getIntent().getStringExtra("sdate");
+      //  startDate=getIntent().getStringExtra("sdate");
         counsellorName=getIntent().getStringExtra("oname");
         counsellorContact=getIntent().getStringExtra("ocontact");
-        comment=getIntent().getStringExtra("comment");
+     //   comment=getIntent().getStringExtra("comment");
         retainedName=getIntent().getStringExtra("rname");
         retainedContact=getIntent().getStringExtra("rcontact");
 
@@ -95,7 +95,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtRName=(TextView)findViewById(R.id.textView_retainNm);
         txtRContact=(TextView)findViewById(R.id.textView_retainContact);
         txtStartDt=(TextView)findViewById(R.id.textView_start);
-        try {
+      /*  try {
             // obtain date and time from initial string
             Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(prevDate);
             // set date string
@@ -124,7 +124,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             txtStartDt.setText(stringDate);
         } catch (ParseException e) {
             // wrong input
-        }
+        }*/
         txtCaseNumber.setText(caseNumber);
         txtCaseTitle.setText(caseTitle);
         txtCaseType.setText(caseType);
@@ -132,7 +132,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtStatus.setText(status);
         txtCName.setText(counsellorName);
         txtCContact.setText(counsellorContact);
-        txtComment.setText(comment);
+      //  txtComment.setText(comment);
         txtRName.setText(retainedName);
         txtRContact.setText(retainedContact);
 
@@ -150,6 +150,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent=new Intent(CaseDetailActivity.this, AddCommentActivity.class);
+                intent.putExtra("id", caseId);
                 startActivity(intent);
                 finish();
             }
