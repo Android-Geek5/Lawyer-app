@@ -1,4 +1,4 @@
-package com.lawyerapp.common;
+package com.eweblog.common;
 
 import android.content.Context;
 import android.graphics.Bitmap;

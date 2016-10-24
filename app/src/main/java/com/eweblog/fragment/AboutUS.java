@@ -1,4 +1,4 @@
-package com.lawyerapp.fragment;
+package com.eweblog.fragment;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.lawyerapp.R;
-import com.lawyerapp.SelectDateActivity;
+import com.eweblog.R;
+import com.eweblog.SelectDateActivity;
 
 
 public class AboutUS extends Fragment {

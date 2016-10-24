@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.Activity;
 import android.content.Context;

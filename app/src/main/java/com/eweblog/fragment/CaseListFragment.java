@@ -1,52 +1,29 @@
-package com.lawyerapp.fragment;
+package com.eweblog.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.NetworkError;
-import com.android.volley.NoConnectionError;
-import com.android.volley.ParseError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.ServerError;
-import com.android.volley.TimeoutError;
-import com.android.volley.VolleyError;
-import com.android.volley.VolleyLog;
-import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.AddCaseActivity;
-import com.lawyerapp.R;
-import com.lawyerapp.SelectDateActivity;
-import com.lawyerapp.adapter.CaseListAdapter;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
-import com.lawyerapp.model.CaseListModel;
+import com.eweblog.AddCaseActivity;
+import com.eweblog.R;
+import com.eweblog.SelectDateActivity;
+import com.eweblog.adapter.CaseListAdapter;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.model.CaseListModel;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CaseListFragment extends Fragment {
 
-    List<CaseListModel> caseList;
+    List<CaseListModel> caseList, caseListArray;
     ListView listView;
     FloatingActionButton fab;
     Prefshelper prefshelper;
@@ -90,6 +67,7 @@ public class CaseListFragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_case_list, container, false);
             listView = (ListView) rootview.findViewById(R.id.listView);
             caseList= (List<CaseListModel>) getArguments().getSerializable("list");
+
             listView.setAdapter(new CaseListAdapter(getActivity(), caseList));
 
 

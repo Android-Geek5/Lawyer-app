@@ -1,4 +1,4 @@
-package com.lawyerapp.common;
+package com.eweblog.common;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -9,8 +9,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.IBinder;
 
-import com.lawyerapp.R;
-import com.lawyerapp.SelectDateActivity;
+import com.eweblog.R;
+import com.eweblog.SelectDateActivity;
 
 public class MyAlarmService extends Service
 {

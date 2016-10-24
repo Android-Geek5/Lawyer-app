@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,9 +31,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -51,8 +52,9 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
     TextView txtNextError;
     ArrayAdapter<String> stringArrayAdapter;
     Prefshelper prefshelper;
-    String strId, strTitle, strNextDt, strComment,  strNDay, strNMonth, strNYear, nextTime;
+    String strId, strNextDt, strComment,  strNDay, strNMonth, strNYear, nextTime;
     DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
+    LinearLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,16 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
         btnAdd=(Button)findViewById(R.id.add);
         txtNextError=(TextView)findViewById(R.id.tw_next_error);
         edtComments=(EditText) findViewById(R.id.textView_comments);
+        linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent1 = new Intent(AddCommentActivity.this, SelectDateActivity.class);
+                startActivity(intent1);
+                finish();
+                SelectDateActivity.txtTitle.setText("Home");
+            }
+        });
         strId=getIntent().getStringExtra("id");
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -58,15 +58,6 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/mail"
-        app:layout_anchorGravity="bottom|right|end"
-        />
 
     <ScrollView
     android:layout_width="match_parent"
@@ -82,38 +73,40 @@
          android:layout_height="wrap_content"
          android:orientation="vertical"
               android:layout_margin="16dp">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:text="Case Number: "
-        android:layout_marginRight="10dp"
-        android:gravity="center_vertical"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
 
-        android:textStyle="bold"
-        android:id="@+id/textView14" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/black"
+                    android:text="Case Number: "
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
 
-    <TextView
-  android:layout_width="match_parent"
-  android:layout_height="40dp"
-  android:textSize="16sp"
-    android:layout_weight="1"
+                    android:textStyle="bold"
+                    android:id="@+id/textView14" />
 
-  android:textColor="@android:color/black"
-  android:text="Case Number"
-  android:gravity="center_vertical"
-  android:id="@+id/textView_number"
-  android:layout_marginBottom="3dp"
-  />
-</LinearLayout>
-<View
+                <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:textSize="16sp"
+                android:layout_weight="1"
+
+              android:textColor="@android:color/black"
+              android:text="Case Number"
+              android:gravity="center_vertical"
+              android:id="@+id/textView_number"
+              android:layout_marginBottom="3dp"
+              />
+            </LinearLayout>
+
+            <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
@@ -127,7 +120,7 @@
                 android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="40dp"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="Case Title: "
@@ -138,7 +131,7 @@
                     />
 <TextView
   android:layout_width="match_parent"
-  android:layout_height="40dp"
+  android:layout_height="wrap_content"
   android:textSize="16sp"
   android:textColor="@android:color/black"
   android:text="Case Title"
@@ -173,7 +166,7 @@
                     />
 <TextView
   android:layout_width="match_parent"
-  android:layout_height="40dp"
+  android:layout_height="wrap_content"
   android:textSize="16sp"
   android:textColor="@android:color/black"
   android:text="CaseType"
@@ -194,6 +187,7 @@
                 android:layout_marginTop="10dp"
 
                 android:layout_gravity="center_vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -204,10 +198,11 @@
                     android:gravity="center_vertical"
 
                     android:textStyle="bold"
-                    />
-            <TextView
+                    android:id="@+id/textView16" />
+
+                <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="Court Name"
@@ -243,7 +238,7 @@
 
                 <TextView
   android:layout_width="match_parent"
-  android:layout_height="40dp"
+  android:layout_height="wrap_content"
   android:textSize="16sp"
   android:textColor="@android:color/black"
   android:text="Position/Status Of Case"
@@ -264,6 +259,7 @@
                 android:layout_marginTop="10dp"
 
                 android:layout_gravity="center_vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -274,10 +270,11 @@
                     android:textStyle="bold"
                     android:gravity="center_vertical"
 
-                    />
-            <TextView
+                    android:id="@+id/textView17" />
+
+                <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="Start Date"
@@ -312,7 +309,7 @@
 
                 <TextView
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="Previous Date"
@@ -347,7 +344,7 @@
                     />
 <TextView
   android:layout_width="match_parent"
-  android:layout_height="40dp"
+  android:layout_height="wrap_content"
   android:textSize="16sp"
   android:textColor="@android:color/black"
   android:text="Next Due Date"
@@ -392,7 +389,7 @@
                     />
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="Name:"
@@ -419,7 +416,7 @@
                     />
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="RContact"
@@ -437,18 +434,18 @@
     android:layout_marginTop="3dp"
   android:background="@android:color/darker_gray"/>
 
-<TextView
-  android:layout_width="wrap_content"
-  android:layout_height="40dp"
-  android:textSize="16sp"
-  android:textColor="@android:color/black"
-  android:text="Opposite Counselor: "
-  android:gravity="center_vertical"
-  android:layout_marginTop="10dp"
-  android:layout_marginBottom="3dp"
-    android:textStyle="bold"
-  android:id="@+id/textView_opposite"
-  />
+            <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="40dp"
+              android:textSize="16sp"
+              android:textColor="@android:color/black"
+              android:text="Opposite Counselor: "
+              android:gravity="center_vertical"
+              android:layout_marginTop="10dp"
+              android:layout_marginBottom="3dp"
+                android:textStyle="bold"
+              android:id="@+id/textView_opposite"
+              />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -467,7 +464,7 @@
                     />
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="RContact"
@@ -496,7 +493,7 @@
                     />
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="RContact"
@@ -531,13 +528,14 @@
                     />
 <TextView
   android:layout_width="match_parent"
-  android:layout_height="40dp"
+  android:layout_height="wrap_content"
   android:textSize="16sp"
   android:textColor="@android:color/black"
   android:text="Comments"
   android:gravity="center_vertical"
   android:id="@+id/textView_comments"
-android:layout_weight="1"
+  android:maxLines="25"
+    android:paddingBottom="10dp"
   />
 </LinearLayout>
 <View
@@ -561,4 +559,14 @@ android:layout_weight="1"
     </LinearLayout>
 
 </ScrollView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/mail"
+        app:layout_anchorGravity="bottom|right|end"
+        />
+
 </android.support.design.widget.CoordinatorLayout>

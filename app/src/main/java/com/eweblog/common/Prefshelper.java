@@ -1,10 +1,15 @@
-package com.lawyerapp.common;
+package com.eweblog.common;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 
+import com.eweblog.model.CaseListModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -137,5 +142,27 @@ public class Prefshelper {
     public String getMobileVerification() {
         return getPreferences().getString("user_mobile_verification_status", "");
     }
+    public void setList( List<CaseListModel> list)
+    {
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
 
+        set("key", json);
+    }
+
+    private  void set(String key, String value)
+    {
+        Editor edit = getPreferences().edit();
+        edit.putString(key, value);
+        edit.apply();
+    }
+
+    public  List<CaseListModel> getList()
+    {
+        Gson gson = new Gson();
+        String json = getPreferences().getString("key", "");
+        Type type = new TypeToken<List<CaseListModel>>(){}.getType();
+        List<CaseListModel> caes= gson.fromJson(json, type);
+        return caes;
+    }
 }

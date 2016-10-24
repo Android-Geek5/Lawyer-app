@@ -1,5 +1,6 @@
-package com.lawyerapp.fragment;
+package com.eweblog.fragment;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,11 +28,11 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.R;
-import com.lawyerapp.SelectDateActivity;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.R;
+import com.eweblog.SelectDateActivity;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -60,9 +62,19 @@ public class ChangePasswordFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_change_password, container, false);
         prefshelper=new Prefshelper(getActivity());
         SelectDateActivity.txtTitle.setText("Change Password");
+
         edtPwd = (EditText) rootview.findViewById(R.id.password);
         edtConfirmPwd = (EditText) rootview.findViewById(R.id.cpassword);
         Button submit = (Button)rootview.findViewById(R.id.email_sign_in_button);
+        if (prefshelper.getMode().equalsIgnoreCase("offline"))
+        {
+            dialog();
+            submit.setEnabled(false);
+        }
+        else
+        {
+            submit.setEnabled(true);
+        }
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +130,22 @@ public class ChangePasswordFragment extends Fragment {
         return pass != null && pass.length() >= 6;
     }
 
+    public void dialog() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
 
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     public void changePassword() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(getActivity());

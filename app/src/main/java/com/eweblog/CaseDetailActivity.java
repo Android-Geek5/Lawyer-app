@@ -1,5 +1,6 @@
-package com.lawyerapp;
+package com.eweblog;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -9,6 +10,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -27,16 +29,19 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
+import com.eweblog.model.CaseListModel;
 
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,8 +52,21 @@ public class CaseDetailActivity extends AppCompatActivity {
     Prefshelper prefshelper;
     TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus, txtPrevDate, txtNextDt, txtCName, txtCContact
             ,txtComment, txtRName, txtRContact, txtStartDt;
-    String caseId, caseNumber, caseTitle, courtName, status,prevDate, nextDate,startDate, counsellorName, counsellorContact,
-    comment, retainedName, retainedContact, caseType;
+    String caseId;
+    String caseNumber;
+    String caseTitle;
+    String courtName;
+    String status;
+    ArrayList<String> prevDate;
+    ArrayList<String> nextDate;
+    String startDate;
+    String counsellorName;
+    String counsellorContact;
+    ArrayList<String> comment;
+    String retainedName;
+    String retainedContact;
+    String caseType;
+    List<CaseListModel> caseArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,15 +91,15 @@ public class CaseDetailActivity extends AppCompatActivity {
         caseTitle=getIntent().getStringExtra("ctitle");
         courtName=getIntent().getStringExtra("court");
         status=getIntent().getStringExtra("status");
-      //  prevDate=getIntent().getStringExtra("pdate");
-      //  nextDate=getIntent().getStringExtra("ndate");
-      //  startDate=getIntent().getStringExtra("sdate");
+     //   prevDate=getIntent().getStringArrayListExtra("pdate");
+     //   nextDate=getIntent().getStringArrayListExtra("ndate");
+        startDate=getIntent().getStringExtra("sdate");
         counsellorName=getIntent().getStringExtra("oname");
         counsellorContact=getIntent().getStringExtra("ocontact");
-     //   comment=getIntent().getStringExtra("comment");
+      //  comment=getIntent().getStringArrayListExtra("comment");
         retainedName=getIntent().getStringExtra("rname");
         retainedContact=getIntent().getStringExtra("rcontact");
-
+         caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list");
         txtCaseNumber=(TextView)findViewById(R.id.textView_number);
         txtCaseTitle=(TextView)findViewById(R.id.textView_title);
         txtCaseType=(TextView)findViewById(R.id.textView_type);
@@ -95,25 +113,54 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtRName=(TextView)findViewById(R.id.textView_retainNm);
         txtRContact=(TextView)findViewById(R.id.textView_retainContact);
         txtStartDt=(TextView)findViewById(R.id.textView_start);
-      /*  try {
-            // obtain date and time from initial string
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(prevDate);
-            // set date string
-            String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-            // set time string
-           // txtPrevDate.setText(stringDate);
-        } catch (ParseException e) {
-            // wrong input
+        if (prefshelper.getMode().equalsIgnoreCase("offline"))
+        {
+            dialog();
+            btnAdd.setEnabled(false);
+            fab.setEnabled(false);
         }
-        try {
-            // obtain date and time from initial string
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(nextDate);
-            // set date string
-            String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-            // set time string
-        //   txtNextDt.setText(stringDate);
-        } catch (ParseException e) {
-            // wrong input
+        else
+        {
+            btnAdd.setEnabled(true);
+            fab.setEnabled(true);
+        }
+        fab.setBackgroundTintList(ColorStateList.valueOf(Color
+                .parseColor("#00bcd5")));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                sendCaseDetail();
+            }
+        });
+        for(int j=0; j<caseArray.size(); j++) {
+            try {
+                // obtain date and time from initial string
+                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(caseArray.get(j).getCasePrevDate());
+                // set date string
+                String prevDate="";
+                String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
+                // set time string
+                 prevDate=prevDate+stringDate;
+                 txtPrevDate.setText(prevDate);
+            } catch (ParseException e) {
+                // wrong input
+            }
+        }
+        for(int j=0; j<caseArray.size(); j++) {
+            try {
+                // obtain date and time from initial string
+                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse((caseArray.get(j).getNextDate()));
+                // set date string
+                String nextDate="";
+
+                String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
+                // set time string
+                nextDate=nextDate+stringDate;
+                txtNextDt.setText(nextDate);
+            } catch (ParseException e) {
+                // wrong input
+            }
         }
         try {
             // obtain date and time from initial string
@@ -124,7 +171,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             txtStartDt.setText(stringDate);
         } catch (ParseException e) {
             // wrong input
-        }*/
+        }
         txtCaseNumber.setText(caseNumber);
         txtCaseTitle.setText(caseTitle);
         txtCaseType.setText(caseType);
@@ -132,20 +179,18 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtStatus.setText(status);
         txtCName.setText(counsellorName);
         txtCContact.setText(counsellorContact);
-      //  txtComment.setText(comment);
+        for(int i=0; i<caseArray.size();i++)
+        {
+            String c="";
+            c=c+ caseArray.get(i).getComment();
+            txtComment.setText(c);
+        }
+
         txtRName.setText(retainedName);
         txtRContact.setText(retainedContact);
 
 
-        fab.setBackgroundTintList(ColorStateList.valueOf(Color
-                .parseColor("#00bcd5")));
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                  sendCaseDetail();
-            }
-        });
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,5 +281,21 @@ public class CaseDetailActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }

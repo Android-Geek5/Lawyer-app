@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -24,9 +24,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -65,7 +65,92 @@ public class RegisterationActivity extends AppCompatActivity {
                 strContact=edtContact.getText().toString();
                 strPwd=edtPwd.getText().toString();
                 strCPwd=edtCPwd.getText().toString();
-                signUp();
+                View focusView = null;
+                boolean cancelLogin = false;
+
+
+                            if (TextUtils.isEmpty(strName)) {
+                                edtName.setError(errorName);
+                                focusView = edtName;
+                                cancelLogin = true;
+                            }
+                            else if(strName.length()<2)
+                            {
+                                edtName.setError(errorName);
+                                focusView = edtName;
+                                cancelLogin = true;
+                            }
+                            if (TextUtils.isEmpty(strContact)) {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+                            }
+                            else if(!isValidPhone(strContact))
+                            {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+                            }
+                         /*   if(errorMobile.equalsIgnoreCase("The Phone field must contain a unique value."))
+                            {
+                                edtContact.setError(errorMobile);
+                                focusView = edtContact;
+                                cancelLogin = true;
+
+                            }*/
+                            if (TextUtils.isEmpty(strEmail)) {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidEmail(strEmail)) {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }
+                           /* if(errorEmail.equalsIgnoreCase("The Email field must contain a unique value."))
+                            {
+                                edtEmail.setError(errorEmail);
+                                focusView = edtEmail;
+                                cancelLogin = true;
+                            }*/
+                            if (TextUtils.isEmpty(strPwd)) {
+                                edtPwd.setError(errorPassword);
+                                focusView = edtPwd;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidPass(strPwd)) {
+                                edtPwd.setError(errorPassword);
+                                focusView = edtPwd;
+                                cancelLogin = true;
+                            }
+                            if (TextUtils.isEmpty(strCPwd)) {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }
+                            else if (!isValidPass(strCPwd)) {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }
+                            /* if(strCPwd.equalsIgnoreCase("The Confirm Password field does not match the Password field."))
+                            {
+                                edtCPwd.setError(errorConfirm);
+                                focusView = edtCPwd;
+                                cancelLogin = true;
+                            }*/
+
+                          if(cancelLogin) {
+                                // error in login
+                                focusView.requestFocus();
+                            }
+                        else
+                          {
+                              signUp();
+                          }
+
+
 
 
             }
@@ -127,7 +212,7 @@ public class RegisterationActivity extends AppCompatActivity {
                             View focusView = null;
                             boolean cancelLogin = false;
                          //   Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-                            JSONObject jsonObject=object.getJSONObject("data");
+                        /*    JSONObject jsonObject=object.getJSONObject("data");
                             String error1=jsonObject.getString("user_name");
                             String error2=jsonObject.getString("user_email");
                             String error3=jsonObject.getString("user_contact");
@@ -231,7 +316,7 @@ public class RegisterationActivity extends AppCompatActivity {
                                 focusView.requestFocus();
                             }
 
-
+*/
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
                             Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
@@ -241,7 +326,8 @@ public class RegisterationActivity extends AppCompatActivity {
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
 
-
+                                     prefshelper.storeUserIdToPreference(userID);
+                                    prefshelper.storeSecHashToPreference(userSecHash);
                                 }
 
                             } catch (Exception e) {

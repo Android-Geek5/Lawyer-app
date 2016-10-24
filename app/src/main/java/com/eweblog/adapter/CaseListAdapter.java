@@ -1,17 +1,19 @@
-package com.lawyerapp.adapter;
+package com.eweblog.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.lawyerapp.CaseDetailActivity;
-import com.lawyerapp.R;
-import com.lawyerapp.model.CaseListModel;
+import com.eweblog.CaseDetailActivity;
+import com.eweblog.R;
+import com.eweblog.model.CaseListModel;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -81,15 +83,17 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("ctitle", caseList.get(position).getCaseTitle());
                 intent.putExtra("court",caseList.get(position).getCourtName());
                 intent.putExtra("status", caseList.get(position).getCaseStatus());
-               // intent.putExtra("pdate",caseList.get(position).getCasePrevDate());
-              //  intent.putExtra("ndate", caseList.get(position).getNextDate());
+            //    intent.putStringArrayListExtra("pdate", caseList.get(position).getPrevDateArray());
+           //     intent.putStringArrayListExtra("ndate", caseList.get(position).getNextDateArray());
                 intent.putExtra("sdate",caseList.get(position).getCaseStartDate());
                 intent.putExtra("oname", caseList.get(position).getCounsellorName());
                 intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
                 intent.putExtra("rname", caseList.get(position).getRetainName());
                 intent.putExtra("rcontact",caseList.get(position).getRetainContact());
-           //     intent.putExtra("comment", caseList.get(position).getComment());
+                intent.putExtra("list", (Serializable) caseList.get(position).getCaseList());
+          //      intent.putStringArrayListExtra("comment", caseList.get(position).getNCommentsArray());
                 context.startActivity(intent);
+
             }
         });
         return rowView;

@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -23,9 +23,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 

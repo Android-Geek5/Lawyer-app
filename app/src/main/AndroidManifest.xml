@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.lawyerapp">
+    package="com.eweblog">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="com.eweblog.SplashScreenActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,45 +24,45 @@
         </activity>
 
         <service
-            android:name=".common.MyAlarmService"
+            android:name="com.eweblog.common.MyAlarmService"
             android:enabled="true" />
 
-        <receiver android:name=".common.AlarmReceiver" />
+        <receiver android:name="com.eweblog.common.AlarmReceiver" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.eweblog.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".RegisterationActivity"
+            android:name="com.eweblog.RegisterationActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".OTPScreenActivity"
+            android:name="com.eweblog.OTPScreenActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".SelectDateActivity"
+            android:name="com.eweblog.SelectDateActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".AddCaseActivity"
+            android:name="com.eweblog.AddCaseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".CaseDetailActivity"
+            android:name="com.eweblog.CaseDetailActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ExitActivity"
+            android:name="com.eweblog.ExitActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".ForgotPasswordActivity"
+            android:name="com.eweblog.ForgotPasswordActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".AddCommentActivity"></activity>
+        <activity android:name="com.eweblog.AddCommentActivity"></activity>
     </application>
 
 </manifest>

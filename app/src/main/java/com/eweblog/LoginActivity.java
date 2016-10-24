@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -26,9 +26,10 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.ConnectionDetector;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText edtContact,edtPwd;
     String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified,userStatus;
     Prefshelper prefshelper;
-
+    ConnectionDetector cd;
     TextView txtNotAUser, txtForgotPwd;
 
     @Override
@@ -53,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         // Set up the login form.
+        cd = new ConnectionDetector(getApplicationContext());
         edtContact = (EditText) findViewById(R.id.email);
         edtPwd = (EditText) findViewById(R.id.password);
         txtNotAUser = (TextView) findViewById(R.id.textView);
@@ -105,9 +107,18 @@ public class LoginActivity extends AppCompatActivity {
                 if (cancelLogin) {
                     // error in login
                     focusView.requestFocus();
-                } else {
-                   
-                    login();
+                }
+                else
+                {
+                   if(cd.isConnectingToInternet())
+                   {
+                        prefshelper.offlineMode("");
+                       login();
+                   }
+                    else
+                   {
+
+                   }
                 }
 
             }

@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,8 +1,6 @@
-package com.lawyerapp;
+package com.eweblog;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,15 +23,13 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.AlarmReceiver;
-import com.lawyerapp.common.ConnectionDetector;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.ConnectionDetector;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +53,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void run() {
 
                     if (cd.isConnectingToInternet()) {
+                        prefshelper.offlineMode("");
                         if ((prefshelper.getUserIdFromPreference().equals("")) || (prefshelper.getUserSecHashFromPreference().equals(""))) {
 
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);

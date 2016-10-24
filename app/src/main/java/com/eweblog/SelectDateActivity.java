@@ -1,7 +1,8 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -23,13 +24,15 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.gson.*;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
@@ -44,24 +47,31 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
-import com.lawyerapp.common.AlarmReceiver;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
-import com.lawyerapp.fragment.AboutUS;
-import com.lawyerapp.fragment.CaseListFragment;
-import com.lawyerapp.fragment.ChangePasswordFragment;
-import com.lawyerapp.model.CaseListModel;
+import com.eweblog.common.AlarmReceiver;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
+import com.eweblog.fragment.AboutUS;
+import com.eweblog.fragment.CaseListFragment;
+import com.eweblog.fragment.ChangePasswordFragment;
+import com.eweblog.model.CaseListModel;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Document;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -87,17 +97,20 @@ public class SelectDateActivity extends AppCompatActivity {
     TextView txtMonth, txtCase;
     ImageView imgPrevious, imgNext;
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
-    String event="", e="", nextDate, previousDate, comment;
+    String event = "", e = "", nextDate, previousDate, comment, key;
     Prefshelper prefshelper;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
-    List<CaseListModel> caseList;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    List<CaseListModel> caseList, caseListArray;
     FloatingActionButton fab;
-    List<String> nextDates = new ArrayList<>();
-    List<String> prevDates = new ArrayList<>();
-    List<String> comments = new ArrayList<>();
+    ArrayList<String> nextDates = new ArrayList<>();
+    ArrayList<String> prevDates = new ArrayList<>();
+    ArrayList<String> comments = new ArrayList<>();
     List<String> displayingDates = new ArrayList<>();
     List<Event> events;
     Date newDt, dateEvent;
+    int i=0;
+
+    String newEvent;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -109,47 +122,53 @@ public class SelectDateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_date);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        txtTitle=(TextView)findViewById(R.id.toolbar_title);
+        txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
-        compactCalendar=(CompactCalendarView)findViewById(R.id.compactcalendar_view);
+        compactCalendar = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        navigationView=(NavigationView)findViewById(R.id.navigation);
+        navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
-        txtMonth=(TextView)findViewById(R.id.txt_month);
-        txtCase=(TextView)findViewById(R.id.txt_caseTitle);
-        prefshelper=new Prefshelper(this);
+        txtMonth = (TextView) findViewById(R.id.txt_month);
+        txtCase = (TextView) findViewById(R.id.txt_caseTitle);
+        prefshelper = new Prefshelper(this);
 
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.HOUR, 5);
         calendar.set(Calendar.AM_PM, Calendar.PM);
-        Intent myIntent = new Intent(this , AlarmReceiver.class);
+        Intent myIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
 
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                 AlarmManager.INTERVAL_DAY, pendingIntent);
 
-        imgNext=(ImageView)findViewById(R.id.image_next);
-        imgPrevious=(ImageView)findViewById(R.id.image_previous);
-        compactCalendar.setLocale(TimeZone.getDefault(),Locale.ENGLISH);
+        imgNext = (ImageView) findViewById(R.id.image_next);
+        imgPrevious = (ImageView) findViewById(R.id.image_previous);
+        compactCalendar.setLocale(TimeZone.getDefault(), Locale.ENGLISH);
         compactCalendar.setUseThreeLetterAbbreviation(true);
-        caseList=new ArrayList<>();
+        caseList = new ArrayList<>();
+        caseListArray=new ArrayList<>();
+        if (prefshelper.getMode().equalsIgnoreCase("")) {
+            caseList();
+        } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+            caseList = prefshelper.getList();
+            loadEvents();
+            Log.e("list locl", prefshelper.getList()+"");
+        }
 
         imgPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 compactCalendar.showPreviousMonth();
-                if(prefshelper.getMode().equalsIgnoreCase("offline"))
-                {
-
-                }
-                else
-                {
+                if (prefshelper.getMode().equalsIgnoreCase("")) {
                     caseList();
+                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                    caseList = prefshelper.getList();
+                    loadEvents();
                 }
 
 
@@ -159,13 +178,11 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
-                if(prefshelper.getMode().equalsIgnoreCase("offline"))
-                {
-
-                }
-                else
-                {
+                if (prefshelper.getMode().equalsIgnoreCase("")) {
                     caseList();
+                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                    caseList = prefshelper.getList();
+                    loadEvents();
                 }
 
 
@@ -176,67 +193,66 @@ public class SelectDateActivity extends AppCompatActivity {
         txtMonth.setText(dateFormatForMonth.format(compactCalendar.getFirstDayOfCurrentMonth()));
 
 
-
         // define a listener to receive callbacks when certain events happen.
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendar.getEvents(dateClicked);
                 txtCase.setText("");
-                e="";
-                if(events.size()<=0)
-                {
+                e = "";
+                if (events.size() <= 0) {
                     txtCase.setText("");
-                    e="";
+                    e = "";
                     txtCase.setText("No Case Found");
-                }
-                else
-                {
+                } else {
 
-                    for(int i=0; i<events.size();i++)
-                    {
+                    for (int i = 0; i < events.size(); i++) {
                         txtCase.setText("");
-                        e="";
-                        Log.e("eventss sizeeee", events.size()+"");
-                        event= String.valueOf(events.get(i).getData());
-                        String event1=event.substring(0, event.length()-24);
+                        e = "";
+                        Log.e("eventss sizeeee", events.size() + "");
+                        event = String.valueOf(events.get(i).getData());
+                        String event1 = event.substring(0, event.length() - 24);
                         String event2 = event.substring(38, event.length());
-                        String newEvent=event1+", "+event2;
+                        newEvent = event1 + ", " + event2;
                         e = e + "\n " + newEvent;
-                        txtCase.setText(e);
                     }
+                    txtCase.setText(e);
+
                 }
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-                dateEvent=firstDayOfNewMonth;
+                dateEvent = firstDayOfNewMonth;
                 txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
 
-                caseList();
+                if (prefshelper.getMode().equalsIgnoreCase("")) {
+                    caseList();
+                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                    caseList = prefshelper.getList();
+                    loadEvents();
+                    Log.e("list locl", prefshelper.getList()+"");
+                }
                 List<Event> events = compactCalendar.getEvents(firstDayOfNewMonth);
                 txtCase.setText("");
-                e="";
-                if(events.size()<=0)
-                {
+                e = "";
+                if (events.size() <= 0) {
                     txtCase.setText("");
-                    e="";
+                    e = "";
                     txtCase.setText("No Case Found");
-                }
-                else
-                {
-                    for(int i=0; i<events.size();i++)
-                    {
+                } else {
+                    for (int i = 0; i < events.size(); i++) {
                         txtCase.setText("");
-                        e="";
-                        Log.e("eventss sizeeee", events.size()+"");
-                        event= String.valueOf(events.get(i).getData());
-                        String event1=event.substring(0, event.length()-24);
+                        e = "";
+                        Log.e("eventss sizeeee", events.size() + "");
+                        event = String.valueOf(events.get(i).getData());
+                        String event1 = event.substring(0, event.length() - 24);
                         String event2 = event.substring(38, event.length());
-                        String newEvent=event1+", "+event2;
+                        newEvent = event1 + ", " + event2;
                         e = e + "\n " + newEvent;
-                        txtCase.setText(e);
                     }
+
+                    txtCase.setText(e);
                 }
 
             }
@@ -266,7 +282,7 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
-        fab = (FloatingActionButton)findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00bcd5")));
         fab.setOnClickListener(new View.OnClickListener() {
@@ -274,11 +290,11 @@ public class SelectDateActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 txtTitle.setText("Case List");
-                Bundle bundle= new Bundle();
+                Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) caseList);
-                android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                CaseListFragment caseListFragment=new CaseListFragment();
+                android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                CaseListFragment caseListFragment = new CaseListFragment();
                 caseListFragment.setArguments(bundle);
                 fragmentTransaction.replace(R.id.content_frame, caseListFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -308,17 +324,18 @@ public class SelectDateActivity extends AppCompatActivity {
                     case R.id.drawer_home:
                         txtTitle.setText("Home");
                         Intent intent = new Intent(SelectDateActivity.this, SelectDateActivity.class);
-                        overridePendingTransition(0,0);
+                        overridePendingTransition(0, 0);
                         startActivity(intent);
                         finish();
                         return true;
                     case R.id.drawer_list:
                         txtTitle.setText("Case List");
-                        Bundle bundle= new Bundle();
+                        Bundle bundle = new Bundle();
                         bundle.putSerializable("list", (Serializable) caseList);
-                        android.support.v4.app.FragmentManager fragmentManager=getSupportFragmentManager();
-                        android.support.v4.app.FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
-                        CaseListFragment caseListFragment=new CaseListFragment();
+
+                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        CaseListFragment caseListFragment = new CaseListFragment();
                         caseListFragment.setArguments(bundle);
                         fragmentTransaction.replace(R.id.content_frame, caseListFragment);
                         fragmentTransaction.addToBackStack(null);
@@ -326,16 +343,16 @@ public class SelectDateActivity extends AppCompatActivity {
                         return true;
                     case R.id.changePwd:
                         txtTitle.setText("Change Password");
-                        fragmentManager=getSupportFragmentManager();
-                        fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new ChangePasswordFragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
                     case R.id.about_us:
                         txtTitle.setText("About us");
-                        fragmentManager=getSupportFragmentManager();
-                        fragmentTransaction=fragmentManager.beginTransaction();
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new AboutUS());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
@@ -364,15 +381,7 @@ public class SelectDateActivity extends AppCompatActivity {
                 }
             }
         });
-        if(prefshelper.getMode().equalsIgnoreCase("offline"))
-        {
 
-        }
-        else {
-
-
-        }
-           caseList();
     }
 
     @Override
@@ -406,72 +415,77 @@ public class SelectDateActivity extends AppCompatActivity {
 
 
     private void addEvents(int month, int year) {
+       if(caseList.size()>0)
+       {
+           for(int a=0; a<caseList.size(); a++)
+           {
 
-        Log.e("size", nextDates.size()+"");
+               Log.e("size", caseList.get(a).getCaseList() + "");
 
-               if(nextDates.size()>0) {
-                   for (int i = 0; i < nextDates.size(); i++) {
+               if (caseList.get(a).getCaseList().size() > 0)
+               {
+                for (i=0; i < caseList.get(a).getCaseList().size(); i++) {
 
-                       try {
-                           newDt = dateFormatForDisplaying.parse(nextDates.get(i));
+                try {
+                    newDt = dateFormatForDisplaying.parse(caseList.get(a).getCaseList().get(i).getNextDate());
 
-                           currentCalender.setTime(formatter.parse(formatter.format(newDt)));
+                    currentCalender.setTime(formatter.parse(formatter.format(newDt)));
 
-                           if (month > -1) {
-                               currentCalender.set(Calendar.MONTH, month);
-                           }
-                           if (year > -1) {
-                               currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
-                               currentCalender.set(Calendar.YEAR, year);
-                           }
-                       } catch (ParseException e1) {
-                           e1.printStackTrace();
-                       }
+                    if (month > -1) {
+                        currentCalender.set(Calendar.MONTH, month);
+                    }
+                    if (year > -1) {
+                        currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
+                        currentCalender.set(Calendar.YEAR, year);
+                    }
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                    long timeInMillis = currentCalender.getTimeInMillis();
+                    events = getEvents(timeInMillis, i);
 
-                       long timeInMillis = currentCalender.getTimeInMillis();
+                    compactCalendar.addEvents(events);
+                 }
 
+                }
 
-                       events = getEvents(timeInMillis, i);
+           }
+           if (events.size() <= 0) {
+               txtCase.setText("");
+               e = "";
+               txtCase.setText("No Case Found");
+           } else {
 
-                       compactCalendar.addEvents(events);
-                   }
-                   if (events.size() <= 0) {
-                       txtCase.setText("");
-                       e = "";
-                       txtCase.setText("No Case Found");
-                   } else {
+               for (int k = 0; k < events.size(); k++) {
+                   txtCase.setText("");
+                   e = "";
+                   Log.e("eventss sizeeee", events.size() + "");
+                   event = String.valueOf(events.get(k).getData());
 
-                       for (int k = 0; k <events.size(); k++) {
-                           txtCase.setText("");
-                           e = "";
-                           Log.e("eventss sizeeee", events.size() + "");
-                           event = String.valueOf(events.get(k).getData());
+                   String event1 = event.substring(0, event.length() - 24);
 
-                              String event1 = event.substring(0, event.length() - 24);
+                   String event2 = event.substring(38, event.length());
+                   newEvent = event1 + ", " + event2;
+                   e = e + "\n " + newEvent;
 
-                              String event2 = event.substring(38, event.length());
+               }
 
-                              String newEvent = event1 + ", " + event2;
-                              e = e + "\n " + newEvent;
-                              txtCase.setText(e);
-
-                       }
-                   }
-
-        }
+               txtCase.setText(e);
+           }
+       }
     }
 
     private List<Event> getEvents(long timeInMillis, int day) {
 
         if (day < 2) {
             return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
-        } else if ( day > 2 && day <= 4) {
+        } else if (day > 2 && day <= 4) {
             return Arrays.asList(
                     new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)),
                     new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         } else {
             return Arrays.asList(
-                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis) ),
+                    new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)),
                     new Event(Color.argb(255, 100, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)),
                     new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         }
@@ -479,24 +493,36 @@ public class SelectDateActivity extends AppCompatActivity {
 
 
     @Override
-    public  void onBackPressed()
-    {
-        new AlertDialog.Builder(this)
-                .setTitle("Alert !")
-                .setMessage("Are you sure you want to exit?")
-                .setNegativeButton(android.R.string.no, null)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent a = new Intent(Intent.ACTION_MAIN);
-                        a.addCategory(Intent.CATEGORY_HOME);
-                        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(a);
+    public void onBackPressed() {
+        final Dialog dialog = new Dialog(SelectDateActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.back_layout);
 
-                    }
-                }).create().show();
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+        Button no = (Button) dialog.findViewById(R.id.bt_no);
+        no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent a = new Intent(Intent.ACTION_MAIN);
+                a.addCategory(Intent.CATEGORY_HOME);
+                a.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(a);
+
+
+            }
+        });
+        dialog.show();
     }
-    public void shareapp(){
+
+    public void shareapp() {
         String message = "http://erginus.com/";
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
@@ -504,6 +530,7 @@ public class SelectDateActivity extends AppCompatActivity {
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(share, "Share Via"));
     }
+
     public void caseList() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(SelectDateActivity.this);
@@ -518,14 +545,17 @@ public class SelectDateActivity extends AppCompatActivity {
                     Log.d("", ".......response====" + response.toString());
                     getlist().clear();
                     nextDates.clear();
-                     ////////
+                    prevDates.clear();
+                    comments.clear();
+                    getNlist().clear();
+                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
 
                         if (serverCode.equalsIgnoreCase("0")) {
-                           // Toast.makeText(SelectDateActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                            // Toast.makeText(SelectDateActivity.this, serverMessage,Toast.LENGTH_LONG).show();
                             prefshelper.message(serverMessage);
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
@@ -533,51 +563,52 @@ public class SelectDateActivity extends AppCompatActivity {
                             try {
                                 if ("1".equals(serverCode)) {
 
-                                    JSONArray jsonArray=object.getJSONArray("data");
-                                    if(jsonArray.length()>0)
-                                    {
-                                        for(int i=0; i<jsonArray.length(); i++)
-                                        {
-                                            JSONObject jsonObject=jsonArray.getJSONObject(i);
+                                    JSONArray jsonArray = object.getJSONArray("data");
+                                    if (jsonArray.length() > 0) {
 
-                                                    String caseId=jsonObject.getString("case_id");
-                                                    String caseNumber=jsonObject.getString("case_number");
-                                                    String caseTitle=jsonObject.getString("case_title");
-                                                    String caseType=jsonObject.getString("case_type");
-                                                    String casePositionStatus=jsonObject.getString("case_position_status");
-                                                    String retainedName=jsonObject.getString("case_retained_name");
-                                                    String retainedContact=jsonObject.getString("case_retained_contact");
-                                                    String counselorName=jsonObject.getString("case_opposite_counselor_name");
-                                                    String counselorContact=jsonObject.getString("case_opposite_counselor_contact");
-                                                    String courtName=jsonObject.getString("case_court_name");
-                                                    String caseStarted=jsonObject.getString("case_started");
-                                                    JSONArray jsonArray2=jsonObject.getJSONArray("case_comments_array");
-                                                    if(jsonArray2.length()>0)
-                                                    {
-                                                        for(int k=0; k<jsonArray2.length(); k++)
-                                                        {
-                                                            JSONObject jsonObject2=jsonArray2.getJSONObject(k);
-                                                            previousDate=jsonObject2.getString("case_detail_previous_date");
-                                                            nextDate=jsonObject2.getString("case_detail_next_date");
-                                                            comment=jsonObject2.getString("case_detail_comment");
-                                                            nextDates.add(nextDate);
-                                                            prevDates.add(previousDate);
-                                                            comments.add(comment);
+                                        for (int i = 0; i < jsonArray.length(); i++) {
+                                            JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                                                        }
+                                            String caseId = jsonObject.getString("case_id");
+                                            String caseNumber = jsonObject.getString("case_number");
+                                            String caseTitle = jsonObject.getString("case_title");
+                                            String caseType = jsonObject.getString("case_type");
+                                            String casePositionStatus = jsonObject.getString("case_position_status");
+                                            String retainedName = jsonObject.getString("case_retained_name");
+                                            String retainedContact = jsonObject.getString("case_retained_contact");
+                                            String counselorName = jsonObject.getString("case_opposite_counselor_name");
+                                            String counselorContact = jsonObject.getString("case_opposite_counselor_contact");
+                                            String courtName = jsonObject.getString("case_court_name");
+                                            String caseStarted = jsonObject.getString("case_started");
+                                            JSONArray jsonArray2 = jsonObject.getJSONArray("case_comments_array");
+                                            if (jsonArray2.length() > 0) {
 
-                                                    }
-
-                                                    caseList.add(model(caseId,caseNumber,caseTitle,caseType,casePositionStatus,
-                                                            retainedName,retainedContact,counselorName,counselorContact,courtName,
-                                                            caseStarted, nextDates, prevDates,comments));
+                                                for (int k = 0; k < jsonArray2.length(); k++) {
+                                                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
+                                                    previousDate = jsonObject2.getString("case_detail_previous_date");
+                                                    nextDate = jsonObject2.getString("case_detail_next_date");
+                                                    comment = jsonObject2.getString("case_detail_comment");
+                                                    caseListArray.add(model2( previousDate, nextDate,comment));
 
                                                 }
 
+
+                                            }
+
+                                            caseList.add(model(caseId, caseNumber, caseTitle, caseType, casePositionStatus,
+                                                    retainedName, retainedContact, counselorName, counselorContact, courtName,
+                                                    caseStarted,caseListArray));
+
+                                        }
+
                                     }
+                                    setNlist(caseListArray);
                                     setlist(caseList);
+                                    prefshelper.setList(caseList);
+
 
                                 }
+
 
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -634,21 +665,28 @@ public class SelectDateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     public List<CaseListModel> getlist() {
         return caseList;
     }
+
     public void setlist(List<CaseListModel> list) {
         this.caseList = list;
+    }
+    public List<CaseListModel> getNlist() {
+        return caseListArray;
+    }
+
+    public void setNlist(List<CaseListModel> list) {
+        this.caseListArray = list;
     }
 
 
     private CaseListModel model(String casId, String caseNmber, String casTitle,
-                                   String casType,String casePstnStatus,String retainedNm, String retainedCntact,
-                                   String counselorNm,String counselorContct,String courtNm,String caseStrted,
-                             List<String> nextDate,List<String> previousDate, List<String> comment)
-    {
-        CaseListModel model=new CaseListModel();
-
+                                 String casType, String casePstnStatus, String retainedNm, String retainedCntact,
+                                 String counselorNm, String counselorContct, String courtNm, String caseStrted,
+                                 List<CaseListModel> list) {
+        CaseListModel model = new CaseListModel();
         model.setCaseId(casId);
         model.setCaseNumber(caseNmber);
         model.setCaseTitle(casTitle);
@@ -660,11 +698,19 @@ public class SelectDateActivity extends AppCompatActivity {
         model.setCounsellorContact(counselorContct);
         model.setCourtName(courtNm);
         model.setCaseStartDate(caseStrted);
-        model.setNextDateArray(nextDate);
-        model.setPrevDateArray(previousDate);
-        model.setCommentsArray(comment);
-
-        return  model;
+        model.setCaseList(list);
+     /*   model.setPrevDateArray(previousDate);
+        model.setCommentsArray(comment);*/
+        return model;
     }
 
+    private CaseListModel model2( String previousDate, String nextDate,
+                                String comment) {
+        CaseListModel model = new CaseListModel();
+
+        model.setNextDate(nextDate);
+        model.setCasePrevDate(previousDate);
+        model.setComment(comment);
+        return model;
+    }
 }

@@ -1,13 +1,15 @@
-package com.lawyerapp.model;
+package com.eweblog.model;
 
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CaseListModel implements Serializable{
-    String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
+   private String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
     retainContact, caseStatus , comment, nextDate;
-    List<String> nextDt, prevDt, comments;
+   private ArrayList<String> nextDt, prevDt, comments;
+ List<CaseListModel> list;
 
     public String getCaseTitle() {
         return caseTitle;
@@ -121,28 +123,37 @@ public class CaseListModel implements Serializable{
         this.nextDate = name;
     }
 
-    public List<String> getNextDateArray() {
+    public ArrayList<String> getNextDateArray() {
         return nextDt;
     }
 
-    public void setNextDateArray(List name) {
+    public void setNextDateArray(ArrayList name) {
         this.nextDt = name;
     }
 
 
-    public List<String> getPrevDateArray() {
+    public ArrayList<String> getPrevDateArray() {
         return prevDt;
     }
 
-    public void setPrevDateArray(List name) {
+    public void setPrevDateArray(ArrayList name) {
         this.prevDt = name;
     }
-    public List<String> getNCommentsArray() {
+
+    public ArrayList<String> getNCommentsArray() {
         return comments;
     }
 
-    public void setCommentsArray(List name) {
+    public void setCommentsArray(ArrayList name) {
         this.comments = name;
+    }
+
+    public List<CaseListModel> getCaseList() {
+        return list;
+    }
+
+    public void setCaseList(List<CaseListModel> name) {
+        this.list = name;
     }
 
 

@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.lawyerapp;
+package com.eweblog;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -24,9 +24,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -110,7 +110,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
                         Toast.makeText(OTPScreenActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-
+                       Log.e("error", response);
                         if (serverCode.equalsIgnoreCase("0")) {
 
                         }

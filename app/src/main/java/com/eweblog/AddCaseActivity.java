@@ -1,6 +1,9 @@
-package com.lawyerapp;
+package com.eweblog;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,9 +35,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.lawyerapp.common.MapAppConstant;
-import com.lawyerapp.common.Prefshelper;
-import com.lawyerapp.common.VolleySingleton;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
+import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
@@ -52,12 +56,12 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
-            edtOppositeName,edtOppositeNumber, edtComments;
+            edtOppositeName, edtOppositeNumber, edtComments;
     Prefshelper prefshelper;
-    String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName,strOCContact, strRName, strRContact,
-    strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth,strSYear, strTime, strNTime,
+    String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
+            strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear, strTime, strNTime,
             prevTime, nextTime;
-   // DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    // DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
     TextView txtStartError, txtPrevError, txtNextError;
 
@@ -67,7 +71,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_add_case);
-        prefshelper=new Prefshelper(AddCaseActivity.this);
+        prefshelper = new Prefshelper(AddCaseActivity.this);
         sprDay = (Spinner) findViewById(R.id.spinner_day);
         sprMonth = (Spinner) findViewById(R.id.spinner_month);
         sprYear = (Spinner) findViewById(R.id.spinner_year);
@@ -79,10 +83,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSYear = (Spinner) findViewById(R.id.spinner_syear);
 
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
-        btnAdd=(Button)findViewById(R.id.add);
-        txtStartError=(TextView)findViewById(R.id.tw_start_error);
-        txtPrevError=(TextView)findViewById(R.id.tw_prev_error);
-        txtNextError=(TextView)findViewById(R.id.tw_next_error);
+        btnAdd = (Button) findViewById(R.id.add);
+        txtStartError = (TextView) findViewById(R.id.tw_start_error);
+        txtPrevError = (TextView) findViewById(R.id.tw_prev_error);
+        txtNextError = (TextView) findViewById(R.id.tw_next_error);
         linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,20 +97,30 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 SelectDateActivity.txtTitle.setText("Home");
             }
         });
-        edtCourtName=(EditText) findViewById(R.id.textView_name);
-        edtCaseNumber=(EditText) findViewById(R.id.textView_number);
-        edtCaseTitle=(EditText) findViewById(R.id.textView_title);
-        edtCaseType=(EditText) findViewById(R.id.textView_type);
-        edtStatus=(EditText) findViewById(R.id.textView_position);
-        edtRetainName=(EditText) findViewById(R.id.textView_nm);
-        edtRetainMobile=(EditText) findViewById(R.id.textView_mobile);
-        edtOppositeName=(EditText) findViewById(R.id.textView_cname);
-        edtOppositeNumber=(EditText) findViewById(R.id.textView_cmobile);
-        edtComments=(EditText) findViewById(R.id.textView_comments);
+
+        if (prefshelper.getMode().equalsIgnoreCase("offline"))
+        {
+            dialog();
+            btnAdd.setEnabled(false);
+        }
+        else
+        {
+            btnAdd.setEnabled(true);
+        }
+        edtCourtName = (EditText) findViewById(R.id.textView_name);
+        edtCaseNumber = (EditText) findViewById(R.id.textView_number);
+        edtCaseTitle = (EditText) findViewById(R.id.textView_title);
+        edtCaseType = (EditText) findViewById(R.id.textView_type);
+        edtStatus = (EditText) findViewById(R.id.textView_position);
+        edtRetainName = (EditText) findViewById(R.id.textView_nm);
+        edtRetainMobile = (EditText) findViewById(R.id.textView_mobile);
+        edtOppositeName = (EditText) findViewById(R.id.textView_cname);
+        edtOppositeNumber = (EditText) findViewById(R.id.textView_cmobile);
+        edtComments = (EditText) findViewById(R.id.textView_comments);
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             //  mScs.getSuggestions(new TextInfo(edtCourtName.getText().toString()), 3 );
+                //  mScs.getSuggestions(new TextInfo(edtCourtName.getText().toString()), 3 );
            /*     PackageManager pm = getPackageManager();
                 Intent spell = new Intent(SpellCheckerService.SERVICE_INTERFACE);
                 ResolveInfo info = pm.resolveService(spell, 0);
@@ -118,83 +132,76 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 View focusView = null;
                 boolean cancelLogin = false;
 
-                strNumber=edtCaseNumber.getText().toString();
-                strTitle=edtCaseTitle.getText().toString();
-                strCourt=edtCourtName.getText().toString();
-                strOCName=edtOppositeName.getText().toString();
-                strOCContact=edtOppositeNumber.getText().toString();
-                strRName=edtRetainName.getText().toString();
-                strRContact=edtRetainMobile.getText().toString();
-                strComment=edtComments.getText().toString();
-                strStatus=edtStatus.getText().toString();
+                strNumber = edtCaseNumber.getText().toString();
+                strTitle = edtCaseTitle.getText().toString();
+                strCourt = edtCourtName.getText().toString();
+                strOCName = edtOppositeName.getText().toString();
+                strOCContact = edtOppositeNumber.getText().toString();
+                strRName = edtRetainName.getText().toString();
+                strRContact = edtRetainMobile.getText().toString();
+                strComment = edtComments.getText().toString();
+                strStatus = edtStatus.getText().toString();
 
-                if(edtCaseType.getVisibility()==View.VISIBLE)
-                {
-                    strType=edtCaseType.getText().toString();
+                if (edtCaseType.getVisibility() == View.VISIBLE) {
+                    strType = edtCaseType.getText().toString();
                 }
 
-                if(strStartDate==null)
-                {
+                if (strStartDate == null) {
                     txtStartError.setVisibility(View.VISIBLE);
 
-                }
-                else
-                {
+                } else {
                     txtStartError.setVisibility(View.GONE);
                 }
-                if(strPreviousDt==null && prevTime==null)
-                {
+                if (strPreviousDt == null && prevTime == null) {
                     txtPrevError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     txtPrevError.setVisibility(View.GONE);
                 }
-                if(strNextDt==null && nextTime==null)
-                {
+                if (strNextDt == null && nextTime == null) {
                     txtNextError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
+                } else {
                     txtNextError.setVisibility(View.GONE);
                 }
 
-              if(prevTime!=null)
-                {
+                if (prevTime != null) {
 
-                    prevTime= strTime.substring(0, strTime.length()-2);
+                    prevTime = strTime.substring(0, strTime.length() - 2);
                 }
-                if(nextTime!=null)
-                {
+                if (nextTime != null) {
 
-                    nextTime=strNTime.substring(0, strNTime.length()-2);
+                    nextTime = strNTime.substring(0, strNTime.length() - 2);
                 }
 
-                String startDt=strSYear+"-"+strSMonth+"-"+strSDay;
+                String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
                 try {
-                    Date dt1=dateFormatter2.parse(startDt);
-                    strStartDate=dateFormatter2.format(dt1);
+                    Date dt1 = dateFormatter2.parse(startDt);
+                    strStartDate = dateFormatter2.format(dt1);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 Log.e("year", strSYear);
-                String prevDate=strYear+"-"+strMonth+"-"+strDay;
+                String prevDate = strYear + "-" + strMonth + "-" + strDay;
                 try {
-                    Date date=dateFormatter2.parse(prevDate);
-                    strPreviousDt=dateFormatter2.format(date);
+                    Date date = dateFormatter2.parse(prevDate);
+                    strPreviousDt = dateFormatter2.format(date);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
+                String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
                 try {
-                    Date dt=dateFormatter2.parse(nextDate);
-                    strNextDt=dateFormatter2.format(dt);
+                    Date dt = dateFormatter2.parse(nextDate);
+                    strNextDt = dateFormatter2.format(dt);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
                 if (TextUtils.isEmpty(strTitle)) {
                     edtCaseTitle.setError("Field must not be empty.");
                     focusView = edtCaseTitle;
+                    cancelLogin = true;
+                }
+                if (TextUtils.isEmpty(strNumber)) {
+                    edtCaseNumber.setError("Field must not be empty.");
+                    focusView = edtCaseNumber;
                     cancelLogin = true;
                 }
 
@@ -228,8 +235,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     edtRetainMobile.setError("Field must not be empty.");
                     focusView = edtRetainMobile;
                     cancelLogin = true;
-                }
-                else if (!isValidPhone((strRContact))) {
+                } else if (!isValidPhone((strRContact))) {
                     edtRetainMobile.setError("Mobile number must be of digits 10.");
                     focusView = edtRetainMobile;
                     cancelLogin = true;
@@ -238,8 +244,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     edtOppositeNumber.setError("Field must not be empty.");
                     focusView = edtOppositeNumber;
                     cancelLogin = true;
-                }
-                else if (!isValidPhone((strOCContact))) {
+                } else if (!isValidPhone((strOCContact))) {
                     edtOppositeNumber.setError("Mobile number must be of digits 10.");
                     focusView = edtOppositeNumber;
                     cancelLogin = true;
@@ -250,7 +255,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     // error in login
                     focusView.requestFocus();
                 } else {
-                   
+
                     addCase();
                 }
 
@@ -292,7 +297,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         }
 
         if (sprSDay.getAdapter() == null) {
-           stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -323,7 +328,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprSDay.setAdapter(stringArrayAdapter);
         }
         if (sprSMonth.getAdapter() == null) {
-           stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -354,7 +359,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprSMonth.setAdapter(stringArrayAdapter);
         }
         if (sprSYear.getAdapter() == null) {
-           stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -478,7 +483,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprYear.setAdapter(stringArrayAdapter);
         }
         if (sprNDay.getAdapter() == null) {
-           stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -509,7 +514,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprNDay.setAdapter(stringArrayAdapter);
         }
         if (sprNMonth.getAdapter() == null) {
-           stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
 
                 @Override
                 public boolean isEnabled(int position) {
@@ -582,18 +587,19 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSYear.setOnItemSelectedListener(AddCaseActivity.this);
 
     }
-   /* public void onResume() {
-        super.onResume();
-        final TextServicesManager tsm = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
-        mScs = tsm.newSpellCheckerSession(null, null, this, true);
-    }
 
-    public void onPause() {
-        super.onPause();
-        if (mScs != null) {
-            mScs.close();
-        }
-    }*/
+    /* public void onResume() {
+         super.onResume();
+         final TextServicesManager tsm = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
+         mScs = tsm.newSpellCheckerSession(null, null, this, true);
+     }
+
+     public void onPause() {
+         super.onPause();
+         if (mScs != null) {
+             mScs.close();
+         }
+     }*/
     @Override
     public void onBackPressed() {
         Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
@@ -605,193 +611,174 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-   /* @Override
-    public void onGetSuggestions(SuggestionsInfo[] arg0) {
+    /* @Override
+     public void onGetSuggestions(SuggestionsInfo[] arg0) {
 
-        final StringBuilder sb = new StringBuilder();
+         final StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < arg0.length; ++i) {
-            // Returned suggestions are contained in SuggestionsInfo
-            final int len = arg0[i].getSuggestionsCount();
-            sb.append('\n');
+         for (int i = 0; i < arg0.length; ++i) {
+             // Returned suggestions are contained in SuggestionsInfo
+             final int len = arg0[i].getSuggestionsCount();
+             sb.append('\n');
 
-            for (int j = 0; j < len; ++j) {
-                sb.append("," + arg0[i].getSuggestionAt(j));
+             for (int j = 0; j < len; ++j) {
+                 sb.append("," + arg0[i].getSuggestionAt(j));
+             }
+
+             sb.append(" (" + len + ")");
+         }
+
+     }
+
+     @Override
+     public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] sentenceSuggestionsInfos) {
+
+     }*/
+    public void addCase() {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+
+            Log.e("", "SIGNUP " + MapAppConstant.API + "add_case");
+            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "add_case", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.d("", ".......response====" + response.toString());
+
+                    ////////
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Toast.makeText(AddCaseActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+
+                        if (serverCode.equalsIgnoreCase("0")) {
+
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                            startActivity(intent1);
+                            finish();
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(AddCaseActivity.this, "Timeout Error",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
 
-            sb.append(" (" + len + ")");
+                    params.put("user_id", prefshelper.getUserIdFromPreference());
+                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("case_number", strNumber);
+                    params.put("case_title", strTitle);
+                    params.put("case_type", strType);
+                    params.put("case_court_name", strCourt);
+                    params.put("case_position_status", strStatus);
+                    params.put("case_previous_date", strPreviousDt);
+                    params.put("case_next_date", strNextDt);
+                    params.put("case_opposite_counselor_name", strOCName);
+                    params.put("case_opposite_counselor_contact", strOCContact);
+                    params.put("case_retained_name", strRName);
+                    params.put("case_retained_contact", strRContact);
+                    params.put("case_comment", strComment);
+                    params.put("case_started", strStartDate);
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
     }
-
-    @Override
-    public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] sentenceSuggestionsInfos) {
-
-    }*/
-   public void addCase() {
-       try {
-           final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
-           pDialog.setMessage("Loading...");
-           pDialog.show();
-
-           Log.e("", "SIGNUP " + MapAppConstant.API + "add_case");
-           StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "add_case", new Response.Listener<String>() {
-               @Override
-               public void onResponse(String response) {
-                   pDialog.dismiss();
-                   Log.d("", ".......response====" + response.toString());
-
-                   ////////
-                   try {
-                       JSONObject object = new JSONObject(response);
-                       String serverCode = object.getString("code");
-                       String serverMessage = object.getString("message");
-                       Toast.makeText(AddCaseActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-
-                       if (serverCode.equalsIgnoreCase("0")) {
-
-                       }
-                       if (serverCode.equalsIgnoreCase("1")) {
-                           try {
-                               if ("1".equals(serverCode)) {
-
-                               }
-
-                           } catch (Exception e) {
-                               e.printStackTrace();
-                           }
-
-                           Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
-                           startActivity(intent1);
-                           finish();
-                       }
-
-
-
-
-
-                   } catch (Exception e) {
-                       e.printStackTrace();
-                   }
-               }
-           }
-                   , new Response.ErrorListener() {
-               @Override
-               public void onErrorResponse(VolleyError error) {
-                   pDialog.dismiss();
-                   //  VolleyLog.d("", "Error: " + error.getMessage());
-                   if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                       Toast.makeText(AddCaseActivity.this, "Timeout Error",
-                               Toast.LENGTH_LONG).show();
-                   } else if (error instanceof AuthFailureError) {
-                       VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                   } else if (error instanceof ServerError) {
-                       VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                   } else if (error instanceof NetworkError) {
-                       VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                   } else if (error instanceof ParseError) {
-                       VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                   }
-               }
-           }
-           ) {
-               @Override
-               protected Map<String, String> getParams() {
-                   Map<String, String> params = new HashMap<String, String>();
-
-                   params.put("user_id", prefshelper.getUserIdFromPreference());
-                   params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
-                   params.put("case_number", strNumber);
-                   params.put("case_title", strTitle);
-                   params.put("case_type", strType);
-                   params.put("case_court_name", strCourt);
-                   params.put("case_position_status", strStatus);
-                   params.put("case_previous_date", strPreviousDt);
-                   params.put("case_next_date", strNextDt);
-                   params.put("case_opposite_counselor_name", strOCName);
-                   params.put("case_opposite_counselor_contact", strOCContact);
-                   params.put("case_retained_name", strRName);
-                   params.put("case_retained_contact", strRContact);
-                   params.put("case_comment", strComment);
-                   params.put("case_started", strStartDate);
-                   return params;
-               }
-           };
-           sr.setShouldCache(true);
-
-           sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                   DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-           VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
-
-       } catch (Exception e) {
-           e.printStackTrace();
-       }
-   }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Spinner spinner = (Spinner) adapterView;
-        if(spinner.getId()==R.id.spinner_type)
-        {
-            if(i==3)
-            {
+        if (spinner.getId() == R.id.spinner_type) {
+            if (i == 3) {
                 edtCaseType.setVisibility(View.VISIBLE);
                 edtCaseType.requestFocus();
 
-            }
-            else if(i==0)
-            {
-                strType="";
-            }
-            else
-            {
+            } else if (i == 0) {
+                strType = "";
+            } else {
                 edtCourtName.requestFocus();
                 edtCaseType.setVisibility(View.GONE);
-                strType= sprCaseType.getSelectedItem().toString();
+                strType = sprCaseType.getSelectedItem().toString();
                 Log.e("status", strType);
             }
         }
-        if(spinner.getId()==R.id.spinner_day)
-        {
-            if (i==0)
-            {
-                strDay="";
-            }
-            else {
-                strDay= sprDay.getSelectedItem().toString();
+        if (spinner.getId() == R.id.spinner_day) {
+            if (i == 0) {
+                strDay = "";
+            } else {
+                strDay = sprDay.getSelectedItem().toString();
                 Log.e("day", strDay);
             }
         }
-        if(spinner.getId()==R.id.spinner_month)
-        {
+        if (spinner.getId() == R.id.spinner_month) {
 
-            if (i==0)
-            {
-                strMonth="";
-            }
-            else {
-                strMonth= String.valueOf(i);
+            if (i == 0) {
+                strMonth = "";
+            } else {
+                strMonth = String.valueOf(i);
                 Log.e("day", strMonth);
             }
         }
-        if(spinner.getId()==R.id.spinner_year)
-        {
-            if (i==0)
-            {
-                strYear="";
-            }
-            else {
-                if(txtPrevError.getVisibility()==View.VISIBLE)
-                {
+        if (spinner.getId() == R.id.spinner_year) {
+            if (i == 0) {
+                strYear = "";
+            } else {
+                if (txtPrevError.getVisibility() == View.VISIBLE) {
                     txtPrevError.setVisibility(View.GONE);
                 }
                 edtCaseTitle.requestFocus();
-                strYear=sprYear.getSelectedItem().toString();
+                strYear = sprYear.getSelectedItem().toString();
                 Log.e("year", strYear);
-                String prevDate=strYear+"-"+strMonth+"-"+strDay;
+                String prevDate = strYear + "-" + strMonth + "-" + strDay;
                 try {
-                    Date date=dateFormatter2.parse(prevDate);
-                    strPreviousDt=dateFormatter2.format(date);
+                    Date date = dateFormatter2.parse(prevDate);
+                    strPreviousDt = dateFormatter2.format(date);
                     Log.e("year", strPreviousDt);
                 } catch (ParseException e) {
                     e.printStackTrace();
@@ -799,92 +786,72 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
             }
         }
-        if(spinner.getId()==R.id.spinner_nday)
-        {
-            if (i==0)
-            {
-                strNDay="";
-            }
-            else {
-                strNDay=sprNDay.getSelectedItem().toString();
+        if (spinner.getId() == R.id.spinner_nday) {
+            if (i == 0) {
+                strNDay = "";
+            } else {
+                strNDay = sprNDay.getSelectedItem().toString();
                 Log.e("year", strNDay);
 
             }
         }
-        if(spinner.getId()==R.id.spinner_nmonth)
-        {
-            if (i==0)
-            {
-                strNMonth="";
-            }
-            else {
-                strNMonth=String.valueOf(i);
+        if (spinner.getId() == R.id.spinner_nmonth) {
+            if (i == 0) {
+                strNMonth = "";
+            } else {
+                strNMonth = String.valueOf(i);
                 Log.e("year", strNMonth);
             }
         }
-        if(spinner.getId()==R.id.spinner_nyear)
-        {
-            if (i==0)
-            {
-                strNYear="";
-            }
-            else {
-                if(txtNextError.getVisibility()==View.VISIBLE)
-                {
+        if (spinner.getId() == R.id.spinner_nyear) {
+            if (i == 0) {
+                strNYear = "";
+            } else {
+                if (txtNextError.getVisibility() == View.VISIBLE) {
                     txtNextError.setVisibility(View.GONE);
                 }
                 edtRetainName.requestFocus();
-                strNYear= sprNYear.getSelectedItem().toString();
+                strNYear = sprNYear.getSelectedItem().toString();
                 Log.e("year", strNYear);
-                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
+                String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
                 try {
-                    Date dt=dateFormatter2.parse(nextDate);
-                    strNextDt=dateFormatter2.format(dt);
+                    Date dt = dateFormatter2.parse(nextDate);
+                    strNextDt = dateFormatter2.format(dt);
                     Log.e("year", strNextDt);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
             }
         }
-        if(spinner.getId()==R.id.spinner_sday)
-        {
-            if (i==0)
-            {
-                strSDay="";
-            }
-            else {
-                strSDay= sprSDay.getSelectedItem().toString();
+        if (spinner.getId() == R.id.spinner_sday) {
+            if (i == 0) {
+                strSDay = "";
+            } else {
+                strSDay = sprSDay.getSelectedItem().toString();
                 Log.e("year", strSDay);
             }
         }
-        if(spinner.getId()==R.id.spinner_smonth)
-        {
-            if (i==0)
-            {
-                strSMonth="";
-            }
-            else {
-                strSMonth= String.valueOf(i);
+        if (spinner.getId() == R.id.spinner_smonth) {
+            if (i == 0) {
+                strSMonth = "";
+            } else {
+                strSMonth = String.valueOf(i);
                 Log.e("year", String.valueOf(i));
             }
         }
-        if(spinner.getId()==R.id.spinner_syear)
-        {
-            if (i==0)
-            {
-                strSYear="";
-            }
-            else {
-                if(txtStartError.getVisibility()==View.VISIBLE)
-                {
+        if (spinner.getId() == R.id.spinner_syear) {
+            if (i == 0) {
+                strSYear = "";
+            } else {
+                if (txtStartError.getVisibility() == View.VISIBLE) {
                     txtStartError.setVisibility(View.GONE);
                 }
 
-                strSYear=  sprSYear.getSelectedItem().toString();
-                String startDt=strSYear+"-"+strSMonth+"-"+strSDay;
+                strSYear = sprSYear.getSelectedItem().toString();
+                String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
                 try {
-                    Date dt1=dateFormatter2.parse(startDt);
-                    strStartDate=dateFormatter2.format(dt1);
+                    Date dt1 = dateFormatter2.parse(startDt);
+                    strStartDate = dateFormatter2.format(dt1);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -950,7 +917,25 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
     private boolean isValidPhone(String pass) {
         return pass != null && pass.length() == 10;
+    }
+
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 }
