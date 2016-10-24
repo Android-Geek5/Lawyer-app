@@ -29,6 +29,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -67,6 +68,7 @@ public class CaseDetailActivity extends AppCompatActivity {
     String retainedContact;
     String caseType;
     List<CaseListModel> caseArray;
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,24 +115,23 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtRName=(TextView)findViewById(R.id.textView_retainNm);
         txtRContact=(TextView)findViewById(R.id.textView_retainContact);
         txtStartDt=(TextView)findViewById(R.id.textView_start);
-        if (prefshelper.getMode().equalsIgnoreCase("offline"))
-        {
-            dialog();
-            btnAdd.setEnabled(false);
-            fab.setEnabled(false);
-        }
-        else
-        {
-            btnAdd.setEnabled(true);
-            fab.setEnabled(true);
-        }
+        cd=new ConnectionDetector(CaseDetailActivity.this);
+
         fab.setBackgroundTintList(ColorStateList.valueOf(Color
                 .parseColor("#00bcd5")));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!cd.isConnectingToInternet())
+                {
+                    dialog();
 
-                sendCaseDetail();
+                }
+                else
+                {
+                    sendCaseDetail();
+                }
+
             }
         });
         for(int j=0; j<caseArray.size(); j++) {
@@ -194,10 +195,19 @@ public class CaseDetailActivity extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(CaseDetailActivity.this, AddCommentActivity.class);
-                intent.putExtra("id", caseId);
-                startActivity(intent);
-                finish();
+                if (!cd.isConnectingToInternet())
+                {
+                    dialog();
+
+                }
+                else
+                {
+                    Intent intent=new Intent(CaseDetailActivity.this, AddCommentActivity.class);
+                    intent.putExtra("id", caseId);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
     }

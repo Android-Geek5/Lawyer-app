@@ -32,6 +32,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.eweblog.common.ConnectionDetector;
 import com.google.gson.*;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -109,7 +111,7 @@ public class SelectDateActivity extends AppCompatActivity {
     List<Event> events;
     Date newDt, dateEvent;
     int i=0;
-
+    ConnectionDetector cd;
     String newEvent;
 
 
@@ -131,7 +133,7 @@ public class SelectDateActivity extends AppCompatActivity {
         txtMonth = (TextView) findViewById(R.id.txt_month);
         txtCase = (TextView) findViewById(R.id.txt_caseTitle);
         prefshelper = new Prefshelper(this);
-
+        cd = new ConnectionDetector(getApplicationContext());
 
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
@@ -152,9 +154,9 @@ public class SelectDateActivity extends AppCompatActivity {
         compactCalendar.setUseThreeLetterAbbreviation(true);
         caseList = new ArrayList<>();
         caseListArray=new ArrayList<>();
-        if (prefshelper.getMode().equalsIgnoreCase("")) {
+        if (cd.isConnectingToInternet()) {
             caseList();
-        } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+        } else {
             caseList = prefshelper.getList();
             loadEvents();
             Log.e("list locl", prefshelper.getList()+"");
@@ -164,9 +166,9 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showPreviousMonth();
-                if (prefshelper.getMode().equalsIgnoreCase("")) {
+                if (cd.isConnectingToInternet()) {
                     caseList();
-                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                } else  {
                     caseList = prefshelper.getList();
                     loadEvents();
                 }
@@ -178,9 +180,9 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 compactCalendar.showNextMonth();
-                if (prefshelper.getMode().equalsIgnoreCase("")) {
+                if (cd.isConnectingToInternet()) {
                     caseList();
-                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                } else {
                     caseList = prefshelper.getList();
                     loadEvents();
                 }
@@ -226,9 +228,9 @@ public class SelectDateActivity extends AppCompatActivity {
                 dateEvent = firstDayOfNewMonth;
                 txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
 
-                if (prefshelper.getMode().equalsIgnoreCase("")) {
+                if (cd.isConnectingToInternet()) {
                     caseList();
-                } else if (prefshelper.getMode().equalsIgnoreCase("offline")) {
+                } else  {
                     caseList = prefshelper.getList();
                     loadEvents();
                     Log.e("list locl", prefshelper.getList()+"");

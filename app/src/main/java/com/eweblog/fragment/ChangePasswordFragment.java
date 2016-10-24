@@ -30,6 +30,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.R;
 import com.eweblog.SelectDateActivity;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -44,6 +45,7 @@ public class ChangePasswordFragment extends Fragment {
     EditText edtPwd,edtConfirmPwd;
     String strPwd, strConfirmPwd;
     Prefshelper prefshelper;
+    ConnectionDetector cd;
 
     public ChangePasswordFragment() {
         // Required empty public constructor
@@ -62,11 +64,11 @@ public class ChangePasswordFragment extends Fragment {
         View rootview = inflater.inflate(R.layout.fragment_change_password, container, false);
         prefshelper=new Prefshelper(getActivity());
         SelectDateActivity.txtTitle.setText("Change Password");
-
+        cd=new ConnectionDetector(getActivity());
         edtPwd = (EditText) rootview.findViewById(R.id.password);
         edtConfirmPwd = (EditText) rootview.findViewById(R.id.cpassword);
         Button submit = (Button)rootview.findViewById(R.id.email_sign_in_button);
-        if (prefshelper.getMode().equalsIgnoreCase("offline"))
+        if (!cd.isConnectingToInternet())
         {
             dialog();
             submit.setEnabled(false);

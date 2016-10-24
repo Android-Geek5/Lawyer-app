@@ -1,5 +1,6 @@
 package com.eweblog;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -43,6 +46,7 @@ public class RegisterationActivity extends AppCompatActivity {
     String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash;
     Prefshelper prefshelper;
     String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,97 +61,95 @@ public class RegisterationActivity extends AppCompatActivity {
        edtPwd = (EditText) findViewById(R.id.password);
        prefshelper=new Prefshelper(RegisterationActivity.this);
        edtCPwd = (EditText) findViewById(R.id.confirm_password);
+        cd=new ConnectionDetector(RegisterationActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                View focusView = null;
+                boolean cancelLogin = false;
                 strName=edtName.getText().toString();
                 strEmail=edtEmail.getText().toString();
                 strContact=edtContact.getText().toString();
                 strPwd=edtPwd.getText().toString();
                 strCPwd=edtCPwd.getText().toString();
-                View focusView = null;
-                boolean cancelLogin = false;
 
 
                             if (TextUtils.isEmpty(strName)) {
-                                edtName.setError(errorName);
+                                edtName.setError("Field must not be empty.");
                                 focusView = edtName;
                                 cancelLogin = true;
                             }
                             else if(strName.length()<2)
                             {
-                                edtName.setError(errorName);
+                                edtName.setError("Field must be atleast of length 2.");
                                 focusView = edtName;
                                 cancelLogin = true;
                             }
                             if (TextUtils.isEmpty(strContact)) {
-                                edtContact.setError(errorMobile);
+                                edtContact.setError("Field must not be empty.");
                                 focusView = edtContact;
                                 cancelLogin = true;
                             }
                             else if(!isValidPhone(strContact))
                             {
-                                edtContact.setError(errorMobile);
+                                edtContact.setError("Contact must be of 10 digits.");
                                 focusView = edtContact;
                                 cancelLogin = true;
                             }
-                         /*   if(errorMobile.equalsIgnoreCase("The Phone field must contain a unique value."))
-                            {
-                                edtContact.setError(errorMobile);
-                                focusView = edtContact;
-                                cancelLogin = true;
 
-                            }*/
                             if (TextUtils.isEmpty(strEmail)) {
-                                edtEmail.setError(errorEmail);
+                                edtEmail.setError("Field must not be empty.");
                                 focusView = edtEmail;
                                 cancelLogin = true;
                             }
                             else if (!isValidEmail(strEmail)) {
-                                edtEmail.setError(errorEmail);
+                                edtEmail.setError("Invalid Email.");
                                 focusView = edtEmail;
                                 cancelLogin = true;
                             }
-                           /* if(errorEmail.equalsIgnoreCase("The Email field must contain a unique value."))
-                            {
-                                edtEmail.setError(errorEmail);
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }*/
+
                             if (TextUtils.isEmpty(strPwd)) {
-                                edtPwd.setError(errorPassword);
+                                edtPwd.setError("Field must not be empty.");
                                 focusView = edtPwd;
                                 cancelLogin = true;
                             }
                             else if (!isValidPass(strPwd)) {
-                                edtPwd.setError(errorPassword);
+                                edtPwd.setError("Password must be of length 6.");
                                 focusView = edtPwd;
                                 cancelLogin = true;
                             }
                             if (TextUtils.isEmpty(strCPwd)) {
-                                edtCPwd.setError(errorConfirm);
+                                edtCPwd.setError("Field must not be empty.");
                                 focusView = edtCPwd;
                                 cancelLogin = true;
                             }
                             else if (!isValidPass(strCPwd)) {
-                                edtCPwd.setError(errorConfirm);
+                                edtCPwd.setError("Password must be of length 6.");
                                 focusView = edtCPwd;
                                 cancelLogin = true;
                             }
-                            /* if(strCPwd.equalsIgnoreCase("The Confirm Password field does not match the Password field."))
+                            else if(!strCPwd.equalsIgnoreCase(strPwd))
                             {
-                                edtCPwd.setError(errorConfirm);
+                                edtCPwd.setError("Passwords do not match.");
                                 focusView = edtCPwd;
                                 cancelLogin = true;
-                            }*/
+                            }
+
 
                           if(cancelLogin) {
                                 // error in login
                                 focusView.requestFocus();
                             }
-                        else
-                          {
-                              signUp();
+                          else
+                           {
+                              if(cd.isConnectingToInternet())
+                              {
+                                  signUp();
+                              }
+                              else
+                              {
+                                  dialog();
+                              }
                           }
 
 
@@ -188,6 +190,24 @@ public class RegisterationActivity extends AppCompatActivity {
 
 
     }
+
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
     public void signUp() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(RegisterationActivity.this);
@@ -209,114 +229,9 @@ public class RegisterationActivity extends AppCompatActivity {
 
 
                         if (serverCode.equalsIgnoreCase("0")) {
-                            View focusView = null;
-                            boolean cancelLogin = false;
-                         //   Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-                        /*    JSONObject jsonObject=object.getJSONObject("data");
-                            String error1=jsonObject.getString("user_name");
-                            String error2=jsonObject.getString("user_email");
-                            String error3=jsonObject.getString("user_contact");
-                            String error4=jsonObject.getString("user_login_password");
-                            String error5=jsonObject.getString("confirm_login_password");
-                            if(error1!=null)
-                            {
-                                errorName=error1;
-                            }
-                            if(error2!=null)
-                            {
-                                errorEmail=error2;
-                            }
-                            if(error3!=null)
-                            {
-                                errorMobile=error3;
-                            }
-                            if(error4!=null)
-                            {
-                                errorPassword=error4;
-                            }
-                            if(error5!=null)
-                            {
-                                errorConfirm=error5;
-                            }
 
-                            if (TextUtils.isEmpty(strName)) {
-                                edtName.setError(errorName);
-                                focusView = edtName;
-                                cancelLogin = true;
-                            }
-                            else if(strName.length()<2)
-                            {
-                                edtName.setError(errorName);
-                                focusView = edtName;
-                                cancelLogin = true;
-                            }
-                            if (TextUtils.isEmpty(strContact)) {
-                                edtContact.setError(errorMobile);
-                                focusView = edtContact;
-                                cancelLogin = true;
-                            }
-                            else if(!isValidPhone(strContact))
-                            {
-                                edtContact.setError(errorMobile);
-                                focusView = edtContact;
-                                cancelLogin = true;
-                            }
-                            if(errorMobile.equalsIgnoreCase("The Phone field must contain a unique value."))
-                            {
-                                edtContact.setError(errorMobile);
-                                focusView = edtContact;
-                                cancelLogin = true;
+                            Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-                            }
-                            if (TextUtils.isEmpty(strEmail)) {
-                                edtEmail.setError(errorEmail);
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidEmail(strEmail)) {
-                                edtEmail.setError(errorEmail);
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }
-                            if(errorEmail.equalsIgnoreCase("The Email field must contain a unique value."))
-                            {
-                                edtEmail.setError(errorEmail);
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }
-                            if (TextUtils.isEmpty(strPwd)) {
-                                edtPwd.setError(errorPassword);
-                                focusView = edtPwd;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidPass(strPwd)) {
-                                edtPwd.setError(errorPassword);
-                                focusView = edtPwd;
-                                cancelLogin = true;
-                            }
-                            if (TextUtils.isEmpty(strCPwd)) {
-                                edtCPwd.setError(errorConfirm);
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidPass(strCPwd)) {
-                                edtCPwd.setError(errorConfirm);
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-                             if(strCPwd.equalsIgnoreCase("The Confirm Password field does not match the Password field."))
-                            {
-                                edtCPwd.setError(errorConfirm);
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-
-                          if(cancelLogin) {
-                                // error in login
-                                focusView.requestFocus();
-                            }
-
-*/
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
                             Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();

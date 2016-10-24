@@ -1,11 +1,13 @@
 package com.eweblog;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +25,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -37,6 +40,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     EditText editText;
     Prefshelper prefshelper;
     String strMobile;
+    ConnectionDetector cd;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         editText =(EditText)findViewById(R.id.password);
         prefshelper=new Prefshelper(ForgotPasswordActivity.this);
         btnRegister=(Button)findViewById(R.id.email_sign_in_button);
+        cd=new ConnectionDetector(ForgotPasswordActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,12 +75,35 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     // error in login
                     focusView.requestFocus();
                 } else {
+                    if(cd.isConnectingToInternet())
+                    {
+                        forgotPwd();
+                    }
+                    else
+                    {
+                        dialog();
+                    }
 
-                    forgotPwd();
                 }
 
             }
         });
+    }
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
     private boolean isValidOTP(String pass) {
         return pass != null && pass.length() == 10;

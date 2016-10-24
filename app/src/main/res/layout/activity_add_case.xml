@@ -694,7 +694,7 @@
        android:layout_weight="1"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
-        android:text="Opposite Counselor"
+        android:text="Opposite Counsel"
         android:textColorHint="@color/colorAccent"
         android:id="@+id/textView_opposite"
         />

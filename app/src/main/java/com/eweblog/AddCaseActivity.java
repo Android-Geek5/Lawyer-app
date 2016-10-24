@@ -35,6 +35,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -64,6 +65,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     // DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
     TextView txtStartError, txtPrevError, txtNextError;
+    ConnectionDetector cd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +99,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 SelectDateActivity.txtTitle.setText("Home");
             }
         });
-
-        if (prefshelper.getMode().equalsIgnoreCase("offline"))
+        cd= new ConnectionDetector(AddCaseActivity.this);
+        if (!cd.isConnectingToInternet())
         {
             dialog();
             btnAdd.setEnabled(false);

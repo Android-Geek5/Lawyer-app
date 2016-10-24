@@ -1,5 +1,6 @@
 package com.eweblog;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -112,12 +114,11 @@ public class LoginActivity extends AppCompatActivity {
                 {
                    if(cd.isConnectingToInternet())
                    {
-                        prefshelper.offlineMode("");
-                       login();
+                        login();
                    }
                     else
                    {
-
+                     dialog();
                    }
                 }
 
@@ -133,7 +134,22 @@ public class LoginActivity extends AppCompatActivity {
         return pass != null && pass.length() >= 6;
     }
 
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
 
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
     public void login() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(LoginActivity.this);

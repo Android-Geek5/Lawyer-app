@@ -1,6 +1,7 @@
 package com.eweblog;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,7 +9,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -53,7 +57,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 public void run() {
 
                     if (cd.isConnectingToInternet()) {
-                        prefshelper.offlineMode("");
+
                         if ((prefshelper.getUserIdFromPreference().equals("")) || (prefshelper.getUserSecHashFromPreference().equals(""))) {
 
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
@@ -72,7 +76,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             sessionLogin();
                         }
                     } else {
-                        prefshelper.offlineMode("offline");
+
                         if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) || !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")))
                         {
                             Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
@@ -81,27 +85,29 @@ public class SplashScreenActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            AlertDialog alertDialog = new AlertDialog.Builder(SplashScreenActivity.this).create();
-                            alertDialog.setTitle("Alert!");
-                            alertDialog.setMessage("Internet Connection Error, Please connect to working Internet connection");
-                            alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                    Intent intent = new Intent(SplashScreenActivity.this, SplashScreenActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-
-                            // Showing Alert Message
-                            alertDialog.show();
+                          dialog();
                         }
                     }
                 }
 
             }, SPLASH_TIME_OUT);
         }
+    public void dialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_layout);
 
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
     public void sessionLogin() {
         try {

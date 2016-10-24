@@ -99,7 +99,7 @@ public class Prefshelper {
 
         return getPreferences().getString("no_case", "");
     }
-    public void offlineMode(String contact) {
+  /*  public void offlineMode(String contact) {
         Editor edit = getPreferences().edit();
         edit.putString("offline", contact);
         edit.commit();
@@ -110,7 +110,7 @@ public class Prefshelper {
 
         return getPreferences().getString("offline", "");
     }
-
+*/
 
     public String getUserIdFromPreference() {
 
