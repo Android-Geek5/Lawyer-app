@@ -89,7 +89,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             }
         });
     }
-    public void dialog() {
+    public void dialog()
+    {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -126,17 +127,15 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(ForgotPasswordActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-                        if (serverCode.equalsIgnoreCase("0")) {
 
+                        if (serverCode.equalsIgnoreCase("0"))
+                        {
+                            Toast.makeText(ForgotPasswordActivity.this, serverMessage,Toast.LENGTH_LONG).show();
                         }
-                        if (serverCode.equalsIgnoreCase("1")) {
-                            try {
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                        if (serverCode.equalsIgnoreCase("1"))
+                        {
+                            Toast.makeText(ForgotPasswordActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
 
                         }

@@ -315,16 +315,16 @@
                 android:text="Previous Date"
                android:layout_weight="1"
                 android:gravity="center_vertical"
-
+                    android:paddingBottom="10dp"
                 android:id="@+id/textView_pdate"
                 />
 </LinearLayout>
-<View
-  android:layout_width="match_parent"
-  android:layout_height="1dp"
-    android:layout_marginTop="3dp"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="3dp"
 
-  android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -332,6 +332,7 @@
                 android:layout_marginTop="10dp"
 
                 android:layout_gravity="center_vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -341,20 +342,25 @@
                     android:layout_marginRight="10dp"
                     android:gravity="center_vertical"
                     android:textStyle="bold"
-                    />
-<TextView
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:textSize="16sp"
-  android:textColor="@android:color/black"
-  android:text="Next Due Date"
 
-  android:gravity="center_vertical"
-  android:layout_weight="1"
-  android:id="@+id/textView_duedate"
-  />
+                    android:id="@+id/textView13" />
+
+                <TextView
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                      android:textSize="16sp"
+                      android:textColor="@android:color/black"
+                      android:text="Next Due Date"
+                    android:paddingBottom="10dp"
+                 android:gravity="center_vertical"
+                 android:layout_weight="1"
+                 android:id="@+id/textView_duedate"
+                />
 </LinearLayout>
-<View
+
+
+
+            <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"

@@ -230,7 +230,15 @@ public class RegisterationActivity extends AppCompatActivity {
 
                         if (serverCode.equalsIgnoreCase("0")) {
 
-                            Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                            if(serverMessage.contains("|"))
+                            {
+
+                                Toast.makeText(RegisterationActivity.this,  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(RegisterationActivity.this, serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
+                            }
 
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
@@ -240,8 +248,7 @@ public class RegisterationActivity extends AppCompatActivity {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
-
-                                     prefshelper.storeUserIdToPreference(userID);
+                                    prefshelper.storeUserIdToPreference(userID);
                                     prefshelper.storeSecHashToPreference(userSecHash);
                                 }
 

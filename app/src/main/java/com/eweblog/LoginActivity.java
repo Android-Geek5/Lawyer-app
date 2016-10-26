@@ -168,12 +168,20 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(LoginActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
                         if (serverCode.equalsIgnoreCase("0")) {
+                            if(serverMessage.contains("|"))
+                            {
 
+                                Toast.makeText(LoginActivity.this,  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(LoginActivity.this, serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
+                            }
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
+
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");

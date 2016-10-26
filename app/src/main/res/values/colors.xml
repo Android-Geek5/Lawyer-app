@@ -9,5 +9,9 @@
     <color name="bgcolor">#f3f3f3</color>
     <color name="eventDecorator">#f44336</color>
     <color name="menuBG">#303030</color>
+    <color name="reply"> #8bc34a</color>
+    <color name="argu"> #f44336</color>
+    <color name="cross"> #00bfa5</color>
+    <color name="consider"> #ff9e80</color>
 
 </resources>

@@ -41,6 +41,7 @@ public class MyAlarmService extends Service
                    .setSmallIcon(R.mipmap.elogo)
                    .setContentTitle("Reminder")
                    .setContentText("Please check the cases for tomorrow.")
+                   .setAutoCancel(true)
               .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify));
 
 

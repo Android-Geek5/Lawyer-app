@@ -201,17 +201,14 @@ public class OTPScreenActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(OTPScreenActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-                        if (serverCode.equalsIgnoreCase("0")) {
 
+                        if (serverCode.equalsIgnoreCase("0"))
+                        {
+                            Toast.makeText(OTPScreenActivity.this, serverMessage,Toast.LENGTH_LONG).show();
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
-                            try {
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            Toast.makeText(OTPScreenActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
 
                         }

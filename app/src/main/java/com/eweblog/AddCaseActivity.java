@@ -1,9 +1,7 @@
 package com.eweblog;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,15 +43,17 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     LinearLayout linearLayout;
     Spinner sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear, sprCaseType, sprSDay, sprSMonth, sprSYear;
-    //private SpellCheckerSession mScs;
+
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
@@ -62,11 +62,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
             strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear, strTime, strNTime,
             prevTime, nextTime;
-    // DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-    DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
+
+    DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     TextView txtStartError, txtPrevError, txtNextError;
     ConnectionDetector cd;
-
+    Calendar cal = Calendar.getInstance();
+    Date sysDate = cal.getTime();
+    Date dt1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,18 +121,12 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtOppositeName = (EditText) findViewById(R.id.textView_cname);
         edtOppositeNumber = (EditText) findViewById(R.id.textView_cmobile);
         edtComments = (EditText) findViewById(R.id.textView_comments);
+        Log.e("current adte", dateFormatter2.format(sysDate));
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //  mScs.getSuggestions(new TextInfo(edtCourtName.getText().toString()), 3 );
-           /*     PackageManager pm = getPackageManager();
-                Intent spell = new Intent(SpellCheckerService.SERVICE_INTERFACE);
-                ResolveInfo info = pm.resolveService(spell, 0);
-                if (info == null) {
-                    edtCourtName.setText("no spell checker found");
-                } else {
-                    edtCourtName.setText("found spell checker " + info.serviceInfo.name + " in package " + info.serviceInfo.packageName);
-                }*/
+
                 View focusView = null;
                 boolean cancelLogin = false;
 
@@ -144,57 +140,74 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strComment = edtComments.getText().toString();
                 strStatus = edtStatus.getText().toString();
 
-                if (edtCaseType.getVisibility() == View.VISIBLE) {
+                if (edtCaseType.getVisibility() == View.VISIBLE)
+                {
                     strType = edtCaseType.getText().toString();
                 }
 
-                if (strStartDate == null) {
+                if (strStartDate == null)
+                {
                     txtStartError.setVisibility(View.VISIBLE);
 
-                } else {
+                }
+                else
+                {
                     txtStartError.setVisibility(View.GONE);
                 }
-                if (strPreviousDt == null && prevTime == null) {
+                if (strPreviousDt == null )
+                {
                     txtPrevError.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else
+                {
                     txtPrevError.setVisibility(View.GONE);
                 }
-                if (strNextDt == null && nextTime == null) {
+                if (strNextDt == null)
+                {
                     txtNextError.setVisibility(View.VISIBLE);
-                } else {
+                }
+                else
+                {
                     txtNextError.setVisibility(View.GONE);
                 }
 
-                if (prevTime != null) {
 
-                    prevTime = strTime.substring(0, strTime.length() - 2);
-                }
-                if (nextTime != null) {
+                if(!strSYear.equalsIgnoreCase("") && !strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
+                {
+                    String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
+                    try {
+                        dt1 = dateFormatter2.parse(startDt);
+                         strStartDate = dateFormatter2.format(dt1);
 
-                    nextTime = strNTime.substring(0, strNTime.length() - 2);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    Log.e("year", strSYear);
+
+                }
+                if(!strYear.equalsIgnoreCase("") && !strMonth.equalsIgnoreCase("") && !strDay.equalsIgnoreCase(""))
+                {
+                    String prevDate = strYear + "-" + strMonth + "-" + strDay;
+                    try {
+                        Date date = dateFormatter2.parse(prevDate);
+                           strPreviousDt = dateFormatter2.format(date);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
-                try {
-                    Date dt1 = dateFormatter2.parse(startDt);
-                    strStartDate = dateFormatter2.format(dt1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                Log.e("year", strSYear);
-                String prevDate = strYear + "-" + strMonth + "-" + strDay;
-                try {
-                    Date date = dateFormatter2.parse(prevDate);
-                    strPreviousDt = dateFormatter2.format(date);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
-                try {
-                    Date dt = dateFormatter2.parse(nextDate);
-                    strNextDt = dateFormatter2.format(dt);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if(!strNYear.equalsIgnoreCase("") && !strNMonth.equalsIgnoreCase("") && !strNDay.equalsIgnoreCase(""))
+                {
+                    String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
+                    try {
+                        Date dt = dateFormatter2.parse(nextDate);
+                        strNextDt = dateFormatter2.format(dt);
+
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
                 if (TextUtils.isEmpty(strTitle)) {
                     edtCaseTitle.setError("Field must not be empty.");
@@ -590,18 +603,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    /* public void onResume() {
-         super.onResume();
-         final TextServicesManager tsm = (TextServicesManager) getSystemService(Context.TEXT_SERVICES_MANAGER_SERVICE);
-         mScs = tsm.newSpellCheckerSession(null, null, this, true);
-     }
 
-     public void onPause() {
-         super.onPause();
-         if (mScs != null) {
-             mScs.close();
-         }
-     }*/
     @Override
     public void onBackPressed() {
         Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
@@ -613,29 +615,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     }
 
 
-    /* @Override
-     public void onGetSuggestions(SuggestionsInfo[] arg0) {
-
-         final StringBuilder sb = new StringBuilder();
-
-         for (int i = 0; i < arg0.length; ++i) {
-             // Returned suggestions are contained in SuggestionsInfo
-             final int len = arg0[i].getSuggestionsCount();
-             sb.append('\n');
-
-             for (int j = 0; j < len; ++j) {
-                 sb.append("," + arg0[i].getSuggestionAt(j));
-             }
-
-             sb.append(" (" + len + ")");
-         }
-
-     }
-
-     @Override
-     public void onGetSentenceSuggestions(SentenceSuggestionsInfo[] sentenceSuggestionsInfos) {
-
-     }*/
     public void addCase() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
@@ -736,6 +715,19 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Spinner spinner = (Spinner) adapterView;
+        sprMonth.getSelectedView();
+        sprMonth.setEnabled(false);
+        sprSMonth.getSelectedView();
+        sprSMonth.setEnabled(false);
+        sprNMonth.getSelectedView();
+        sprNMonth.setEnabled(false);
+        sprYear.getSelectedView();
+        sprYear.setEnabled(false);
+        sprSYear.getSelectedView();
+        sprSYear.setEnabled(false);
+        sprNYear.getSelectedView();
+        sprNYear.setEnabled(false);
+
         if (spinner.getId() == R.id.spinner_type) {
             if (i == 3) {
                 edtCaseType.setVisibility(View.VISIBLE);
@@ -747,7 +739,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 edtCourtName.requestFocus();
                 edtCaseType.setVisibility(View.GONE);
                 strType = sprCaseType.getSelectedItem().toString();
-                Log.e("status", strType);
+
             }
         }
         if (spinner.getId() == R.id.spinner_day) {
@@ -755,7 +747,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strDay = "";
             } else {
                 strDay = sprDay.getSelectedItem().toString();
-                Log.e("day", strDay);
+                sprMonth.setEnabled(true);
+
             }
         }
         if (spinner.getId() == R.id.spinner_month) {
@@ -764,7 +757,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strMonth = "";
             } else {
                 strMonth = String.valueOf(i);
-                Log.e("day", strMonth);
+                sprYear.setEnabled(true);
             }
         }
         if (spinner.getId() == R.id.spinner_year) {
@@ -776,16 +769,28 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 }
                 edtCaseTitle.requestFocus();
                 strYear = sprYear.getSelectedItem().toString();
-                Log.e("year", strYear);
-                String prevDate = strYear + "-" + strMonth + "-" + strDay;
-                try {
-                    Date date = dateFormatter2.parse(prevDate);
-                    strPreviousDt = dateFormatter2.format(date);
-                    Log.e("year", strPreviousDt);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
 
+
+                if(!strMonth.equalsIgnoreCase("") && !strDay.equalsIgnoreCase(""))
+                {
+                    String prevDate = strYear + "-" + strMonth + "-" + strDay;
+                    try {
+                        Date date = dateFormatter2.parse(prevDate);
+                        if(dt1!=null) {
+                            if ((date.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))) || (date.after(dt1)) &&
+                                    date.before(dateFormatter2.parse(dateFormatter2.format(sysDate))))) {
+                                txtPrevError.setVisibility(View.GONE);
+                                strPreviousDt = dateFormatter2.format(date);
+                            } else {
+                                txtPrevError.setVisibility(View.VISIBLE);
+                                txtPrevError.setText("Previous date should be equals to or after than start date");
+                            }
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
         if (spinner.getId() == R.id.spinner_nday) {
@@ -793,7 +798,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strNDay = "";
             } else {
                 strNDay = sprNDay.getSelectedItem().toString();
-                Log.e("year", strNDay);
+                sprNMonth.setEnabled(true);
 
             }
         }
@@ -802,7 +807,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strNMonth = "";
             } else {
                 strNMonth = String.valueOf(i);
-                Log.e("year", strNMonth);
+                sprNYear.setEnabled(true);
             }
         }
         if (spinner.getId() == R.id.spinner_nyear) {
@@ -814,14 +819,26 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 }
                 edtRetainName.requestFocus();
                 strNYear = sprNYear.getSelectedItem().toString();
-                Log.e("year", strNYear);
-                String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
-                try {
-                    Date dt = dateFormatter2.parse(nextDate);
-                    strNextDt = dateFormatter2.format(dt);
-                    Log.e("year", strNextDt);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+
+                if(!strNMonth.equalsIgnoreCase("") && !strNDay.equalsIgnoreCase("")) {
+                    String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
+                    try {
+                        Date dt = dateFormatter2.parse(nextDate);
+                        if(dt.after(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
+                                dt.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
+                        {
+                            strNextDt = dateFormatter2.format(dt);
+                            txtNextError.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            txtNextError.setVisibility(View.VISIBLE);
+                            txtNextError.setText("Next date should be equals to or greater than current date");
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -830,7 +847,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strSDay = "";
             } else {
                 strSDay = sprSDay.getSelectedItem().toString();
-                Log.e("year", strSDay);
+                sprSMonth.setEnabled(true);
             }
         }
         if (spinner.getId() == R.id.spinner_smonth) {
@@ -838,26 +855,44 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strSMonth = "";
             } else {
                 strSMonth = String.valueOf(i);
-                Log.e("year", String.valueOf(i));
+                sprSYear.setEnabled(true);
             }
         }
         if (spinner.getId() == R.id.spinner_syear) {
-            if (i == 0) {
+            if (i == 0)
+            {
                 strSYear = "";
-            } else {
+            }
+            else
+            {
+
                 if (txtStartError.getVisibility() == View.VISIBLE) {
                     txtStartError.setVisibility(View.GONE);
                 }
 
                 strSYear = sprSYear.getSelectedItem().toString();
-                String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
-                try {
-                    Date dt1 = dateFormatter2.parse(startDt);
-                    strStartDate = dateFormatter2.format(dt1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                if(!strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
+                {
+                    String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
+                    try {
+                         dt1 = dateFormatter2.parse(startDt);
+                        if(dt1.before(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
+                                dt1.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
+                        {
+                            strStartDate = dateFormatter2.format(dt1);
+                            txtStartError.setVisibility(View.GONE);
+                        }
+                        else
+                        {
+                            txtStartError.setVisibility(View.VISIBLE);
+                            txtStartError.setText("Please select a date before current date");
+                        }
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                 }
-                Log.e("year", strStartDate);
             }
         }
       /*  if(spinner.getId()==R.id.spinner_time)
@@ -936,6 +971,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                startActivity(intent1);
+                finish();
             }
         });
         dialog.show();

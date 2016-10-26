@@ -1,12 +1,10 @@
 package com.eweblog;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
@@ -33,8 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.eweblog.common.ConnectionDetector;
-import com.google.gson.*;
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.NetworkError;
@@ -47,9 +43,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.eweblog.common.AlarmReceiver;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
@@ -57,23 +52,18 @@ import com.eweblog.fragment.AboutUS;
 import com.eweblog.fragment.CaseListFragment;
 import com.eweblog.fragment.ChangePasswordFragment;
 import com.eweblog.model.CaseListModel;
+import com.github.sundeepk.compactcalendarview.CompactCalendarView;
+import com.github.sundeepk.compactcalendarview.domain.Event;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -86,9 +76,9 @@ import java.util.TimeZone;
 public class SelectDateActivity extends AppCompatActivity {
 
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
-    private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+    private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
-    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
+    SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;
@@ -96,12 +86,12 @@ public class SelectDateActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
     CompactCalendarView compactCalendar;
-    TextView txtMonth, txtCase;
+    TextView txtMonth;
     ImageView imgPrevious, imgNext;
-    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
+    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
     String event = "", e = "", nextDate, previousDate, comment, key;
     Prefshelper prefshelper;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
     List<CaseListModel> caseList, caseListArray;
     FloatingActionButton fab;
     ArrayList<String> nextDates = new ArrayList<>();
@@ -131,22 +121,11 @@ public class SelectDateActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
         txtMonth = (TextView) findViewById(R.id.txt_month);
-        txtCase = (TextView) findViewById(R.id.txt_caseTitle);
+      //  txtCase = (TextView) findViewById(R.id.txt_caseTitle);
         prefshelper = new Prefshelper(this);
         cd = new ConnectionDetector(getApplicationContext());
 
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.HOUR, 5);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
-        Intent myIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
 
         imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
@@ -200,7 +179,7 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onDayClick(Date dateClicked) {
                 List<Event> events = compactCalendar.getEvents(dateClicked);
-                txtCase.setText("");
+              /*  txtCase.setText("");
                 e = "";
                 if (events.size() <= 0) {
                     txtCase.setText("");
@@ -213,14 +192,15 @@ public class SelectDateActivity extends AppCompatActivity {
                         e = "";
                         Log.e("eventss sizeeee", events.size() + "");
                         event = String.valueOf(events.get(i).getData());
-                        String event1 = event.substring(0, event.length() - 24);
-                        String event2 = event.substring(38, event.length());
+                        String event1 = event.substring(0, 18);
+
+                        String event2 = event.substring(event.lastIndexOf(' ') + 1);
                         newEvent = event1 + ", " + event2;
                         e = e + "\n " + newEvent;
                     }
                     txtCase.setText(e);
 
-                }
+                }*/
             }
 
             @Override
@@ -236,7 +216,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     Log.e("list locl", prefshelper.getList()+"");
                 }
                 List<Event> events = compactCalendar.getEvents(firstDayOfNewMonth);
-                txtCase.setText("");
+               /* txtCase.setText("");
                 e = "";
                 if (events.size() <= 0) {
                     txtCase.setText("");
@@ -248,14 +228,15 @@ public class SelectDateActivity extends AppCompatActivity {
                         e = "";
                         Log.e("eventss sizeeee", events.size() + "");
                         event = String.valueOf(events.get(i).getData());
-                        String event1 = event.substring(0, event.length() - 24);
-                        String event2 = event.substring(38, event.length());
+                        String event1 = event.substring(0, 18);
+
+                        String event2 = event.substring(event.lastIndexOf(' ') + 1);
                         newEvent = event1 + ", " + event2;
                         e = e + "\n " + newEvent;
                     }
 
                     txtCase.setText(e);
-                }
+                }*/
 
             }
         });
@@ -366,9 +347,30 @@ public class SelectDateActivity extends AppCompatActivity {
                         finish();
                         return true;
                     case R.id.drawer_logout:
-                        prefshelper.getPreferences().edit().clear().commit();
-                        ExitActivity.exitApplication(SelectDateActivity.this);
 
+                        final Dialog dialog = new Dialog(SelectDateActivity.this);
+                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialog.setCancelable(false);
+                        dialog.setContentView(R.layout.back_layout);
+                        TextView txt = (TextView) dialog.findViewById(R.id.text);
+                        txt.setText("Are you sure you want to logout ?");
+                        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+                        Button no = (Button) dialog.findViewById(R.id.bt_no);
+                        no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                dialog.dismiss();
+                            }
+                        });
+                        yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialog.dismiss();
+                                prefshelper.getPreferences().edit().clear().apply();
+                                ExitActivity.exitApplication(SelectDateActivity.this);
+                            }
+                        });
+                        dialog.show();
                         return true;
 
                     case R.id.drawer_share:
@@ -452,7 +454,7 @@ public class SelectDateActivity extends AppCompatActivity {
                 }
 
            }
-           if (events.size() <= 0) {
+         /*  if (events.size() <= 0) {
                txtCase.setText("");
                e = "";
                txtCase.setText("No Case Found");
@@ -464,16 +466,16 @@ public class SelectDateActivity extends AppCompatActivity {
                    Log.e("eventss sizeeee", events.size() + "");
                    event = String.valueOf(events.get(k).getData());
 
-                   String event1 = event.substring(0, event.length() - 24);
+                   String event1 = event.substring(0, 18);
 
-                   String event2 = event.substring(38, event.length());
+                   String event2 = event.substring(event.lastIndexOf(' ') + 1);
                    newEvent = event1 + ", " + event2;
                    e = e + "\n " + newEvent;
 
                }
 
                txtCase.setText(e);
-           }
+           }*/
        }
     }
 
@@ -525,7 +527,7 @@ public class SelectDateActivity extends AppCompatActivity {
     }
 
     public void shareapp() {
-        String message = "http://erginus.com/";
+        String message = "https://play.google.com/store/apps/details?id=com.eweblog";
         Intent share = new Intent(Intent.ACTION_SEND);
         share.setType("text/plain");
         share.putExtra(Intent.EXTRA_TEXT, message);

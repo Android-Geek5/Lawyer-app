@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -58,18 +59,19 @@ public class CaseDetailActivity extends AppCompatActivity {
     String caseTitle;
     String courtName;
     String status;
-    ArrayList<String> prevDate;
-    ArrayList<String> nextDate;
+
     String startDate;
     String counsellorName;
     String counsellorContact;
-    ArrayList<String> comment;
+
     String retainedName;
     String retainedContact;
     String caseType;
     List<CaseListModel> caseArray;
     ConnectionDetector cd;
-
+    String prevDate="";
+    String nextDate="";
+    String c="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,29 +141,30 @@ public class CaseDetailActivity extends AppCompatActivity {
                 // obtain date and time from initial string
                 Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(caseArray.get(j).getCasePrevDate());
                 // set date string
-                String prevDate="";
+
                 String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
                 // set time string
-                 prevDate=prevDate+stringDate;
-                 txtPrevDate.setText(prevDate);
+                 prevDate=prevDate +stringDate+"\n";
+
             } catch (ParseException e) {
                 // wrong input
             }
+            txtPrevDate.setText(prevDate);
         }
         for(int j=0; j<caseArray.size(); j++) {
             try {
                 // obtain date and time from initial string
                 Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse((caseArray.get(j).getNextDate()));
                 // set date string
-                String nextDate="";
 
                 String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
                 // set time string
-                nextDate=nextDate+stringDate;
-                txtNextDt.setText(nextDate);
+                nextDate=nextDate+stringDate+"\n";
+
             } catch (ParseException e) {
                 // wrong input
             }
+            txtNextDt.setText(nextDate);
         }
         try {
             // obtain date and time from initial string
@@ -182,11 +185,11 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtCContact.setText(counsellorContact);
         for(int i=0; i<caseArray.size();i++)
         {
-            String c="";
-            c=c+ caseArray.get(i).getComment();
-            txtComment.setText(c);
-        }
 
+            c=c+ caseArray.get(i).getComment();
+
+        }
+        txtComment.setText(c);
         txtRName.setText(retainedName);
         txtRContact.setText(retainedContact);
 
@@ -210,6 +213,58 @@ public class CaseDetailActivity extends AppCompatActivity {
 
             }
         });
+        if(status.equalsIgnoreCase("arguments"))
+        {
+           txtStatus.setText(status);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.argu, null));
+            }
+            else
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.argu));
+            }
+        }
+        else if(status.equalsIgnoreCase("reply"))
+        {
+           txtStatus.setText(status);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.reply, null));
+            }
+            else
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.reply));
+            }
+        }
+        else if(status.equalsIgnoreCase("cross"))
+        {
+           txtStatus.setText(status);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.cross, null));
+            }
+            else
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.cross));
+            }
+        }
+        else if(status.equalsIgnoreCase("consideration"))
+        {
+           txtStatus.setText(status);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.consider, null));
+            }
+            else
+            {
+               txtStatus.setTextColor(getResources().getColor(R.color.consider));
+            }
+        }
+        else
+        {
+           txtStatus.setText(status);
+        }
     }
     public void sendCaseDetail() {
         try {

@@ -2,6 +2,7 @@ package com.eweblog.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,59 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtNumber.setText("Case Number: "+caseList.get(position).getCaseNumber());
         holder.txtCourt.setText("Court Name: "+caseList.get(position).getCourtName());
         holder.txtCaseType.setText("Case Type: "+caseList.get(position).getCaseType());
-        holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+        if(caseList.get(position).getCaseStatus().equalsIgnoreCase("arguments"))
+        {
+            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.argu, null));
+            }
+            else
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.argu));
+            }
+        }
+        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("reply"))
+        {
+            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.reply, null));
+            }
+            else
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.reply));
+            }
+        }
+        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("cross"))
+        {
+            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+               holder.txtStatus.setTextColor(context.getResources().getColor(R.color.cross, null));
+            }
+            else
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.cross));
+            }
+        }
+        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("consideration"))
+        {
+            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.consider, null));
+            }
+            else
+            {
+                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.consider));
+            }
+        }
+        else
+        {
+            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
+        }
+
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
