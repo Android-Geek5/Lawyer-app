@@ -74,26 +74,31 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     if (cd.isConnectingToInternet()) {
 
-                        if ((prefshelper.getUserIdFromPreference().equals("")) || (prefshelper.getUserSecHashFromPreference().equals(""))) {
+                        if ((prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) ||
+                                (prefshelper.getUserSecHashFromPreference().equalsIgnoreCase(""))) {
 
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
 
                         }
-                        else if ((!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
-                                prefshelper.getMobileVerification().equalsIgnoreCase("0"))) {
-
+                        else if ((!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) &&
+                                !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase(""))
+                        && !(prefshelper.getMobileVerification().equalsIgnoreCase("1"))))
+                        {
                             Intent intent = new Intent(SplashScreenActivity.this, OTPScreenActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                        else {
+                        else if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) || !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
+                                (prefshelper.getMobileVerification().equalsIgnoreCase("1")))
+                        {
                             sessionLogin();
                         }
                     } else {
 
-                        if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) || !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")))
+                        if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
+                               (prefshelper.getMobileVerification().equalsIgnoreCase("1")))
                         {
                             Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
                             startActivity(intent);
@@ -120,11 +125,27 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+
             }
         });
         dialog.show();
     }
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        Intent intent =new Intent(SplashScreenActivity.this, SplashScreenActivity.class);
+        finish();
+        startActivity(intent);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+    }
     public void sessionLogin() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(SplashScreenActivity.this);

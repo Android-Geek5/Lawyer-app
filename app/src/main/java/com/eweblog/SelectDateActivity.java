@@ -1,8 +1,6 @@
 package com.eweblog;
 
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +41,6 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.eweblog.common.AlarmReceiver;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -59,6 +56,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -77,7 +75,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
     private Calendar currentCalender = Calendar.getInstance(Locale.getDefault());
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-
+    DateFormat formatter22= new SimpleDateFormat("E MMM dd HH:mm:ss Z yyyy");
     SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy", Locale.US);
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -86,23 +84,20 @@ public class SelectDateActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
     CompactCalendarView compactCalendar;
-    TextView txtMonth;
+    TextView txtMonth, txtCase;
     ImageView imgPrevious, imgNext;
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
-    String event = "", e = "", nextDate, previousDate, comment, key;
+    String  nextDate, previousDate, comment, e, event, newEvent, newDate, daySelected;
     Prefshelper prefshelper;
 
-    List<CaseListModel> caseList, caseListArray;
+    List<CaseListModel> caseList = new ArrayList<>();
+    List<CaseListModel> caseListArray=new ArrayList<>();
     FloatingActionButton fab;
-    ArrayList<String> nextDates = new ArrayList<>();
-    ArrayList<String> prevDates = new ArrayList<>();
-    ArrayList<String> comments = new ArrayList<>();
-    List<String> displayingDates = new ArrayList<>();
+
     List<Event> events;
-    Date newDt, dateEvent;
+    Date newDt, dateEvent, date ;
     int i=0;
     ConnectionDetector cd;
-    String newEvent;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -121,19 +116,17 @@ public class SelectDateActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
         txtMonth = (TextView) findViewById(R.id.txt_month);
-      //  txtCase = (TextView) findViewById(R.id.txt_caseTitle);
+        txtCase = (TextView) findViewById(R.id.txt_caseTitle);
         prefshelper = new Prefshelper(this);
         cd = new ConnectionDetector(getApplicationContext());
-
-
-
         imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
         compactCalendar.setLocale(TimeZone.getDefault(), Locale.ENGLISH);
         compactCalendar.setUseThreeLetterAbbreviation(true);
-        caseList = new ArrayList<>();
-        caseListArray=new ArrayList<>();
+        compactCalendar.setSelected(true);
+        prefshelper.message("");
         if (cd.isConnectingToInternet()) {
+
             caseList();
         } else {
             caseList = prefshelper.getList();
@@ -178,15 +171,58 @@ public class SelectDateActivity extends AppCompatActivity {
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
+                daySelected = dateFormatForDisplaying.format(dateClicked);
+              /*  try {
+                   dtserch=dateFormatForDisplaying.parse(dateSerach);
+                  newserach=dateFormatForDisplaying.format(dtserch);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }*/
+             /*  Log.d("date", dateSerach);
+                for(int i=0; i < caseList.size(); i++){
+                    if(caseList.get(i).getCaseArrayList().get(i).getNextDate() != null &&
+                            caseList.get(i).getCaseArrayList().get(i).getNextDate().contains(dateSerach))
+                    {
+                        prefshelper.message("...");
+                        Log.d("date",   caseList.get(i).getCaseArrayList().get(i).getNextDate());
+                        List<CaseListModel> newList=new ArrayList<CaseListModel>();
+                        newList.add(caseList.get(i));
+                        Log.d("arrayneww ",   caseList.get(i)+"");
+                        txtTitle.setText("Case List");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("list", (Serializable) newList);
+                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        CaseListFragment caseListFragment = new CaseListFragment();
+                        caseListFragment.setArguments(bundle);
+                        fragmentTransaction.replace(R.id.content_frame, caseListFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                    else
+                    {
+                        prefshelper.message("No Cases available");
+                        txtTitle.setText("Case List");
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("list", (Serializable) caseList);
+                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
+                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        CaseListFragment caseListFragment = new CaseListFragment();
+                        caseListFragment.setArguments(bundle);
+                        fragmentTransaction.replace(R.id.content_frame, caseListFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                    //something here
+                }*/
                 List<Event> events = compactCalendar.getEvents(dateClicked);
-              /*  txtCase.setText("");
+                txtCase.setText("");
                 e = "";
                 if (events.size() <= 0) {
                     txtCase.setText("");
                     e = "";
                     txtCase.setText("No Case Found");
                 } else {
-
                     for (int i = 0; i < events.size(); i++) {
                         txtCase.setText("");
                         e = "";
@@ -198,9 +234,10 @@ public class SelectDateActivity extends AppCompatActivity {
                         newEvent = event1 + ", " + event2;
                         e = e + "\n " + newEvent;
                     }
-                    txtCase.setText(e);
 
-                }*/
+                    txtCase.setText(e);
+                }
+
             }
 
             @Override
@@ -216,7 +253,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     Log.e("list locl", prefshelper.getList()+"");
                 }
                 List<Event> events = compactCalendar.getEvents(firstDayOfNewMonth);
-               /* txtCase.setText("");
+                txtCase.setText("");
                 e = "";
                 if (events.size() <= 0) {
                     txtCase.setText("");
@@ -236,7 +273,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     }
 
                     txtCase.setText(e);
-                }*/
+                }
 
             }
         });
@@ -271,7 +308,9 @@ public class SelectDateActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(caseList.size()>0) {
+                    prefshelper.message("");
+                }
                 txtTitle.setText("Case List");
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("list", (Serializable) caseList);
@@ -418,47 +457,45 @@ public class SelectDateActivity extends AppCompatActivity {
     }
 
 
-    private void addEvents(int month, int year) {
-       if(caseList.size()>0)
-       {
-           for(int a=0; a<caseList.size(); a++)
-           {
+    private void addEvents(int month, int year)
+    {
+        if(caseList!=null) {
+            if (caseList.size() > 0) {
+                for (int a = 0; a < caseList.size(); a++) {
 
-               Log.e("size", caseList.get(a).getCaseList() + "");
+                    if (caseList.get(a).getCaseArrayList().size() > 0) {
+                        for (i = 0; i < caseList.get(a).getCaseArrayList().size(); i++) {
 
-               if (caseList.get(a).getCaseList().size() > 0)
-               {
-                for (i=0; i < caseList.get(a).getCaseList().size(); i++) {
+                            try {
+                                newDt = dateFormatForDisplaying.parse(caseList.get(a).getCaseArrayList().get(i).getNextDate());
 
-                try {
-                    newDt = dateFormatForDisplaying.parse(caseList.get(a).getCaseList().get(i).getNextDate());
+                                currentCalender.setTime(formatter.parse(formatter.format(newDt)));
 
-                    currentCalender.setTime(formatter.parse(formatter.format(newDt)));
+                                if (month > -1) {
+                                    currentCalender.set(Calendar.MONTH, month);
+                                }
+                                if (year > -1) {
+                                    currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
+                                    currentCalender.set(Calendar.YEAR, year);
+                                }
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
+                            long timeInMillis = currentCalender.getTimeInMillis();
+                            events = getEvents(timeInMillis, i);
 
-                    if (month > -1) {
-                        currentCalender.set(Calendar.MONTH, month);
+                            compactCalendar.addEvents(events);
+                        }
+
                     }
-                    if (year > -1) {
-                        currentCalender.set(Calendar.ERA, GregorianCalendar.AD);
-                        currentCalender.set(Calendar.YEAR, year);
-                    }
-                } catch (ParseException e1) {
-                    e1.printStackTrace();
-                }
-                    long timeInMillis = currentCalender.getTimeInMillis();
-                    events = getEvents(timeInMillis, i);
-
-                    compactCalendar.addEvents(events);
-                 }
 
                 }
-
-           }
-         /*  if (events.size() <= 0) {
+           if (events.size() <= 0) {
                txtCase.setText("");
                e = "";
                txtCase.setText("No Case Found");
-           } else {
+           }
+           else {
 
                for (int k = 0; k < events.size(); k++) {
                    txtCase.setText("");
@@ -466,17 +503,32 @@ public class SelectDateActivity extends AppCompatActivity {
                    Log.e("eventss sizeeee", events.size() + "");
                    event = String.valueOf(events.get(k).getData());
 
-                   String event1 = event.substring(0, 18);
+                   newDate=formatter22.format(compactCalendar.getFirstDayOfCurrentMonth());
 
-                   String event2 = event.substring(event.lastIndexOf(' ') + 1);
-                   newEvent = event1 + ", " + event2;
-                   e = e + "\n " + newEvent;
+                       String event1 = event.substring(0, 18);
+
+                       String event2 = event.substring(event.lastIndexOf(' ') + 1);
+                       newEvent = event1 + ", " + event2;
+                       e = e + "\n " + newEvent;
+
 
                }
+                if(event.contains(newDate)) {
+                    txtCase.setText("");
+                    e = "";
+                    txtCase.setText(e);
+                }
+               else
+                {
+                    txtCase.setText("");
+                    e = "";
+                    txtCase.setText("No Case Found");
+                }
 
-               txtCase.setText(e);
-           }*/
-       }
+            }
+
+            }
+        }
     }
 
     private List<Event> getEvents(long timeInMillis, int day) {
@@ -548,10 +600,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     Log.d("", ".......response====" + response.toString());
                     getlist().clear();
-                    nextDates.clear();
-                    prevDates.clear();
-                    comments.clear();
-                    getNlist().clear();
+
                     ////////
                     try {
                         JSONObject object = new JSONObject(response);
@@ -571,6 +620,7 @@ public class SelectDateActivity extends AppCompatActivity {
                                     if (jsonArray.length() > 0) {
 
                                         for (int i = 0; i < jsonArray.length(); i++) {
+
                                             JSONObject jsonObject = jsonArray.getJSONObject(i);
 
                                             String caseId = jsonObject.getString("case_id");
@@ -592,13 +642,11 @@ public class SelectDateActivity extends AppCompatActivity {
                                                     previousDate = jsonObject2.getString("case_detail_previous_date");
                                                     nextDate = jsonObject2.getString("case_detail_next_date");
                                                     comment = jsonObject2.getString("case_detail_comment");
-                                                    caseListArray.add(model2( previousDate, nextDate,comment));
+                                                    caseListArray.add(model2(caseId,previousDate, nextDate,comment));
 
                                                 }
-
-
                                             }
-
+                                            setNlist(caseListArray);
                                             caseList.add(model(caseId, caseNumber, caseTitle, caseType, casePositionStatus,
                                                     retainedName, retainedContact, counselorName, counselorContact, courtName,
                                                     caseStarted,caseListArray));
@@ -606,7 +654,7 @@ public class SelectDateActivity extends AppCompatActivity {
                                         }
 
                                     }
-                                    setNlist(caseListArray);
+                                    Log.e("araay...sd", caseListArray+"");
                                     setlist(caseList);
                                     prefshelper.setList(caseList);
 
@@ -702,16 +750,15 @@ public class SelectDateActivity extends AppCompatActivity {
         model.setCounsellorContact(counselorContct);
         model.setCourtName(courtNm);
         model.setCaseStartDate(caseStrted);
-        model.setCaseList(list);
-     /*   model.setPrevDateArray(previousDate);
-        model.setCommentsArray(comment);*/
+        model.setArrayCaseList(list);
+
         return model;
     }
 
-    private CaseListModel model2( String previousDate, String nextDate,
+    private CaseListModel model2( String caseid, String previousDate, String nextDate,
                                 String comment) {
         CaseListModel model = new CaseListModel();
-
+        model.setCaseId(caseid);
         model.setNextDate(nextDate);
         model.setCasePrevDate(previousDate);
         model.setComment(comment);

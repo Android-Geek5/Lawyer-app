@@ -45,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="Add Case"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 android:gravity="center|center_vertical"
                 android:textColor="@android:color/white"
                 android:id="@+id/toolbar_title" />
@@ -464,7 +465,7 @@
             android:layout_height="45dp"
         android:textSize="15sp"
         android:textColor="@android:color/white"
-        android:hint="Status Of Case"
+        android:hint="Status of Case"
             android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_position"
         android:layout_marginTop="10dp"
@@ -739,8 +740,7 @@
         android:textSize="15sp"
         android:textColor="@android:color/white"
         android:inputType="textAutoCorrect|textMultiLine"
-
-        android:hint="Comments(optional)"
+        android:hint="Comments"
         android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_comments"
         android:layout_marginTop="10dp"

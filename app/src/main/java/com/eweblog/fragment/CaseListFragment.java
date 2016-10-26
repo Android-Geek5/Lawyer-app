@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class CaseListFragment extends Fragment {
 
-    List<CaseListModel> caseList, caseListArray;
+    List<CaseListModel> caseList;
     ListView listView;
     FloatingActionButton fab;
     Prefshelper prefshelper;
@@ -67,9 +68,8 @@ public class CaseListFragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_case_list, container, false);
             listView = (ListView) rootview.findViewById(R.id.listView);
             caseList= (List<CaseListModel>) getArguments().getSerializable("list");
-
+            Log.e("listtttttte", caseList+"");
             listView.setAdapter(new CaseListAdapter(getActivity(), caseList));
-
 
             fab = (FloatingActionButton)rootview.findViewById(R.id.fab);
 
@@ -107,8 +107,10 @@ public class CaseListFragment extends Fragment {
 
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
-                        getFragmentManager().popBackStack();
+
                         SelectDateActivity.txtTitle.setText("Home");
+                        Intent intent=new Intent(getActivity(), SelectDateActivity.class);
+                        startActivity(intent);
 
                     }
 

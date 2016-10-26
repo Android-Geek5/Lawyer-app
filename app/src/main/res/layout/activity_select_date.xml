@@ -109,6 +109,7 @@
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/buttonbg"
             app:compactCalendarCurrentDayBackgroundColor="@color/eventDecorator"
             app:compactCalendarMultiEventIndicatorColor="#fff"
+
             />
 <LinearLayout
     android:layout_width="match_parent"

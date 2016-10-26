@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="Case Detail"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 android:gravity="center|center_vertical"
                 android:textColor="@android:color/white"
                 android:id="@+id/toolbar_title" />

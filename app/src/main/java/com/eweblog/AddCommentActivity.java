@@ -40,6 +40,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,7 +56,8 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
     String strId, strNextDt, strComment,  strNDay, strNMonth, strNYear, nextTime;
     DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
     LinearLayout linearLayout;
-
+    Calendar cal = Calendar.getInstance();
+    Date sysDate = cal.getTime();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -346,10 +348,22 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
                 strNYear= sprNYear.getSelectedItem().toString();
                 Log.e("year", strNYear);
                 String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
+
                 try {
-                    Date dt=dateFormatter2.parse(nextDate);
-                    strNextDt=dateFormatter2.format(dt);
-                    Log.e("year", strNextDt);
+                    Date dt = dateFormatter2.parse(nextDate);
+                    if(dt.after(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
+                            dt.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
+                    {
+                        strNextDt = dateFormatter2.format(dt);
+                        txtNextError.setVisibility(View.GONE);
+                    }
+                    else
+                    {
+                        txtNextError.setVisibility(View.VISIBLE);
+                        txtNextError.setText("Next date should be equals to or greater than current date");
+                    }
+
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

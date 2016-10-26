@@ -9,7 +9,7 @@ public class CaseListModel implements Serializable{
    private String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
     retainContact, caseStatus , comment, nextDate;
    private ArrayList<String> nextDt, prevDt, comments;
- List<CaseListModel> list;
+ List<CaseListModel> list, arrayList;
 
     public String getCaseTitle() {
         return caseTitle;
@@ -154,6 +154,14 @@ public class CaseListModel implements Serializable{
 
     public void setCaseList(List<CaseListModel> name) {
         this.list = name;
+    }
+
+    public List<CaseListModel> getCaseArrayList() {
+        return arrayList;
+    }
+
+    public void setArrayCaseList(List<CaseListModel> name) {
+        this.arrayList = name;
     }
 
 

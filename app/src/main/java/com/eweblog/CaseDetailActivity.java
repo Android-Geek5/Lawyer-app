@@ -95,15 +95,13 @@ public class CaseDetailActivity extends AppCompatActivity {
         caseTitle=getIntent().getStringExtra("ctitle");
         courtName=getIntent().getStringExtra("court");
         status=getIntent().getStringExtra("status");
-     //   prevDate=getIntent().getStringArrayListExtra("pdate");
-     //   nextDate=getIntent().getStringArrayListExtra("ndate");
         startDate=getIntent().getStringExtra("sdate");
         counsellorName=getIntent().getStringExtra("oname");
         counsellorContact=getIntent().getStringExtra("ocontact");
-      //  comment=getIntent().getStringArrayListExtra("comment");
         retainedName=getIntent().getStringExtra("rname");
         retainedContact=getIntent().getStringExtra("rcontact");
-         caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list");
+        caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list1");
+        Log.e("araaysd",  getIntent().getSerializableExtra("list1")+"");
         txtCaseNumber=(TextView)findViewById(R.id.textView_number);
         txtCaseTitle=(TextView)findViewById(R.id.textView_title);
         txtCaseType=(TextView)findViewById(R.id.textView_type);
@@ -136,35 +134,53 @@ public class CaseDetailActivity extends AppCompatActivity {
 
             }
         });
-        for(int j=0; j<caseArray.size(); j++) {
-            try {
-                // obtain date and time from initial string
-                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(caseArray.get(j).getCasePrevDate());
-                // set date string
+        if(caseArray!=null) {
+            for (int j = 0; j < caseArray.size(); j++) {
+                if(caseArray.get(j).getCaseId().equalsIgnoreCase(caseId)) {
+                    try {
+                        // obtain date and time from initial string
+                        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(caseArray.get(j).getCasePrevDate());
+                        // set date string
 
-                String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-                // set time string
-                 prevDate=prevDate +stringDate+"\n";
+                        String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
+                        // set time string
+                        prevDate = prevDate + stringDate + "\n";
 
-            } catch (ParseException e) {
-                // wrong input
+                    } catch (ParseException e) {
+                        // wrong input
+                    }
+                    txtPrevDate.setText(prevDate);
+                }
             }
-            txtPrevDate.setText(prevDate);
-        }
-        for(int j=0; j<caseArray.size(); j++) {
-            try {
-                // obtain date and time from initial string
-                Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse((caseArray.get(j).getNextDate()));
-                // set date string
 
-                String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-                // set time string
-                nextDate=nextDate+stringDate+"\n";
+            for (int j = 0; j < caseArray.size(); j++) {
 
-            } catch (ParseException e) {
-                // wrong input
+                if(caseArray.get(j).getCaseId().equalsIgnoreCase(caseId)) {
+                    try {
+                        // obtain date and time from initial string
+                        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse((caseArray.get(j).getNextDate()));
+                        // set date string
+
+                        String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
+                        // set time string
+                        nextDate = nextDate + stringDate + "\n";
+
+                    } catch (ParseException e) {
+                        // wrong input
+                    }
+                    txtNextDt.setText(nextDate);
+                }
             }
-            txtNextDt.setText(nextDate);
+
+            for(int i=0; i<caseArray.size();i++)
+            {
+                if(caseArray.get(i).getCaseId().equalsIgnoreCase(caseId))
+                {
+                    c = c + caseArray.get(i).getComment() + "\n";
+                }
+
+            }
+            txtComment.setText(c);
         }
         try {
             // obtain date and time from initial string
@@ -183,13 +199,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtStatus.setText(status);
         txtCName.setText(counsellorName);
         txtCContact.setText(counsellorContact);
-        for(int i=0; i<caseArray.size();i++)
-        {
 
-            c=c+ caseArray.get(i).getComment();
-
-        }
-        txtComment.setText(c);
         txtRName.setText(retainedName);
         txtRContact.setText(retainedContact);
 
@@ -213,7 +223,7 @@ public class CaseDetailActivity extends AppCompatActivity {
 
             }
         });
-        if(status.equalsIgnoreCase("arguments"))
+        if(status.contains("argument"))
         {
            txtStatus.setText(status);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)

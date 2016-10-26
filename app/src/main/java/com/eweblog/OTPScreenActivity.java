@@ -77,7 +77,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     focusView = edtOtp;
                     cancelLogin = true;
                 }else if (!isValidOTP((otp))) {
-                    edtOtp.setError("Mobile number must be of digits 6.");
+                    edtOtp.setError("OTP must be of digits 6.");
                     focusView = edtOtp;
                     cancelLogin = true;
                 }
@@ -103,6 +103,7 @@ public class OTPScreenActivity extends AppCompatActivity {
     private boolean isValidOTP(String pass) {
         return pass != null && pass.length() == 6;
     }
+
     public void verifyOtp() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(OTPScreenActivity.this);
@@ -128,7 +129,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
                             try {
-
+                             prefshelper.getPreferences().edit().clear().apply();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

@@ -92,7 +92,7 @@ public class RegisterationActivity extends AppCompatActivity {
                             }
                             else if(!isValidPhone(strContact))
                             {
-                                edtContact.setError("Contact must be of 10 digits.");
+                                edtContact.setError("Mobile Number must be of 10 digits.");
                                 focusView = edtContact;
                                 cancelLogin = true;
                             }

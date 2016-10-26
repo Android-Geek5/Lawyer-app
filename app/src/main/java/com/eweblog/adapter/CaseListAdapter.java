@@ -71,7 +71,7 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtNumber.setText("Case Number: "+caseList.get(position).getCaseNumber());
         holder.txtCourt.setText("Court Name: "+caseList.get(position).getCourtName());
         holder.txtCaseType.setText("Case Type: "+caseList.get(position).getCaseType());
-        if(caseList.get(position).getCaseStatus().equalsIgnoreCase("arguments"))
+        if(caseList.get(position).getCaseStatus().contains("argument"))
         {
             holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
@@ -136,15 +136,13 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("ctitle", caseList.get(position).getCaseTitle());
                 intent.putExtra("court",caseList.get(position).getCourtName());
                 intent.putExtra("status", caseList.get(position).getCaseStatus());
-            //    intent.putStringArrayListExtra("pdate", caseList.get(position).getPrevDateArray());
-           //     intent.putStringArrayListExtra("ndate", caseList.get(position).getNextDateArray());
                 intent.putExtra("sdate",caseList.get(position).getCaseStartDate());
                 intent.putExtra("oname", caseList.get(position).getCounsellorName());
                 intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
                 intent.putExtra("rname", caseList.get(position).getRetainName());
                 intent.putExtra("rcontact",caseList.get(position).getRetainContact());
-                intent.putExtra("list", (Serializable) caseList.get(position).getCaseList());
-          //      intent.putStringArrayListExtra("comment", caseList.get(position).getNCommentsArray());
+                intent.putExtra("list1", (Serializable) caseList.get(position).getCaseArrayList());
+                Log.e("aterraaysd",  caseList.get(position).getCaseArrayList().get(position).getNextDate());
                 context.startActivity(intent);
 
             }

@@ -11,6 +11,7 @@ import android.os.IBinder;
 
 import com.eweblog.R;
 import com.eweblog.SelectDateActivity;
+import com.eweblog.SplashScreenActivity;
 
 public class MyAlarmService extends Service
 {
@@ -45,7 +46,7 @@ public class MyAlarmService extends Service
               .setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notify));
 
 
-       Intent resultIntent = new Intent(this.getApplicationContext(), SelectDateActivity.class);
+       Intent resultIntent = new Intent(this.getApplicationContext(), SplashScreenActivity.class);
        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_CLEAR_TOP);
        PendingIntent resultPendingIntent = PendingIntent.getActivity(this.getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        mBuilder.setContentIntent(resultPendingIntent);
