@@ -52,7 +52,7 @@ public class CaseDetailActivity extends AppCompatActivity {
     Button btnAdd;
     FloatingActionButton fab;
     Prefshelper prefshelper;
-    TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus, txtPrevDate, txtNextDt, txtCName, txtCContact
+    TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus,  txtNextDt, txtCName, txtCContact
             ,txtComment, txtRName, txtRContact, txtStartDt;
     String caseId;
     String caseNumber;
@@ -107,11 +107,11 @@ public class CaseDetailActivity extends AppCompatActivity {
         txtCaseType=(TextView)findViewById(R.id.textView_type);
         txtCourtName=(TextView)findViewById(R.id.textView_name);
         txtStatus=(TextView)findViewById(R.id.textView_position);
-        txtPrevDate=(TextView)findViewById(R.id.textView_pdate);
-        txtNextDt=(TextView)findViewById(R.id.textView_duedate);
+     //   txtPrevDate=(TextView)findViewById(R.id.textView_pdate);
+        txtNextDt=(TextView)findViewById(R.id.textView_date);
         txtCName=(TextView)findViewById(R.id.textView_cname);
         txtCContact=(TextView)findViewById(R.id.textView_cContact);
-        txtComment=(TextView)findViewById(R.id.textView_comments);
+        txtComment=(TextView)findViewById(R.id.textView_comment);
         txtRName=(TextView)findViewById(R.id.textView_retainNm);
         txtRContact=(TextView)findViewById(R.id.textView_retainContact);
         txtStartDt=(TextView)findViewById(R.id.textView_start);
@@ -135,7 +135,7 @@ public class CaseDetailActivity extends AppCompatActivity {
             }
         });
         if(caseArray!=null) {
-            for (int j = 0; j < caseArray.size(); j++) {
+           /* for (int j = 0; j < caseArray.size(); j++) {
                 if(caseArray.get(j).getCaseId().equalsIgnoreCase(caseId)) {
                     try {
                         // obtain date and time from initial string
@@ -151,7 +151,7 @@ public class CaseDetailActivity extends AppCompatActivity {
                     }
                     txtPrevDate.setText(prevDate);
                 }
-            }
+            }*/
 
             for (int j = 0; j < caseArray.size(); j++) {
 

@@ -84,7 +84,7 @@ public class SelectDateActivity extends AppCompatActivity {
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
     CompactCalendarView compactCalendar;
-    TextView txtMonth, txtCase;
+    TextView txtMonth;
     ImageView imgPrevious, imgNext;
     private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
     String  nextDate, previousDate, comment, e, event, newEvent, newDate, daySelected;
@@ -92,7 +92,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
     List<CaseListModel> caseList = new ArrayList<>();
     List<CaseListModel> caseListArray=new ArrayList<>();
-    FloatingActionButton fab;
+    //FloatingActionButton fab;
 
     List<Event> events;
     Date newDt, dateEvent, date ;
@@ -116,7 +116,7 @@ public class SelectDateActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
         txtMonth = (TextView) findViewById(R.id.txt_month);
-        txtCase = (TextView) findViewById(R.id.txt_caseTitle);
+       // txtCase = (TextView) findViewById(R.id.txt_caseTitle);
         prefshelper = new Prefshelper(this);
         cd = new ConnectionDetector(getApplicationContext());
         imgNext = (ImageView) findViewById(R.id.image_next);
@@ -215,28 +215,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     }
                     //something here
                 }*/
-                List<Event> events = compactCalendar.getEvents(dateClicked);
-                txtCase.setText("");
-                e = "";
-                if (events.size() <= 0) {
-                    txtCase.setText("");
-                    e = "";
-                    txtCase.setText("No Case Found");
-                } else {
-                    for (int i = 0; i < events.size(); i++) {
-                        txtCase.setText("");
-                        e = "";
-                        Log.e("eventss sizeeee", events.size() + "");
-                        event = String.valueOf(events.get(i).getData());
-                        String event1 = event.substring(0, 18);
 
-                        String event2 = event.substring(event.lastIndexOf(' ') + 1);
-                        newEvent = event1 + ", " + event2;
-                        e = e + "\n " + newEvent;
-                    }
-
-                    txtCase.setText(e);
-                }
 
             }
 
@@ -252,28 +231,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     loadEvents();
                     Log.e("list locl", prefshelper.getList()+"");
                 }
-                List<Event> events = compactCalendar.getEvents(firstDayOfNewMonth);
-                txtCase.setText("");
-                e = "";
-                if (events.size() <= 0) {
-                    txtCase.setText("");
-                    e = "";
-                    txtCase.setText("No Case Found");
-                } else {
-                    for (int i = 0; i < events.size(); i++) {
-                        txtCase.setText("");
-                        e = "";
-                        Log.e("eventss sizeeee", events.size() + "");
-                        event = String.valueOf(events.get(i).getData());
-                        String event1 = event.substring(0, 18);
 
-                        String event2 = event.substring(event.lastIndexOf(' ') + 1);
-                        newEvent = event1 + ", " + event2;
-                        e = e + "\n " + newEvent;
-                    }
-
-                    txtCase.setText(e);
-                }
 
             }
         });
@@ -302,7 +260,7 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+       /* fab = (FloatingActionButton) findViewById(R.id.fab);
 
         fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00bcd5")));
         fab.setOnClickListener(new View.OnClickListener() {
@@ -323,7 +281,7 @@ public class SelectDateActivity extends AppCompatActivity {
                 fragmentTransaction.commit();
 
             }
-        });
+        });*/
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             // This method will trigger on item Click of navigation menu
@@ -481,57 +439,21 @@ public class SelectDateActivity extends AppCompatActivity {
                             } catch (ParseException e1) {
                                 e1.printStackTrace();
                             }
-                            long timeInMillis = currentCalender.getTimeInMillis();
+                           /* long timeInMillis = currentCalender.getTimeInMillis();
                             events = getEvents(timeInMillis, i);
 
-                            compactCalendar.addEvents(events);
+                            compactCalendar.addEvents(events);*/
                         }
 
                     }
 
                 }
-           if (events.size() <= 0) {
-               txtCase.setText("");
-               e = "";
-               txtCase.setText("No Case Found");
-           }
-           else {
-
-               for (int k = 0; k < events.size(); k++) {
-                   txtCase.setText("");
-                   e = "";
-                   Log.e("eventss sizeeee", events.size() + "");
-                   event = String.valueOf(events.get(k).getData());
-
-                   newDate=formatter22.format(compactCalendar.getFirstDayOfCurrentMonth());
-
-                       String event1 = event.substring(0, 18);
-
-                       String event2 = event.substring(event.lastIndexOf(' ') + 1);
-                       newEvent = event1 + ", " + event2;
-                       e = e + "\n " + newEvent;
-
-
-               }
-                if(event.contains(newDate)) {
-                    txtCase.setText("");
-                    e = "";
-                    txtCase.setText(e);
-                }
-               else
-                {
-                    txtCase.setText("");
-                    e = "";
-                    txtCase.setText("No Case Found");
-                }
-
-            }
 
             }
         }
     }
 
-    private List<Event> getEvents(long timeInMillis, int day) {
+   /* private List<Event> getEvents(long timeInMillis, int day) {
 
         if (day < 2) {
             return Arrays.asList(new Event(Color.argb(255, 169, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
@@ -546,7 +468,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     new Event(Color.argb(255, 70, 68, 65), timeInMillis, "Case on " + new Date(timeInMillis)));
         }
     }
-
+*/
 
     @Override
     public void onBackPressed() {
