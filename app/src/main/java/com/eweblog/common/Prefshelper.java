@@ -99,6 +99,17 @@ public class Prefshelper {
 
         return getPreferences().getString("no_case", "");
     }
+    public void storeDate(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("date", contact);
+        edit.commit();
+
+    }
+
+    public String getDate() {
+
+        return getPreferences().getString("date", "");
+    }
   /*  public void offlineMode(String contact) {
         Editor edit = getPreferences().edit();
         edit.putString("offline", contact);

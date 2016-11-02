@@ -2,9 +2,11 @@ package com.eweblog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -12,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -50,20 +54,19 @@ import java.util.Locale;
 import java.util.Map;
 
 
-public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     LinearLayout linearLayout;
-    Spinner sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear, sprCaseType, sprSDay, sprSMonth, sprSYear;
+   Spinner /*sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear,*/ sprCaseType/*, sprSDay, sprSMonth, sprSYear*/;
 
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
-            edtOppositeName, edtOppositeNumber, edtComments;
+            edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate;
     Prefshelper prefshelper;
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
-            strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear, strTime, strNTime,
-            prevTime, nextTime;
-
-    DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+            strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear;
+    DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    DateFormat dateFormatter2 = new SimpleDateFormat("dd MMM yyyy", Locale.US);
     TextView txtStartError, txtPrevError, txtNextError;
     ConnectionDetector cd;
     Calendar cal = Calendar.getInstance();
@@ -74,9 +77,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_add_case);
-        prefshelper = new Prefshelper(AddCaseActivity.this);
-        sprDay = (Spinner) findViewById(R.id.spinner_day);
+         prefshelper = new Prefshelper(AddCaseActivity.this);
+      /*  sprDay = (Spinner) findViewById(R.id.spinner_day);
         sprMonth = (Spinner) findViewById(R.id.spinner_month);
         sprYear = (Spinner) findViewById(R.id.spinner_year);
         sprNDay = (Spinner) findViewById(R.id.spinner_nday);
@@ -84,7 +88,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprNYear = (Spinner) findViewById(R.id.spinner_nyear);
         sprSDay = (Spinner) findViewById(R.id.spinner_sday);
         sprSMonth = (Spinner) findViewById(R.id.spinner_smonth);
-        sprSYear = (Spinner) findViewById(R.id.spinner_syear);
+        sprSYear = (Spinner) findViewById(R.id.spinner_syear);*/
 
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
         btnAdd = (Button) findViewById(R.id.add);
@@ -121,7 +125,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtOppositeName = (EditText) findViewById(R.id.textView_cname);
         edtOppositeNumber = (EditText) findViewById(R.id.textView_cmobile);
         edtComments = (EditText) findViewById(R.id.textView_comments);
-        Log.e("current adte", dateFormatter2.format(sysDate));
+        edtStartDate = (EditText) findViewById(R.id.textView_startdt);
+        edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
+        edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
+
+        edtStartDate.setOnClickListener(this);
+        edtPrevDate.setOnClickListener(this);
+        edtNextDate.setOnClickListener(this);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,21 +149,19 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strRContact = edtRetainMobile.getText().toString();
                 strComment = edtComments.getText().toString();
                 strStatus = edtStatus.getText().toString();
-
+                strStartDate=edtStartDate.getText().toString();
+                strNextDt=edtNextDate.getText().toString();
+                strPreviousDt=edtPrevDate.getText().toString();
+                if(strStartDate.equalsIgnoreCase(""))
+                {
+                    strStartDate=dateFormatter.format(sysDate);
+                    Log.d("start date", strStartDate);
+                }
                 if (edtCaseType.getVisibility() == View.VISIBLE)
                 {
                     strType = edtCaseType.getText().toString();
                 }
 
-                if (strStartDate == null)
-                {
-                    txtStartError.setVisibility(View.VISIBLE);
-
-                }
-                else
-                {
-                    txtStartError.setVisibility(View.GONE);
-                }
                 if (strPreviousDt == null )
                 {
                     txtPrevError.setVisibility(View.VISIBLE);
@@ -172,7 +180,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 }
 
 
-                if(!strSYear.equalsIgnoreCase("") && !strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
+              /*  if(!strSYear.equalsIgnoreCase("") && !strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
                 {
                     String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
                     try {
@@ -208,13 +216,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                }
+                }*/
                 if (TextUtils.isEmpty(strTitle)) {
                     edtCaseTitle.setError("Field must not be empty.");
                     focusView = edtCaseTitle;
                     cancelLogin = true;
                 }
-                if (TextUtils.isEmpty(strNumber)) {
+             /*   if (TextUtils.isEmpty(strNumber)) {
                     edtCaseNumber.setError("Field must not be empty.");
                     focusView = edtCaseNumber;
                     cancelLogin = true;
@@ -263,7 +271,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     edtOppositeNumber.setError("Mobile number must be of digits 10.");
                     focusView = edtOppositeNumber;
                     cancelLogin = true;
-                }
+                }*/
 
 
                 if (cancelLogin) {
@@ -284,17 +292,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -311,23 +313,17 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprCaseType.setAdapter(stringArrayAdapter);
         }
 
-        if (sprSDay.getAdapter() == null) {
+        /*if (sprSDay.getAdapter() == null) {
             stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -348,17 +344,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -379,17 +369,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -410,17 +394,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -441,17 +419,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -472,17 +444,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -503,17 +469,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -534,17 +494,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -565,17 +519,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public boolean isEnabled(int position) {
 
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return position != 0;
                 }
 
                 @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                     View view = super.getDropDownView(position, convertView, parent);
                     TextView tv = (TextView) view;
                     if (position == 0) {
@@ -589,9 +537,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             };
             stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
             sprNYear.setAdapter(stringArrayAdapter);
-        }
+        }*/
         sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
-        sprDay.setOnItemSelectedListener(AddCaseActivity.this);
+      /*  sprDay.setOnItemSelectedListener(AddCaseActivity.this);
         sprMonth.setOnItemSelectedListener(AddCaseActivity.this);
         sprYear.setOnItemSelectedListener(AddCaseActivity.this);
         sprNDay.setOnItemSelectedListener(AddCaseActivity.this);
@@ -599,7 +547,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprNYear.setOnItemSelectedListener(AddCaseActivity.this);
         sprSDay.setOnItemSelectedListener(AddCaseActivity.this);
         sprSMonth.setOnItemSelectedListener(AddCaseActivity.this);
-        sprSYear.setOnItemSelectedListener(AddCaseActivity.this);
+        sprSYear.setOnItemSelectedListener(AddCaseActivity.this);*/
 
     }
 
@@ -626,22 +574,22 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.d("", ".......response====" + response);
 
                     ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(AddCaseActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+
 
                         if (serverCode.equalsIgnoreCase("0")) {
-
+                            Toast.makeText(AddCaseActivity.this, serverMessage, Toast.LENGTH_LONG).show();
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
                             try {
                                 if ("1".equals(serverCode)) {
-
+                                    Toast.makeText(AddCaseActivity.this, serverMessage, Toast.LENGTH_LONG).show();
                                 }
 
                             } catch (Exception e) {
@@ -681,7 +629,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             ) {
                 @Override
                 protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
+                    Map<String, String> params = new HashMap<>();
 
                     params.put("user_id", prefshelper.getUserIdFromPreference());
                     params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
@@ -696,8 +644,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     params.put("case_opposite_counselor_contact", strOCContact);
                     params.put("case_retained_name", strRName);
                     params.put("case_retained_contact", strRContact);
-                    params.put("case_comment", strComment);
-                    params.put("case_started", strStartDate);
+                    params.put("case_detail_comment", strComment);
+                    params.put("case_start_date", strStartDate);
                     return params;
                 }
             };
@@ -715,7 +663,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Spinner spinner = (Spinner) adapterView;
-        sprMonth.getSelectedView();
+      /*  sprMonth.getSelectedView();
         sprMonth.setEnabled(false);
         sprSMonth.getSelectedView();
         sprSMonth.setEnabled(false);
@@ -727,7 +675,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         sprSYear.setEnabled(false);
         sprNYear.getSelectedView();
         sprNYear.setEnabled(false);
-
+*/
         if (spinner.getId() == R.id.spinner_type) {
             if (i == 3) {
                 edtCaseType.setVisibility(View.VISIBLE);
@@ -742,10 +690,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
             }
         }
-        if (spinner.getId() == R.id.spinner_day) {
-            if (i == 0) {
+    /*    if (spinner.getId() == R.id.spinner_day) {
+            if (i == 0)
+            {
                 strDay = "";
-            } else {
+            }
+            else {
+
                 strDay = sprDay.getSelectedItem().toString();
                 sprMonth.setEnabled(true);
 
@@ -764,6 +715,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             if (i == 0) {
                 strYear = "";
             } else {
+                sprYear.setEnabled(true);
+                sprMonth.setEnabled(true);
+                sprDay.setEnabled(true);
                 if (txtPrevError.getVisibility() == View.VISIBLE) {
                     txtPrevError.setVisibility(View.GONE);
                 }
@@ -814,6 +768,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             if (i == 0) {
                 strNYear = "";
             } else {
+                sprNYear.setEnabled(true);
+                sprNMonth.setEnabled(true);
+                sprNDay.setEnabled(true);
                 if (txtNextError.getVisibility() == View.VISIBLE) {
                     txtNextError.setVisibility(View.GONE);
                 }
@@ -865,7 +822,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             }
             else
             {
-
+                sprSYear.setEnabled(true);
+                sprSMonth.setEnabled(true);
+                sprSDay.setEnabled(true);
                 if (txtStartError.getVisibility() == View.VISIBLE) {
                     txtStartError.setVisibility(View.GONE);
                 }
@@ -894,7 +853,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
                 }
             }
-        }
+        }*/
       /*  if(spinner.getId()==R.id.spinner_time)
         {
             if (i==0)
@@ -955,9 +914,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    private boolean isValidPhone(String pass) {
-        return pass != null && pass.length() == 10;
-    }
 
     public void dialog() {
         final Dialog dialog = new Dialog(this);
@@ -977,5 +933,96 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             }
         });
         dialog.show();
+    }
+    public void dialogDatePicker()
+    {
+        final Dialog dialog = new Dialog(AddCaseActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_datepicker);
+        final DatePicker simpleDatePicker = (DatePicker)dialog.findViewById(R.id.datePicker);
+        final Button btnOk=(Button)dialog.findViewById(R.id.bt_yes);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int day = simpleDatePicker.getDayOfMonth();
+                int month = simpleDatePicker.getMonth() + 1;
+                int year =  simpleDatePicker.getYear();
+                String strDay, strMonth;
+                if(day<=9)
+                {
+                    strDay="0"+day;
+                }
+                else
+                {
+                    strDay= String.valueOf(day);
+                }
+
+                if(month<=9)
+                {
+                    strMonth="0"+month;
+                }
+                else
+                {
+                    strMonth= String.valueOf(month);
+                }
+
+                if(prefshelper.getDate().equalsIgnoreCase("start")) {
+                    dialog.dismiss();
+
+                    String date=year + "-" + strMonth + "-" + strDay;
+                    try {
+                        edtStartDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else  if(prefshelper.getDate().equalsIgnoreCase("previous"))
+                {
+                    dialog.dismiss();
+                    String date=year + "-" + strMonth + "-" + strDay;
+                    try {
+                        edtPrevDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else  if(prefshelper.getDate().equalsIgnoreCase("next"))
+                {
+                    dialog.dismiss();
+                    String date=year + "-" + strMonth + "-" + strDay;
+                    try {
+                        edtNextDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
+
+    dialog.show();
+}
+
+    @Override
+    public void onClick(View view) {
+
+        if(view==edtPrevDate)
+        {
+            prefshelper.storeDate("previous");
+           dialogDatePicker();
+        }
+        if(view==edtNextDate)
+        {
+            prefshelper.storeDate("next");
+            dialogDatePicker();
+        }
+        if(view==edtStartDate)
+        {
+            prefshelper.storeDate("start");
+            dialogDatePicker();
+        }
+
     }
 }

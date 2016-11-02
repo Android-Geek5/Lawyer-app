@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:layout_width="match_parent"
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
 
     android:orientation="vertical"
@@ -10,11 +11,9 @@
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:id="@+id/ll_navi"
-
         android:background="@color/colorPrimary"
         android:gravity="center_vertical"
-
-        >
+        android:baselineAligned="false">
         <LinearLayout
             android:layout_width="60dp"
             android:layout_height="match_parent"
@@ -29,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/arrow_back"
-                android:contentDescription="" />
+                android:contentDescription="@string/app_name" />
 
         </LinearLayout>
 
@@ -63,7 +62,8 @@
             />
 
     </LinearLayout>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/bg"
@@ -74,129 +74,151 @@
         android:orientation="vertical"
         android:layout_margin="10dp">
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:orientation="horizontal">
+       <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="15sp"
+        android:textColor="@android:color/white"
+        android:layout_weight="1"
+        android:text="Start Date"
+        android:layout_marginStart="5dp"
+        android:textColorHint="@color/colorAccent"
+        android:id="@+id/tw_start_date"
+        android:gravity="center_vertical"
+
+            tools:ignore="RtlCompat" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="15sp"
+        android:textColor="@android:color/white"
+        android:hint="Start Date"
+        android:layout_weight="1"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/textView_startdt"
+        android:gravity="center_vertical"
+        android:inputType="textAutoCorrect"
+        android:clickable="true"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
+
+        />
+</LinearLayout>
+        <!--  <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="40dp"
+             android:orientation="horizontal"
+             android:focusable="true"
+             android:focusableInTouchMode="true"
+             android:baselineAligned="false">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_marginLeft="5dp"
+             android:layout_weight="1.2"
+             android:layout_marginRight="5dp"
+             android:layout_gravity="center_vertical"
+             android:layout_height="wrap_content">
+
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 >
+                 <Spinner
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:id="@+id/spinner_sday"
+                     android:background="@null"
+
+                     />
+                 <requestFocus/>
+                 <ImageView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/dropdown"
+                     android:id="@+id/imageView_s"
+                     android:layout_centerVertical="true"
+                     android:layout_alignRight="@+id/spinner_sday"
+                     android:contentDescription="@string/app_name" />
+             </RelativeLayout>
+
+         </LinearLayout>
+
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_marginLeft="5dp"
+             android:layout_weight="1"
+             android:layout_marginRight="5dp"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical">
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="20dp"
+                 >
+                 <Spinner
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:id="@+id/spinner_smonth"
+
+                     android:layout_marginLeft="5dp"
+                     android:layout_marginRight="5dp"
+                     android:background="@null"/>
+                 <ImageView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/dropdown"
+                     android:id="@+id/imageView"
+                     android:layout_centerVertical="true"
+                     android:layout_alignRight="@+id/spinner_smonth"
+                     android:contentDescription="@string/app_name" />
+             </RelativeLayout>
+         </LinearLayout>
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_marginLeft="5dp"
+             android:layout_weight="1"
+             android:layout_marginRight="5dp"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center_vertical">
+             <RelativeLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_marginLeft="20dp"
+                 >
+                 <Spinner
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:id="@+id/spinner_syear"
+
+                     android:layout_marginLeft="5dp"
+                     android:layout_marginRight="5dp"
+                     android:background="@null"/>
+                 <ImageView
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/dropdown"
+                     android:id="@+id/imageView6s"
+                     android:layout_centerVertical="true"
+                     android:contentDescription="@string/app_name"
+                     android:layout_alignRight="@+id/spinner_syear"
+                     />
+             </RelativeLayout>
+         </LinearLayout>
+
+         </LinearLayout>-->
 
 
-            <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="15sp"
-            android:textColor="@android:color/white"
-            android:layout_weight="1"
-            android:text="Start Date"
-            android:layout_marginLeft="5dp"
-            android:textColorHint="@color/colorAccent"
-            android:id="@+id/tw_start_date"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="10dp"
-            />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:focusableInTouchMode="true">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1.2"
-            android:layout_marginRight="5dp"
-            android:layout_gravity="center_vertical"
-            android:layout_height="wrap_content">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner_sday"
-                    android:background="@null"
-
-                    />
-                <requestFocus/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/dropdown"
-                    android:id="@+id/imageView_s"
-                    android:layout_centerVertical="true"
-                    android:layout_alignRight="@+id/spinner_sday"
-                    />
-            </RelativeLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                >
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner_smonth"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@null"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/dropdown"
-                    android:id="@+id/imageView"
-                    android:layout_centerVertical="true"
-                    android:layout_alignRight="@+id/spinner_smonth"
-                    />
-            </RelativeLayout>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:layout_marginRight="5dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                >
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/spinner_syear"
-                    android:layout_weight="1"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@null"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/dropdown"
-                    android:id="@+id/imageView6s"
-                    android:layout_centerVertical="true"
-                    android:layout_alignRight="@+id/spinner_syear"
-                    />
-            </RelativeLayout>
-        </LinearLayout>
-
-        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@android:color/holo_red_light"
-            android:layout_weight="1"
+
             android:text="Please Select Start Date"
             android:layout_marginLeft="5dp"
                       android:layout_marginTop="10dp"
@@ -207,6 +229,141 @@
             />
 
 
+        <!--    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1.2"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_day"
+                    android:background="@null"
+
+                    />
+                <requestFocus/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView4"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/app_name"
+                    android:layout_alignRight="@+id/spinner_day"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_month"
+
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView5"
+                    android:contentDescription="@string/app_name"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_month"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_year"
+
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageView6"
+                    android:contentDescription="@string/app_name"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_year"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+      &lt;!&ndash;  <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="0.8"
+            android:layout_marginRight="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_time"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dropdown"
+                    android:id="@+id/imageViewt6"
+                    android:layout_centerVertical="true"
+                    android:layout_alignRight="@+id/spinner_time"
+                    />
+            </RelativeLayout>
+        </LinearLayout>&ndash;&gt;
+    </LinearLayout>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
@@ -218,134 +375,26 @@
             android:textColorHint="@color/colorAccent"
             android:id="@+id/tw_previous_date"
             android:gravity="center_vertical"
+            android:layout_weight="1"
 
             />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
 
-
-
-            <LinearLayout
+            <EditText
                 android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1.2"
-                android:layout_marginRight="5dp"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spinner_day"
-                        android:background="@null"
+                android:layout_height="45dp"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:hint="Previous Date"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/textView_prevdt"
+                android:gravity="center_vertical"
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
 
-                        />
-                    <requestFocus/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageView4"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_day"
-                        />
-                </RelativeLayout>
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
                 android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    >
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spinner_month"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@null"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageView5"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_month"
-                        />
-                </RelativeLayout>
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    >
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spinner_year"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@null"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageView6"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_year"
-                        />
-                </RelativeLayout>
-            </LinearLayout>
-          <!--  <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="0.8"
-                android:layout_marginRight="5dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-                    <Spinner
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/spinner_time"
-                        android:layout_weight="1"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
-                        android:background="@null"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageViewt6"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_time"
-                        />
-                </RelativeLayout>
-            </LinearLayout>-->
+
+                />
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
@@ -354,7 +403,7 @@
             android:textColor="@android:color/holo_red_light"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="1"
+
             android:text="Please Select Previous Date"
             android:layout_marginLeft="5dp"
 
@@ -362,6 +411,7 @@
             android:layout_gravity="center_vertical"
             android:visibility="gone"
             />
+
 
         <EditText
         android:layout_width="match_parent"
@@ -474,24 +524,14 @@
 
             />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:textSize="15sp"
-            android:textColor="@android:color/white"
-            android:text="Next Date"
-            android:layout_marginLeft="5dp"
-            android:gravity="center_vertical"
-            android:textColorHint="@color/colorAccent"
-            android:id="@+id/tw_next_date"
 
-            />
 
-        <LinearLayout
+        <!--   <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+            android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -512,12 +552,13 @@
             android:background="@null"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"/>
+           />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/dropdown"
                     android:id="@+id/imageView7"
+                    android:contentDescription="@string/app_name"
                     android:layout_centerVertical="true"
                     android:layout_alignRight="@+id/spinner_nday"
                     />
@@ -543,12 +584,13 @@
             android:background="@null"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"/>
+           />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/dropdown"
                         android:id="@+id/imageView8"
+                        android:contentDescription="@string/app_name"
                         android:layout_centerVertical="true"
                         android:layout_alignRight="@+id/spinner_nmonth"
                         />
@@ -573,18 +615,19 @@
             android:background="@null"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:layout_weight="1"/>
+           />
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:src="@drawable/dropdown"
                             android:id="@+id/imageView9"
+                            android:contentDescription="@string/app_name"
                             android:layout_centerVertical="true"
                             android:layout_alignRight="@+id/spinner_nyear"
                             />
                     </RelativeLayout>
                 </LinearLayout>
-       <!-- <LinearLayout
+       &lt;!&ndash; <LinearLayout
             android:layout_width="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_weight="0.8"
@@ -602,7 +645,7 @@
                     android:background="@null"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="1"/>
+                   />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -612,15 +655,49 @@
                     android:layout_alignRight="@+id/spinner_ntime"
                     />
             </RelativeLayout>
-        </LinearLayout>-->
-    </LinearLayout>
+        </LinearLayout>&ndash;&gt;
+    </LinearLayout>-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="15sp"
+            android:textColor="@android:color/white"
+            android:text="Next Date"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical"
+            android:textColorHint="@color/colorAccent"
+            android:layout_weight="1"
+            android:id="@+id/tw_next_date"
+
+            />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textSize="15sp"
+                android:textColor="@android:color/white"
+                android:hint="Next Date"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/textView_nextdt"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+
+                />
+        </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textColor="@android:color/holo_red_light"
             android:layout_marginTop="10dp"
-            android:layout_weight="1"
+
             android:text="Please Select Next Date"
             android:layout_marginLeft="5dp"
             android:layout_marginBottom="10dp"
