@@ -5,11 +5,13 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -48,30 +50,18 @@ import java.util.Locale;
 import java.util.Map;
 
 public class CaseDetailActivity extends AppCompatActivity {
-    LinearLayout linearLayout;
+    LinearLayout linearLayout, linearLayoutMain;
     Button btnAdd;
     FloatingActionButton fab;
     Prefshelper prefshelper;
-    TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus,  txtNextDt, txtCName, txtCContact
+    TextView txtCaseNumber, txtCaseTitle, txtCaseType, txtCourtName, txtStatus,  txtRetain, txtOpposite, txtCName, txtCContact
             ,txtComment, txtRName, txtRContact, txtStartDt;
-    String caseId;
-    String caseNumber;
-    String caseTitle;
-    String courtName;
-    String status;
-
-    String startDate;
-    String counsellorName;
-    String counsellorContact;
-
-    String retainedName;
-    String retainedContact;
-    String caseType;
+    String caseId,caseNumber, caseTitle, courtName,status,startDate, counsellorName, counsellorContact, retainedName ,retainedContact
+            ,caseType;
+    LinearLayout llCaseNumber, llCaseTitle, llCaseType, llCourtName, llStatus, llCName, llCContact, llRName, llRcontact,llStartDt;
     List<CaseListModel> caseArray;
     ConnectionDetector cd;
-    String prevDate="";
-    String nextDate="";
-    String c="";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +69,7 @@ public class CaseDetailActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_case_detail);
         linearLayout=(LinearLayout)findViewById(R.id.ll_navi);
-
+        linearLayoutMain=(LinearLayout)findViewById(R.id.ll_main);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,21 +91,129 @@ public class CaseDetailActivity extends AppCompatActivity {
         retainedName=getIntent().getStringExtra("rname");
         retainedContact=getIntent().getStringExtra("rcontact");
         caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list1");
-        Log.e("araaysd",  getIntent().getSerializableExtra("list1")+"");
         txtCaseNumber=(TextView)findViewById(R.id.textView_number);
         txtCaseTitle=(TextView)findViewById(R.id.textView_title);
         txtCaseType=(TextView)findViewById(R.id.textView_type);
         txtCourtName=(TextView)findViewById(R.id.textView_name);
         txtStatus=(TextView)findViewById(R.id.textView_position);
-     //   txtPrevDate=(TextView)findViewById(R.id.textView_pdate);
-        txtNextDt=(TextView)findViewById(R.id.textView_date);
+        txtRetain=(TextView)findViewById(R.id.textView_retain);
+        txtOpposite=(TextView)findViewById(R.id.textView_opposite);
         txtCName=(TextView)findViewById(R.id.textView_cname);
         txtCContact=(TextView)findViewById(R.id.textView_cContact);
-        txtComment=(TextView)findViewById(R.id.textView_comment);
+
         txtRName=(TextView)findViewById(R.id.textView_retainNm);
         txtRContact=(TextView)findViewById(R.id.textView_retainContact);
         txtStartDt=(TextView)findViewById(R.id.textView_start);
+        llCaseNumber=(LinearLayout)findViewById(R.id.ll_number);
+        llCaseTitle=(LinearLayout)findViewById(R.id.ll_title);
+        llCaseType=(LinearLayout)findViewById(R.id.ll_type);
+        llStartDt=(LinearLayout)findViewById(R.id.ll_startdt);
+        llStatus=(LinearLayout)findViewById(R.id.ll_status);
+        llRName=(LinearLayout)findViewById(R.id.ll_retain_nm);
+        llRcontact=(LinearLayout)findViewById(R.id.ll_retain_contact);
+        llCName=(LinearLayout)findViewById(R.id.ll_oname);
+        llCContact=(LinearLayout)findViewById(R.id.ll_ocontact);
+        llCourtName=(LinearLayout)findViewById(R.id.ll_name);
         cd=new ConnectionDetector(CaseDetailActivity.this);
+        if(caseNumber.equalsIgnoreCase(""))
+        {
+            llCaseNumber.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCaseNumber.setText(caseNumber);
+        }
+
+        if(startDate.equalsIgnoreCase(""))
+        {
+            llStartDt.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtStartDt.setText(startDate);
+        }
+
+        if(caseTitle.equalsIgnoreCase(""))
+        {
+            llCaseTitle.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCaseTitle.setText(caseTitle);
+        }
+
+        if(caseType.equalsIgnoreCase(""))
+        {
+            llCaseType.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCaseType.setText(caseType);
+        }
+
+        if(courtName.equalsIgnoreCase(""))
+        {
+            llCourtName.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCourtName.setText(courtName);
+        }
+
+        if(status.equalsIgnoreCase(""))
+        {
+            llStatus.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtStatus.setText(status);
+        }
+
+        if(counsellorName.equalsIgnoreCase(""))
+        {
+            llCName.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCName.setText(counsellorName);
+        }
+
+        if(counsellorContact.equalsIgnoreCase(""))
+        {
+            llCContact.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtCContact.setText(counsellorContact);
+        }
+
+        if(counsellorName.equalsIgnoreCase("") && counsellorContact.equalsIgnoreCase(""))
+        {
+            txtOpposite.setVisibility(View.GONE);
+        }
+
+        if(retainedName.equalsIgnoreCase("") && retainedContact.equalsIgnoreCase(""))
+        {
+            txtRetain.setVisibility(View.GONE);
+        }
+
+        if(retainedName.equalsIgnoreCase(""))
+        {
+            llRName.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtRName.setText(retainedName);
+        }
+
+        if(retainedContact.equalsIgnoreCase(""))
+        {
+            llRcontact.setVisibility(View.GONE);
+        }
+        else
+        {
+            txtRContact.setText(retainedContact);
+        }
 
         fab.setBackgroundTintList(ColorStateList.valueOf(Color
                 .parseColor("#00bcd5")));
@@ -135,73 +233,51 @@ public class CaseDetailActivity extends AppCompatActivity {
             }
         });
         if(caseArray!=null) {
-           /* for (int j = 0; j < caseArray.size(); j++) {
-                if(caseArray.get(j).getCaseId().equalsIgnoreCase(caseId)) {
-                    try {
-                        // obtain date and time from initial string
-                        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(caseArray.get(j).getCasePrevDate());
-                        // set date string
-
-                        String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-                        // set time string
-                        prevDate = prevDate + stringDate + "\n";
-
-                    } catch (ParseException e) {
-                        // wrong input
-                    }
-                    txtPrevDate.setText(prevDate);
-                }
-            }*/
-
-            for (int j = 0; j < caseArray.size(); j++) {
-
-                if(caseArray.get(j).getCaseId().equalsIgnoreCase(caseId)) {
-                    try {
-                        // obtain date and time from initial string
-                        Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse((caseArray.get(j).getNextDate()));
-                        // set date string
-
-                        String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-                        // set time string
-                        nextDate = nextDate + stringDate + "\n";
-
-                    } catch (ParseException e) {
-                        // wrong input
-                    }
-                    txtNextDt.setText(nextDate);
-                }
-            }
 
             for(int i=0; i<caseArray.size();i++)
             {
                 if(caseArray.get(i).getCaseId().equalsIgnoreCase(caseId))
                 {
-                    c = c + caseArray.get(i).getComment() + "\n";
+                    LinearLayout ll = new LinearLayout(this);
+                    ll.setOrientation(LinearLayout.HORIZONTAL);
+                    // Create TextView
+                    TextView txtPrevious = new TextView(this);
+                    txtPrevious.setTextSize(16);
+                    txtPrevious.setPadding(16, 10, 10, 0);
+                    txtPrevious.setTextColor(Color.BLACK);
+                    txtPrevious.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                    txtPrevious.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+
+
+                    ll.addView(txtPrevious);
+
+                  /*  LinearLayout lLayout = new LinearLayout(this);
+                    lLayout.setBackgroundColor(Color.DKGRAY);
+                    lLayout.setLayoutParams(new LinearLayout.LayoutParams(4,
+                            LinearLayout.LayoutParams.MATCH_PARENT));
+                    ll.addView(lLayout);*/
+
+
+                    // Create TextView
+                    TextView txtComment = new TextView(this);
+                    txtComment.setTextSize(16);
+                    txtComment.setPadding(16, 10, 10, 10);
+                    txtComment.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                    txtComment.setTextColor(Color.BLACK);
+                    txtComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                    ll.addView(txtComment);
+
+                    String date = caseArray.get(i).getNextDate();
+                    String comment = caseArray.get(i).getComment();
+                    txtPrevious.setText(date);
+                    txtComment.setText(comment);
+                    linearLayoutMain.addView(ll);
                 }
-
             }
-            txtComment.setText(c);
-        }
-        try {
-            // obtain date and time from initial string
-            Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).parse(startDate);
-            // set date string
-            String stringDate = new SimpleDateFormat("MMMM dd, yyyy", Locale.US).format(date).toUpperCase(Locale.ROOT);
-            // set time string
-            txtStartDt.setText(stringDate);
-        } catch (ParseException e) {
-            // wrong input
-        }
-        txtCaseNumber.setText(caseNumber);
-        txtCaseTitle.setText(caseTitle);
-        txtCaseType.setText(caseType);
-        txtCourtName.setText(courtName);
-        txtStatus.setText(status);
-        txtCName.setText(counsellorName);
-        txtCContact.setText(counsellorContact);
 
-        txtRName.setText(retainedName);
-        txtRContact.setText(retainedContact);
+        }
 
 
 

@@ -37,7 +37,7 @@
             android:textStyle="bold"
             android:id="@+id/bt_yes"
             android:background="@color/buttonbg"
-            android:textColor="@color/colorAccent"/>
+            android:textColor="@android:color/white"/>
 
 
     </LinearLayout>

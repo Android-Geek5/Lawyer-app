@@ -66,7 +66,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
             strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear;
     DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    DateFormat dateFormatter2 = new SimpleDateFormat("dd MMM yyyy", Locale.US);
+    DateFormat dateFormatter2 = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     TextView txtStartError, txtPrevError, txtNextError;
     ConnectionDetector cd;
     Calendar cal = Calendar.getInstance();
@@ -128,7 +128,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtStartDate = (EditText) findViewById(R.id.textView_startdt);
         edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
         edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
-
+        edtNextDate.setHint(dateFormatter2.format(sysDate));
+        edtPrevDate.setHint(dateFormatter2.format(sysDate));
+        edtStartDate.setHint(dateFormatter2.format(sysDate));
         edtStartDate.setOnClickListener(this);
         edtPrevDate.setOnClickListener(this);
         edtNextDate.setOnClickListener(this);
@@ -149,10 +151,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 strRContact = edtRetainMobile.getText().toString();
                 strComment = edtComments.getText().toString();
                 strStatus = edtStatus.getText().toString();
-                strStartDate=edtStartDate.getText().toString();
-                strNextDt=edtNextDate.getText().toString();
-                strPreviousDt=edtPrevDate.getText().toString();
-                if(strStartDate.equalsIgnoreCase(""))
+
+                if(strStartDate==null)
                 {
                     strStartDate=dateFormatter.format(sysDate);
                     Log.d("start date", strStartDate);
@@ -162,7 +162,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     strType = edtCaseType.getText().toString();
                 }
 
-                if (strPreviousDt == null )
+                if (strPreviousDt==null)
                 {
                     txtPrevError.setVisibility(View.VISIBLE);
                 }
@@ -170,7 +170,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 {
                     txtPrevError.setVisibility(View.GONE);
                 }
-                if (strNextDt == null)
+                if (strNextDt==null)
                 {
                     txtNextError.setVisibility(View.VISIBLE);
                 }
@@ -630,7 +630,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-
+                   Log.e(strPreviousDt, strNextDt);
                     params.put("user_id", prefshelper.getUserIdFromPreference());
                     params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
                     params.put("case_number", strNumber);
@@ -970,37 +970,57 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 if(prefshelper.getDate().equalsIgnoreCase("start")) {
                     dialog.dismiss();
 
-                    String date=year + "-" + strMonth + "-" + strDay;
+                    strStartDate=year + "-" + strMonth + "-" + strDay;
                     try {
-                        edtStartDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                        edtStartDate.setText(dateFormatter2.format(dateFormatter.parse(strStartDate)));
+                        edtStartDate.setFocusable(false);
+                        edtPrevDate.setFocusable(true);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
                 else  if(prefshelper.getDate().equalsIgnoreCase("previous"))
                 {
+
+
                     dialog.dismiss();
-                    String date=year + "-" + strMonth + "-" + strDay;
+                    strPreviousDt=year + "-" + strMonth + "-" + strDay;
                     try {
-                        edtPrevDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                         edtPrevDate.setText(dateFormatter2.format(dateFormatter.parse(strPreviousDt)));
+                         edtCaseTitle.setFocusable(true);
+                        if (strPreviousDt==null)
+                        {
+                            txtPrevError.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            txtPrevError.setVisibility(View.GONE);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
                 else  if(prefshelper.getDate().equalsIgnoreCase("next"))
                 {
+
                     dialog.dismiss();
-                    String date=year + "-" + strMonth + "-" + strDay;
+                    strNextDt=year + "-" + strMonth + "-" + strDay;
                     try {
-                        edtNextDate.setText(dateFormatter2.format(dateFormatter.parse(date)));
+                        edtNextDate.setText(dateFormatter2.format(dateFormatter.parse(strNextDt)));
+                        if (strNextDt==null)
+                        {
+                            txtNextError.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            txtNextError.setVisibility(View.GONE);
+                        }
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
             }
         });
-
-
 
     dialog.show();
 }

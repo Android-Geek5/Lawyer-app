@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
 
     android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -62,33 +62,55 @@
             />
 
     </LinearLayout>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg"
+        android:background="@android:color/white"
         android:scrollbars="none">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:orientation="vertical"
             android:layout_margin="10dp">
 
 
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:textSize="15sp"
-                android:textColor="@android:color/white"
-                android:text="Next Date"
-                android:layout_marginLeft="5dp"
-                android:gravity="center_vertical"
-                android:textColorHint="@color/colorAccent"
-                android:id="@+id/tw_next_date"
-
-                />
-
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:text="Next Date"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center_vertical"
+                    android:textColorHint="@color/colorAccent"
+                    android:layout_weight="1"
+                    android:id="@+id/tw_next_date"
+
+                    />
+                <requestFocus/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:hint="Next Date"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:id="@+id/textView_nextdt"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:clickable="true"
+
+                    />
+
+            </LinearLayout>
+
+        <!--    <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="10dp"
@@ -185,7 +207,7 @@
                             />
                     </RelativeLayout>
                 </LinearLayout>
-                <!-- <LinearLayout
+                &lt;!&ndash; <LinearLayout
                      android:layout_width="match_parent"
                      android:layout_marginLeft="5dp"
                      android:layout_weight="0.8"
@@ -213,9 +235,9 @@
                              android:layout_alignRight="@+id/spinner_ntime"
                              />
                      </RelativeLayout>
-                 </LinearLayout>-->
+                 </LinearLayout>&ndash;&gt;
             </LinearLayout>
-            <TextView
+-->            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
@@ -236,9 +258,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:inputType="textAutoCorrect|textMultiLine"
-
+                android:focusableInTouchMode="true"
+                android:focusable="true"
                 android:hint="Comments(optional)"
                 android:textColorHint="@android:color/darker_gray"
                 android:id="@+id/textView_comments"

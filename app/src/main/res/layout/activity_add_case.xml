@@ -66,7 +66,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg"
+        android:background="@android:color/white"
         android:scrollbars="none">
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,27 +76,30 @@
 
 <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="45dp"
+    android:layout_height="50dp"
     android:orientation="horizontal">
-       <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="15sp"
-        android:textColor="@android:color/white"
-        android:layout_weight="1"
-        android:text="Start Date"
-        android:layout_marginStart="5dp"
-        android:textColorHint="@color/colorAccent"
-        android:id="@+id/tw_start_date"
-        android:gravity="center_vertical"
 
-            tools:ignore="RtlCompat" />
+    <TextView
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:textSize="15sp"
+     android:textColor="@android:color/black"
+     android:layout_weight="1"
+     android:text="Start Date"
+     android:layout_marginStart="5dp"
+     android:textColorHint="@color/colorAccent"
+     android:id="@+id/tw_start_date"
+     android:gravity="center_vertical"
+
+         tools:ignore="RtlCompat" />
+
+    <requestFocus/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:hint="Start Date"
         android:layout_weight="1"
         android:textColorHint="@android:color/darker_gray"
@@ -104,17 +107,16 @@
         android:gravity="center_vertical"
         android:inputType="textAutoCorrect"
         android:clickable="true"
-        android:focusableInTouchMode="false"
-        android:focusable="false"
 
         />
+
 </LinearLayout>
         <!--  <LinearLayout
              android:layout_width="match_parent"
              android:layout_height="40dp"
              android:orientation="horizontal"
              android:focusable="true"
-             android:focusableInTouchMode="true"
+        
              android:baselineAligned="false">
          <LinearLayout
              android:layout_width="match_parent"
@@ -362,14 +364,14 @@
     </LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:textSize="15sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:text="Previous Date"
             android:layout_marginLeft="5dp"
             android:textColorHint="@color/colorAccent"
@@ -381,17 +383,16 @@
 
             <EditText
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="match_parent"
                 android:textSize="15sp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:hint="Previous Date"
                 android:textColorHint="@android:color/darker_gray"
                 android:id="@+id/textView_prevdt"
                 android:gravity="center_vertical"
                 android:clickable="true"
-                android:focusableInTouchMode="false"
                 android:focusable="false"
-
+                android:focusableInTouchMode="false"
                 android:layout_weight="1"
 
                 />
@@ -417,14 +418,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:hint="Case Title"
         android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_title"
         android:layout_marginTop="10dp"
         android:inputType="textAutoCorrect"
 
-        />
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -435,7 +436,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:layout_weight="0.8"
                 android:text="Case Type"
                 android:textColorHint="@color/colorAccent"
@@ -476,25 +477,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:hint="Case Type"
             android:visibility="gone"
             android:textColorHint="@android:color/darker_gray"
             android:layout_marginTop="10dp"
             android:inputType="textAutoCorrect"
             android:id="@+id/textView_type"
+
             />
         <EditText
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:textSize="15sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:hint="Court Name"
             android:layout_marginTop="10dp"
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_name"
             android:inputType="textAutoCorrect"
-
+       
+           
             />
 
 
@@ -502,25 +505,27 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:textSize="15sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:hint="RFA Number/Case Number"
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_number"
             android:inputType="number"
-
-
+       
+           
             />
+
         <EditText
         android:layout_width="match_parent"
             android:layout_height="45dp"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:hint="Status of Case"
             android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_position"
         android:layout_marginTop="10dp"
             android:inputType="textAutoCorrect"
-
+       
+           
 
             />
 
@@ -659,13 +664,13 @@
     </LinearLayout>-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="50dp"
             android:orientation="horizontal">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="15sp"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:text="Next Date"
             android:layout_marginLeft="5dp"
             android:gravity="center_vertical"
@@ -679,16 +684,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textSize="15sp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:hint="Next Date"
                 android:textColorHint="@android:color/darker_gray"
                 android:id="@+id/textView_nextdt"
                 android:gravity="center_vertical"
                 android:layout_weight="1"
                 android:clickable="true"
-                android:focusableInTouchMode="false"
                 android:focusable="false"
-
+                android:focusableInTouchMode="false"
                 />
         </LinearLayout>
         <TextView
@@ -717,7 +721,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:layout_weight="1"
                 android:text="Retain For"
                 android:layout_marginLeft="5dp"
@@ -735,9 +739,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:textSize="15sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:inputType="textAutoCorrect"
-
+               
+                   
                     android:hint="Name"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_nm"
@@ -747,11 +752,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:textSize="15sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:inputType="number"
                     android:layout_marginTop="10dp"
                     android:hint="Mobile Number"
                     android:maxLength="10"
+               
+                   
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_mobile"
                     />
@@ -768,7 +775,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
        android:layout_weight="1"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="5dp"
@@ -787,9 +794,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:textSize="15sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:inputType="textAutoCorrect"
-
+               
+                   
                     android:hint="Name"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cname"
@@ -799,13 +807,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
                     android:textSize="15sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     android:inputType="number"
                     android:layout_marginTop="10dp"
                     android:hint="Mobile Number"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cmobile"
                     android:maxLength="10"
+               
+                   
                     />
 
             </LinearLayout>
@@ -815,13 +825,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="15sp"
-        android:textColor="@android:color/white"
+        android:textColor="@android:color/black"
         android:inputType="textAutoCorrect|textMultiLine"
         android:hint="Comments"
         android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_comments"
         android:layout_marginTop="10dp"
-
+   
+       
         />
 
 

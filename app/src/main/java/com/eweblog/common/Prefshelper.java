@@ -88,17 +88,7 @@ public class Prefshelper {
     }
 
 
-    public void message(String contact) {
-        Editor edit = getPreferences().edit();
-        edit.putString("no_case", contact);
-        edit.commit();
 
-    }
-
-    public String getMesage() {
-
-        return getPreferences().getString("no_case", "");
-    }
     public void storeDate(String contact) {
         Editor edit = getPreferences().edit();
         edit.putString("date", contact);
@@ -110,18 +100,7 @@ public class Prefshelper {
 
         return getPreferences().getString("date", "");
     }
-  /*  public void offlineMode(String contact) {
-        Editor edit = getPreferences().edit();
-        edit.putString("offline", contact);
-        edit.commit();
 
-    }
-
-    public String getMode() {
-
-        return getPreferences().getString("offline", "");
-    }
-*/
 
     public String getUserIdFromPreference() {
 

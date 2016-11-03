@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bgnew"
+    android:background="@android:color/white"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,22 +63,25 @@
     <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-        android:layout_marginTop="60dp">
-    <LinearLayout  android:layout_width="match_parent"
+    android:layout_marginTop="55dp">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+       >
 
         <LinearLayout
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:orientation="vertical"
-              android:layout_margin="16dp">
+       >
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:id="@+id/ll_number"
+                android:layout_margin="10dp"
                 >
 
                 <TextView
@@ -107,17 +110,19 @@
               />
             </LinearLayout>
 
-            <View
+   <!--         <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/darker_gray"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_title"
                 android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,17 +147,19 @@
 
   />
 </LinearLayout>
-<View
+<!--<View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/darker_gray"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_type"
                 android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -176,17 +183,19 @@
   android:id="@+id/textView_type"
   />
 </LinearLayout>
-<View
+<!--<View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/darker_gray"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_name"
                 android:layout_gravity="center_vertical">
 
                 <TextView
@@ -213,17 +222,19 @@
                 />
 
 </LinearLayout>
-            <View
+     <!--       <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="3dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_status"
                 android:layout_gravity="center_vertical">
 
                 <TextView
@@ -248,17 +259,19 @@
   android:layout_weight="1"
   />
                 </LinearLayout>
-            <View
+      <!--      <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="3dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray"/>-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_startdt"
                 android:layout_gravity="center_vertical">
 
                 <TextView
@@ -284,90 +297,21 @@
                android:layout_weight="1"
                 />
                 </LinearLayout>
-            <View
+   <!--         <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="3dp"
-                android:background="@android:color/darker_gray"/>
-          <!--  <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
-                android:layout_gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Previous Date: "
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-                    android:id="@+id/textView6" />
-
-                <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"
-                android:text="Previous Date"
-               android:layout_weight="1"
-                android:gravity="center_vertical"
-                    android:paddingBottom="10dp"
-                android:id="@+id/textView_pdate"
-                />
-</LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="3dp"
-
-                android:background="@android:color/darker_gray"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
-                android:layout_gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Next Date: "
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-
-                    android:id="@+id/textView13" />
-
-                <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                      android:textSize="16sp"
-                      android:textColor="@android:color/black"
-                      android:text="Next Due Date"
-                    android:paddingBottom="10dp"
-                 android:gravity="center_vertical"
-                 android:layout_weight="1"
-                 android:id="@+id/textView_duedate"
-                />
-</LinearLayout>
+                android:background="@android:color/darker_gray"/>-->
 
 
 
-            <View
+<!--            <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/darker_gray"/>-->
 
---><TextView
+<TextView
   android:layout_width="wrap_content"
   android:layout_height="40dp"
   android:textSize="16sp"
@@ -376,14 +320,19 @@
     android:textStyle="bold"
   android:id="@+id/textView_retain"
   android:gravity="center_vertical"
-  android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
   android:layout_marginBottom="3dp"
   />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                  android:layout_gravity="center_vertical">
+                  android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_retain_nm">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -408,8 +357,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_retain_contact"
                 android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -435,11 +386,11 @@
             </LinearLayout>
 
 
-<View
+<!--<View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/darker_gray"/>-->
 
             <TextView
               android:layout_width="wrap_content"
@@ -448,7 +399,8 @@
               android:textColor="@android:color/black"
               android:text="Opposite Counsel: "
               android:gravity="center_vertical"
-              android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp"
               android:layout_marginBottom="3dp"
                 android:textStyle="bold"
               android:id="@+id/textView_opposite"
@@ -458,7 +410,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                   android:layout_gravity="center_vertical">
+                   android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_oname">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -485,8 +441,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/ll_ocontact"
                 android:layout_gravity="center_vertical">
                 <TextView
                     android:layout_width="wrap_content"
@@ -519,10 +477,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-
-                android:layout_gravity="center_vertical">
+                android:orientation="vertical"
+                android:id="@+id/ll_main"
+                android:gravity="center_horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -530,54 +487,63 @@
                     android:textColor="@android:color/black"
                     android:text="Comments: "
                     android:layout_marginRight="10dp"
+                     android:textStyle="bold"
                     android:gravity="center_vertical"
-                    android:textStyle="bold"
                     />
-<!--<TextView
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  android:textSize="16sp"
-  android:textColor="@android:color/black"
-  android:text="Comments"
-  android:gravity="center_vertical"
-  android:id="@+id/textView_comments"
-  android:maxLines="25"
-    android:paddingBottom="10dp"
-  />-->
-</LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="3dp"
+                    android:background="@android:color/darker_gray"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp">
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
-                    android:text="Date: "
-                    android:layout_marginRight="10dp"
+                    android:text="Previous Date: "
+                    android:layout_weight="1"
                     android:gravity="center_vertical"
                     android:textStyle="bold"
+
                     android:id="@+id/textView_date"
                     />
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
+                    android:background="@android:color/darker_gray"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="Comment"
+                    android:textStyle="bold"
+                    android:layout_weight="1"
                     android:id="@+id/textView_comment"
                     android:gravity="center_vertical"
 
                     />
 
             </LinearLayout>
-<View
-  android:layout_width="match_parent"
-  android:layout_height="1dp"
-    android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                   android:background="@android:color/darker_gray"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/darker_gray"/>
             <Button
                 android:id="@+id/add"
                 style="?android:textAppearanceSmall"
@@ -588,6 +554,8 @@
                 android:textColor="@android:color/white"
                 android:textSize="15sp"
                 android:text="Add More Comments"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="15dp"
                 android:textStyle="bold" />
 </LinearLayout>

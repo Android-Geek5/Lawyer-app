@@ -52,7 +52,7 @@ public class CaseListAdapter  extends BaseAdapter {
 
     public class Holder
     {
-        TextView txtCase, txtNumber, txtCourt, txtCaseType, txtLearn, txtStatus;
+        TextView txtCase, txtNumber;
 
     }
     @Override
@@ -63,67 +63,8 @@ public class CaseListAdapter  extends BaseAdapter {
         rowView = inflater.inflate(R.layout.case_list_item, null);
         holder.txtCase=(TextView) rowView.findViewById(R.id.textView_title);
         holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
-        holder.txtCourt=(TextView) rowView.findViewById(R.id.textView_name);
-        holder.txtCaseType=(TextView) rowView.findViewById(R.id.textView_type);
-        holder.txtStatus=(TextView) rowView.findViewById(R.id.textView_status);
-        holder.txtLearn=(TextView) rowView.findViewById(R.id.textView_learnmore);
-        holder.txtCase.setText("Case Title: "+caseList.get(position).getCaseTitle());
-        holder.txtNumber.setText("Case Number: "+caseList.get(position).getCaseNumber());
-        holder.txtCourt.setText("Court Name: "+caseList.get(position).getCourtName());
-        holder.txtCaseType.setText("Case Type: "+caseList.get(position).getCaseType());
-        if(caseList.get(position).getCaseStatus().contains("argument"))
-        {
-            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.argu, null));
-            }
-            else
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.argu));
-            }
-        }
-        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("reply"))
-        {
-            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.reply, null));
-            }
-            else
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.reply));
-            }
-        }
-        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("cross"))
-        {
-            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-               holder.txtStatus.setTextColor(context.getResources().getColor(R.color.cross, null));
-            }
-            else
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.cross));
-            }
-        }
-        else if(caseList.get(position).getCaseStatus().equalsIgnoreCase("consideration"))
-        {
-            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.consider, null));
-            }
-            else
-            {
-                holder.txtStatus.setTextColor(context.getResources().getColor(R.color.consider));
-            }
-        }
-        else
-        {
-            holder.txtStatus.setText("Status: "+caseList.get(position).getCaseStatus());
-        }
-
+        holder.txtCase.setText(caseList.get(position).getCaseTitle());
+        holder.txtNumber.setText(caseList.get(position).getCaseArrayList().get(position).getNextDate());
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override

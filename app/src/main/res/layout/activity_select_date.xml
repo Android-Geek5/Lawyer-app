@@ -81,7 +81,7 @@
                 android:layout_weight="0.77"
                 android:layout_margin="10dp"
                 android:gravity="center_vertical|center"
-                android:textColor="@color/colorAccent"
+                android:textColor="@android:color/white"
                 android:id="@+id/txt_month" />
 
             <ImageView
@@ -104,41 +104,38 @@
             android:layout_height="320dp"
             app:compactCalendarTextSize="12sp"
             app:compactCalendarBackgroundColor="@color/colorPrimary"
-            app:compactCalendarTextColor="@color/colorAccent"
+            app:compactCalendarTextColor="@android:color/white"
             app:compactCalendarCurrentSelectedDayBackgroundColor="@color/buttonbg"
             app:compactCalendarCurrentDayBackgroundColor="@color/eventDecorator"
             app:compactCalendarMultiEventIndicatorColor="#fff"
 
             />
-<!--<LinearLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-    <TextView
-        android:text=""
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_weight="1"
-        android:layout_marginLeft="10dp"
-        android:gravity="left"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/buttonbg"
-        android:textStyle="bold"
-        android:id="@+id/txt_caseTitle" />
+    android:orientation="vertical">
 
         <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/arrow"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:src="@drawable/add"
         app:layout_anchorGravity="bottom|right|end"
         />
+<!--
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_gravity="right"
+    android:text="Add Case"
+    android:textColor="@color/buttonbg"
+    android:layout_marginRight="16dp"/>
+-->
 
-</LinearLayout>-->
-
+</LinearLayout>
     </LinearLayout>
 </ScrollView>
     </android.support.design.widget.CoordinatorLayout>
@@ -153,7 +150,7 @@
         android:fitsSystemWindows="true"
 
         android:background="@color/menuBG"
-        app:itemTextColor="@color/colorAccent"
+        app:itemTextColor="@android:color/white"
         app:theme="@style/list_item_appearance"
         app:menu="@menu/drawer_menu" >
 

@@ -46,25 +46,7 @@ public class CaseListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         prefshelper=new Prefshelper(getActivity());
-        if(prefshelper.getMesage().equalsIgnoreCase("No Cases available"))
-        {
-           rootview= inflater.inflate(R.layout.activity_no_case, container, false);
-            fab = (FloatingActionButton)rootview.findViewById(R.id.fab);
 
-            fab.setBackgroundTintList(ColorStateList.valueOf(Color
-                    .parseColor("#00bcd5")));
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Intent intent = new Intent(getActivity(), AddCaseActivity.class);
-                    startActivity(intent);
-
-                }
-            });
-        }
-        else
-        {
             rootview = inflater.inflate(R.layout.fragment_case_list, container, false);
             listView = (ListView) rootview.findViewById(R.id.listView);
             caseList= (List<CaseListModel>) getArguments().getSerializable("list");
@@ -84,7 +66,7 @@ public class CaseListFragment extends Fragment {
 
                 }
             });
-        }
+
 
         SelectDateActivity.txtTitle.setText("Case List");
 

@@ -14,11 +14,7 @@
              android:title="About Us"
             android:icon="@drawable/about">
         </item>
-        <item
-            android:checked="true"
-            android:id="@+id/drawer_list"
-            android:icon="@drawable/case_list"
-            android:title="Case List"/>
+
         <item
             android:id="@+id/drawer_add"
             android:icon="@drawable/add_case"

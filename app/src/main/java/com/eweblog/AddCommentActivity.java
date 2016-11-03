@@ -1,21 +1,20 @@
 package com.eweblog;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,21 +42,25 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
-public class AddCommentActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class AddCommentActivity extends AppCompatActivity{
 
-    Spinner sprNDay, sprNMonth, sprNYear;
+ /*   Spinner sprNDay, sprNMonth, sprNYear;*/
     Button btnAdd;
-    EditText edtComments;
+    EditText edtComments, edtNextDate;
     TextView txtNextError;
     ArrayAdapter<String> stringArrayAdapter;
     Prefshelper prefshelper;
     String strId, strNextDt, strComment,  strNDay, strNMonth, strNYear, nextTime;
-    DateFormat dateFormatter2 = new SimpleDateFormat("yyyy-MM-dd");
+    DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    DateFormat dateFormatter2 = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     LinearLayout linearLayout;
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,12 +68,14 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_add_comment);
         prefshelper=new Prefshelper(AddCommentActivity.this);
-        sprNDay = (Spinner) findViewById(R.id.spinner_nday);
+   /*     sprNDay = (Spinner) findViewById(R.id.spinner_nday);
         sprNMonth = (Spinner) findViewById(R.id.spinner_nmonth);
-        sprNYear = (Spinner) findViewById(R.id.spinner_nyear);
+        sprNYear = (Spinner) findViewById(R.id.spinner_nyear);*/
         btnAdd=(Button)findViewById(R.id.add);
         txtNextError=(TextView)findViewById(R.id.tw_next_error);
         edtComments=(EditText) findViewById(R.id.textView_comments);
+        edtNextDate=(EditText) findViewById(R.id.textView_nextdt);
+        edtNextDate.setHint(dateFormatter2.format(sysDate));
         linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +95,7 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
 
                 strComment=edtComments.getText().toString();
               
-                if(strNextDt==null && nextTime==null)
+                if(strNextDt==null)
                 {
                     txtNextError.setVisibility(View.VISIBLE);
                 }
@@ -118,7 +123,13 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
 
             }
         });
-        if (sprNDay.getAdapter() == null) {
+        edtNextDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialogDatePicker();
+            }
+        });
+      /*  if (sprNDay.getAdapter() == null) {
             stringArrayAdapter = new ArrayAdapter<String>(AddCommentActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
                 @Override
@@ -214,7 +225,7 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
         sprNDay.setOnItemSelectedListener(AddCommentActivity.this);
         sprNMonth.setOnItemSelectedListener(AddCommentActivity.this);
         sprNYear.setOnItemSelectedListener(AddCommentActivity.this);
-
+*/
     }
     public void addComment() {
         try {
@@ -290,8 +301,7 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
                     params.put("user_id", prefshelper.getUserIdFromPreference());
                     params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
                     params.put("case_id", strId);
-                    params.put("case_comment", strComment);
-                
+                    params.put("case_detail_comment", strComment);
                     params.put("case_next_date", strNextDt);
                     return params;
                 }
@@ -306,7 +316,65 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
             e.printStackTrace();
         }
     }
-    @Override
+    public void dialogDatePicker()
+    {
+        final Dialog dialog = new Dialog(AddCommentActivity.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_datepicker);
+        final DatePicker simpleDatePicker = (DatePicker)dialog.findViewById(R.id.datePicker);
+        final Button btnOk=(Button)dialog.findViewById(R.id.bt_yes);
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                int day = simpleDatePicker.getDayOfMonth();
+                int month = simpleDatePicker.getMonth() + 1;
+                int year =  simpleDatePicker.getYear();
+                String strDay, strMonth;
+                if(day<=9)
+                {
+                    strDay="0"+day;
+                }
+                else
+                {
+                    strDay= String.valueOf(day);
+                }
+
+                if(month<=9)
+                {
+                    strMonth="0"+month;
+                }
+                else
+                {
+                    strMonth= String.valueOf(month);
+                }
+
+
+
+                    strNextDt=year + "-" + strMonth + "-" + strDay;
+                    try {
+                        edtNextDate.setText(dateFormatter2.format(dateFormatter.parse(strNextDt)));
+                        if(strNextDt==null)
+                        {
+                            txtNextError.setVisibility(View.VISIBLE);
+                        }
+                        else
+                        {
+                            txtNextError.setVisibility(View.GONE);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                dialog.dismiss();
+            }
+        });
+
+
+
+        dialog.show();
+    }
+
+  /*  @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Spinner spinner = (Spinner) adapterView;
        
@@ -376,4 +444,4 @@ public class AddCommentActivity extends AppCompatActivity implements AdapterView
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
-}
+*/}
