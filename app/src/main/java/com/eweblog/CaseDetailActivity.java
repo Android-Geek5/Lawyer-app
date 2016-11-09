@@ -43,11 +43,16 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class CaseDetailActivity extends AppCompatActivity {
     LinearLayout linearLayout, linearLayoutMain;
@@ -61,6 +66,7 @@ public class CaseDetailActivity extends AppCompatActivity {
     LinearLayout llCaseNumber, llCaseTitle, llCaseType, llCourtName, llStatus, llCName, llCContact, llRName, llRcontact,llStartDt;
     List<CaseListModel> caseArray;
     ConnectionDetector cd;
+    List<CaseListModel> caseListModels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +121,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         llCContact=(LinearLayout)findViewById(R.id.ll_ocontact);
         llCourtName=(LinearLayout)findViewById(R.id.ll_name);
         cd=new ConnectionDetector(CaseDetailActivity.this);
+
         if(caseNumber.equalsIgnoreCase(""))
         {
             llCaseNumber.setVisibility(View.GONE);
@@ -232,54 +239,155 @@ public class CaseDetailActivity extends AppCompatActivity {
 
             }
         });
-        if(caseArray!=null) {
+        if(cd.isConnectingToInternet()) {
+            if (caseArray != null) {
+                Log.e(caseArray.size() + "", "sizeeeeee");
+                for (int i = 0; i < caseArray.size(); i++) {
 
-            for(int i=0; i<caseArray.size();i++)
-            {
-                if(caseArray.get(i).getCaseId().equalsIgnoreCase(caseId))
-                {
-                    LinearLayout ll = new LinearLayout(this);
-                    ll.setOrientation(LinearLayout.HORIZONTAL);
-                    // Create TextView
-                    TextView txtPrevious = new TextView(this);
-                    txtPrevious.setTextSize(16);
-                    txtPrevious.setPadding(16, 10, 10, 0);
-                    txtPrevious.setTextColor(Color.BLACK);
-                    txtPrevious.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-                    txtPrevious.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                    if (caseArray.get(i).getCaseId().equalsIgnoreCase(caseId)) {
+                        Log.e(caseArray.get(i).getCaseId() + "", caseId);
 
+                        LinearLayout llv = new LinearLayout(this);
+                        llv.setOrientation(LinearLayout.VERTICAL);
+                        LinearLayout ll = new LinearLayout(this);
+                        ll.setOrientation(LinearLayout.HORIZONTAL);
+                        // Create TextView
+                        TextView txtPrevious = new TextView(this);
+                        txtPrevious.setTextSize(16);
+                        txtPrevious.setPadding(16, 16, 0, 16);
+                        txtPrevious.setTextColor(Color.BLACK);
+                        txtPrevious.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                        txtPrevious.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        ll.addView(txtPrevious);
+                        // Create TextView
+                        TextView txtComment = new TextView(this);
+                        txtComment.setTextSize(16);
+                        txtComment.setPadding(16, 16, 0, 16);
+                        txtComment.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                        txtComment.setTextColor(Color.BLACK);
+                        txtComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        ll.addView(txtComment);
+                        llv.addView(ll);
+                        LinearLayout lLayout = new LinearLayout(this);
+                        lLayout.setBackgroundColor(Color.BLACK);
+                        lLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                4));
+                        llv.addView(lLayout);
+                        String date = caseArray.get(i).getNextDate();
+                        String comment = caseArray.get(i).getComment();
+                        txtPrevious.setText(date);
+                        txtComment.setText(comment);
+                        linearLayoutMain.addView(llv);
+                    }
 
-                    ll.addView(txtPrevious);
-
-                  /*  LinearLayout lLayout = new LinearLayout(this);
-                    lLayout.setBackgroundColor(Color.DKGRAY);
-                    lLayout.setLayoutParams(new LinearLayout.LayoutParams(4,
-                            LinearLayout.LayoutParams.MATCH_PARENT));
-                    ll.addView(lLayout);*/
-
-
-                    // Create TextView
-                    TextView txtComment = new TextView(this);
-                    txtComment.setTextSize(16);
-                    txtComment.setPadding(16, 10, 10, 10);
-                    txtComment.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
-                    txtComment.setTextColor(Color.BLACK);
-                    txtComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
-                    ll.addView(txtComment);
-
-                    String date = caseArray.get(i).getNextDate();
-                    String comment = caseArray.get(i).getComment();
-                    txtPrevious.setText(date);
-                    txtComment.setText(comment);
-                    linearLayoutMain.addView(ll);
                 }
+
             }
-
         }
+        else {
+            if (caseArray != null) {
+                Log.e(caseArray.size() + "", "sizeeeeee");
+                for (int i = 0; i <caseArray.size(); i++) {
+
+                    if (caseArray.get(i).getCaseId().equalsIgnoreCase(caseId))
+                    {
+                      /*  caseListModels = new ArrayList<>();
+
+                            caseListModels.add(caseArray.get(i));*/
+                        LinearLayout llv = new LinearLayout(this);
+                        llv.setOrientation(LinearLayout.VERTICAL);
+                        LinearLayout ll = new LinearLayout(this);
+                        ll.setOrientation(LinearLayout.HORIZONTAL);
+                        // Create TextView
+                        TextView txtPrevious = new TextView(this);
+                        txtPrevious.setTextSize(16);
+                        txtPrevious.setPadding(16, 16, 0, 16);
+                        txtPrevious.setTextColor(Color.BLACK);
+                        txtPrevious.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                        txtPrevious.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        ll.addView(txtPrevious);
+                        // Create TextView
+                        TextView txtComment = new TextView(this);
+                        txtComment.setTextSize(16);
+                        txtComment.setPadding(16, 16, 0, 16);
+                        txtComment.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                        txtComment.setTextColor(Color.BLACK);
+                        txtComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                        ll.addView(txtComment);
+                        llv.addView(ll);
+                        LinearLayout lLayout = new LinearLayout(this);
+                        lLayout.setBackgroundColor(Color.BLACK);
+                        lLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                4));
+                        llv.addView(lLayout);
+                        String date = caseArray.get(i).getNextDate();
+                        String comment = caseArray.get(i).getComment();
+                        txtPrevious.setText(date);
+                        txtComment.setText(comment);
+                        linearLayoutMain.addView(llv);
+
+                    }
+                }
+               /* List<CaseListModel> uniques = new ArrayList<>();
+                for (CaseListModel element : caseListModels)
+                {
+                    if (!uniques.contains(element)) {
+                        uniques.add(element);
+                    }
+                }
 
 
+                    if(uniques.size()>0)
+                    {
+                        for(int j=0; j<uniques.size(); j++)
+                        {
+                            LinearLayout llv = new LinearLayout(this);
+                            llv.setOrientation(LinearLayout.VERTICAL);
+                            LinearLayout ll = new LinearLayout(this);
+                            ll.setOrientation(LinearLayout.HORIZONTAL);
+                            // Create TextView
+                            TextView txtPrevious = new TextView(this);
+                            txtPrevious.setTextSize(16);
+                            txtPrevious.setPadding(16, 16, 0, 16);
+                            txtPrevious.setTextColor(Color.BLACK);
+                            txtPrevious.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                            txtPrevious.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                            ll.addView(txtPrevious);
+                            // Create TextView
+                            TextView txtComment = new TextView(this);
+                            txtComment.setTextSize(16);
+                            txtComment.setPadding(16, 16, 0, 16);
+                            txtComment.setGravity(Gravity.LEFT | Gravity.CENTER_VERTICAL);
+                            txtComment.setTextColor(Color.BLACK);
+                            txtComment.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
+                            ll.addView(txtComment);
+                            llv.addView(ll);
+                            LinearLayout lLayout = new LinearLayout(this);
+                            lLayout.setBackgroundColor(Color.BLACK);
+                            lLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                                    4));
+                            llv.addView(lLayout);
+                            String date = uniques.get(j).getNextDate();
+                            String comment = uniques.get(j).getComment();
+                            txtPrevious.setText(date);
+                            txtComment.setText(comment);
+                            linearLayoutMain.addView(llv);
+                        }
+
+
+
+                }
+*/
+
+
+            }
+        }
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -352,10 +460,12 @@ public class CaseDetailActivity extends AppCompatActivity {
            txtStatus.setText(status);
         }
     }
+
     public void sendCaseDetail() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(CaseDetailActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "send_case_details_email");

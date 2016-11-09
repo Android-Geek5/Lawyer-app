@@ -154,6 +154,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             final ProgressDialog pDialog = new ProgressDialog(LoginActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "login");

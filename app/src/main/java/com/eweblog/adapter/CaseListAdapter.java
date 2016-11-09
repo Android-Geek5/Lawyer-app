@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.eweblog.CaseDetailActivity;
 import com.eweblog.R;
+import com.eweblog.common.ConnectionDetector;
 import com.eweblog.model.CaseListModel;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class CaseListAdapter  extends BaseAdapter {
     List<CaseListModel> caseList;
-
+    ConnectionDetector cd;
     private static LayoutInflater inflater=null;
     Context context;
 
@@ -64,7 +65,28 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtCase=(TextView) rowView.findViewById(R.id.textView_title);
         holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
         holder.txtCase.setText(caseList.get(position).getCaseTitle());
-        holder.txtNumber.setText(caseList.get(position).getCaseArrayList().get(position).getNextDate());
+
+        cd=new ConnectionDetector(context);
+        if(cd.isConnectingToInternet())
+        {
+            holder.txtNumber.setText(caseList.get(position).getCaseArrayList().get(position).getNextDate());
+        }
+        else
+        {
+            List<CaseListModel> list=caseList.get(position).getCaseArrayList();
+            String caseId=caseList.get(position).getCaseId();
+            for(int i=0; i<list.size(); i++)
+            {
+
+                if((list.get(i).getCaseId()).equalsIgnoreCase(caseId))
+                {
+
+                    holder.txtNumber.setText(list.get(position).getNextDate());
+                }
+
+            }
+
+        }
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +105,6 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("rname", caseList.get(position).getRetainName());
                 intent.putExtra("rcontact",caseList.get(position).getRetainContact());
                 intent.putExtra("list1", (Serializable) caseList.get(position).getCaseArrayList());
-                Log.e("aterraaysd",  caseList.get(position).getCaseArrayList().get(position).getNextDate());
                 context.startActivity(intent);
 
             }

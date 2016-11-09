@@ -262,7 +262,7 @@
                 android:inputType="textAutoCorrect|textMultiLine"
                 android:focusableInTouchMode="true"
                 android:focusable="true"
-                android:hint="Comments(optional)"
+                android:hint="Comments"
                 android:textColorHint="@android:color/darker_gray"
                 android:id="@+id/textView_comments"
                 android:layout_marginTop="10dp"

@@ -212,6 +212,7 @@ public class RegisterationActivity extends AppCompatActivity {
         try {
             final ProgressDialog pDialog = new ProgressDialog(RegisterationActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "signup");

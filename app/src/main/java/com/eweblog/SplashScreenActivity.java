@@ -34,11 +34,17 @@ import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
+import com.eweblog.model.CaseListModel;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SplashScreenActivity extends AppCompatActivity {
@@ -46,6 +52,10 @@ public class SplashScreenActivity extends AppCompatActivity {
     Prefshelper prefshelper;
     private static int SPLASH_TIME_OUT = 2000;
     String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified, userStatus;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    Calendar cal = Calendar.getInstance();
+    Date sysDate = cal.getTime();
+    List<CaseListModel> caseList ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,18 +64,29 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash_screen);
         prefshelper = new Prefshelper(SplashScreenActivity.this);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.HOUR, 5);
-        calendar.set(Calendar.AM_PM, Calendar.PM);
-        Intent myIntent = new Intent(this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+        caseList = prefshelper.getList();
+        if(caseList!=null) {
+            if (caseList.size() > 0) {
+                for (int i = 0; i < caseList.size(); i++) {
+                    if (caseList.get(i).getDate().equalsIgnoreCase(dateFormat.format(sysDate))) {
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTimeInMillis(System.currentTimeMillis());
+                        calendar.set(Calendar.MINUTE, 59);
+                        calendar.set(Calendar.HOUR, 5);
+                        calendar.set(Calendar.AM_PM, Calendar.PM);
+                        Intent myIntent = new Intent(this, AlarmReceiver.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
+
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                AlarmManager.INTERVAL_DAY, pendingIntent);
+                    }
+                }
+            }
+
+        }
         cd = new ConnectionDetector(getApplicationContext());
 
             new Handler().postDelayed(new Runnable() {
@@ -75,8 +96,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (cd.isConnectingToInternet()) {
 
                         if ((prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) ||
-                                (prefshelper.getUserSecHashFromPreference().equalsIgnoreCase(""))) {
-
+                                (prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")))
+                        {
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
@@ -150,6 +171,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         try {
             final ProgressDialog pDialog = new ProgressDialog(SplashScreenActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "session_login");

@@ -231,6 +231,7 @@ public class AddCommentActivity extends AppCompatActivity{
         try {
             final ProgressDialog pDialog = new ProgressDialog(AddCommentActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "add_comment" );

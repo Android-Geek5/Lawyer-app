@@ -116,7 +116,7 @@
              android:layout_height="40dp"
              android:orientation="horizontal"
              android:focusable="true"
-        
+
              android:baselineAligned="false">
          <LinearLayout
              android:layout_width="match_parent"
@@ -423,6 +423,7 @@
         android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_title"
         android:layout_marginTop="10dp"
+
         android:inputType="textAutoCorrect"
 
             />
@@ -452,25 +453,14 @@
                 android:layout_marginRight="5dp"
                 android:layout_gravity="center_vertical"
                 android:layout_height="wrap_content">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
+
                     <Spinner
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/spinner_type"
-                        android:background="@null"
+
                         />
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/dropdown"
-                        android:id="@+id/imageView99"
-                        android:layout_centerVertical="true"
-                        android:layout_alignRight="@+id/spinner_type"
-                        />
-                </RelativeLayout>
+
             </LinearLayout>
             </LinearLayout>
         <EditText
@@ -496,8 +486,8 @@
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_name"
             android:inputType="textAutoCorrect"
-       
-           
+
+
             />
 
 
@@ -510,8 +500,8 @@
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_number"
             android:inputType="number"
-       
-           
+
+
             />
 
         <EditText
@@ -524,8 +514,8 @@
         android:id="@+id/textView_position"
         android:layout_marginTop="10dp"
             android:inputType="textAutoCorrect"
-       
-           
+
+
 
             />
 
@@ -723,7 +713,7 @@
                 android:textSize="15sp"
                 android:textColor="@android:color/black"
                 android:layout_weight="1"
-                android:text="Retain For"
+                android:text="Retained For"
                 android:layout_marginLeft="5dp"
                 android:textColorHint="@color/colorAccent"
                 android:id="@+id/textView_retain"
@@ -741,8 +731,8 @@
                     android:textSize="15sp"
                     android:textColor="@android:color/black"
                     android:inputType="textAutoCorrect"
-               
-                   
+
+
                     android:hint="Name"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_nm"
@@ -757,8 +747,8 @@
                     android:layout_marginTop="10dp"
                     android:hint="Mobile Number"
                     android:maxLength="10"
-               
-                   
+
+
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_mobile"
                     />
@@ -796,8 +786,8 @@
                     android:textSize="15sp"
                     android:textColor="@android:color/black"
                     android:inputType="textAutoCorrect"
-               
-                   
+
+
                     android:hint="Name"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cname"
@@ -814,8 +804,8 @@
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/textView_cmobile"
                     android:maxLength="10"
-               
-                   
+
+
                     />
 
             </LinearLayout>
@@ -831,8 +821,8 @@
         android:textColorHint="@android:color/darker_gray"
         android:id="@+id/textView_comments"
         android:layout_marginTop="10dp"
-   
-       
+
+
         />
 
 

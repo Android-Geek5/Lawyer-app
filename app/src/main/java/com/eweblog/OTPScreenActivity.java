@@ -108,6 +108,7 @@ public class OTPScreenActivity extends AppCompatActivity {
         try {
             final ProgressDialog pDialog = new ProgressDialog(OTPScreenActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "verify_otp");
@@ -188,6 +189,7 @@ public class OTPScreenActivity extends AppCompatActivity {
         try {
             final ProgressDialog pDialog = new ProgressDialog(OTPScreenActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "resend_otp");

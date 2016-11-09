@@ -101,7 +101,7 @@
               android:layout_height="wrap_content"
               android:textSize="16sp"
                 android:layout_weight="1"
-
+              android:paddingBottom="5dp"
               android:textColor="@android:color/black"
               android:text="Case Number"
               android:gravity="center_vertical"
@@ -142,6 +142,7 @@
   android:textColor="@android:color/black"
   android:text="Case Title"
     android:layout_weight="1"
+    android:paddingBottom="5dp"
   android:gravity="center_vertical"
   android:id="@+id/textView_title"
 
@@ -180,6 +181,7 @@
   android:text="CaseType"
   android:gravity="center_vertical"
  android:layout_weight="1"
+    android:paddingBottom="5dp"
   android:id="@+id/textView_type"
   />
 </LinearLayout>
@@ -216,6 +218,7 @@
                 android:textSize="16sp"
                 android:textColor="@android:color/black"
                 android:text="Court Name"
+                    android:paddingBottom="5dp"
                 android:gravity="center_vertical"
                android:layout_weight="1"
                 android:id="@+id/textView_name"
@@ -257,6 +260,7 @@
   android:id="@+id/textView_position"
   android:gravity="center_vertical"
   android:layout_weight="1"
+                    android:paddingBottom="5dp"
   />
                 </LinearLayout>
       <!--      <View
@@ -304,19 +308,18 @@
                 android:background="@android:color/darker_gray"/>-->
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-<!--            <View
-  android:layout_width="match_parent"
-  android:layout_height="1dp"
-    android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>-->
+                android:orientation="horizontal">
 
 <TextView
   android:layout_width="wrap_content"
   android:layout_height="40dp"
   android:textSize="16sp"
   android:textColor="@android:color/black"
-  android:text="Retain For: "
+  android:text="Retained For: "
     android:textStyle="bold"
   android:id="@+id/textView_retain"
   android:gravity="center_vertical"
@@ -324,6 +327,11 @@
     android:layout_marginRight="10dp"
   android:layout_marginBottom="3dp"
   />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -333,22 +341,14 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:id="@+id/ll_retain_nm">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Name: "
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-                    />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="Name:"
+                    android:paddingBottom="5dp"
                     android:id="@+id/textView_retainNm"
                     android:gravity="center_vertical"/>
 
@@ -381,16 +381,17 @@
                     android:id="@+id/textView_retainContact"
                     android:gravity="center_vertical"
 
+
                     />
 
             </LinearLayout>
+</LinearLayout>
+</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
 
-
-<!--<View
-  android:layout_width="match_parent"
-  android:layout_height="1dp"
-    android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>-->
+                android:orientation="horizontal">
 
             <TextView
               android:layout_width="wrap_content"
@@ -405,35 +406,30 @@
                 android:textStyle="bold"
               android:id="@+id/textView_opposite"
               />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
+                    android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:orientation="horizontal"
                    android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
                 android:id="@+id/ll_oname">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:textSize="16sp"
-                    android:textColor="@android:color/black"
-                    android:text="Name: "
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textStyle="bold"
-                    />
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:textSize="16sp"
                     android:textColor="@android:color/black"
                     android:text="RContact"
                     android:id="@+id/textView_cname"
                     android:gravity="center_vertical"
-
+                     android:paddingBottom="5dp"
                     />
 
             </LinearLayout>
@@ -468,12 +464,13 @@
                     />
 
             </LinearLayout>
-
+</LinearLayout>
+                </LinearLayout>
             <View
   android:layout_width="match_parent"
   android:layout_height="1dp"
     android:layout_marginTop="3dp"
-  android:background="@android:color/darker_gray"/>
+  android:background="@android:color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -495,7 +492,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginTop="3dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/black"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -519,7 +516,7 @@
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="@android:color/black"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -537,13 +534,9 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
-                   android:background="@android:color/darker_gray"/>
+                   android:background="@android:color/black"/>
             </LinearLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="5dp"
-                android:background="@android:color/darker_gray"/>
+
             <Button
                 android:id="@+id/add"
                 style="?android:textAppearanceSmall"

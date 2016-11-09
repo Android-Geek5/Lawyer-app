@@ -60,13 +60,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                 strMobile= editText.getText().toString();
 
-
                 if (TextUtils.isEmpty(strMobile)) {
                     editText.setError("Field must not be empty.");
                     focusView = editText;
                     cancelLogin = true;
                 }else if (!isValidOTP((strMobile))) {
-                    editText.setError("Mobile number must be of digits 6.");
+                    editText.setError("Mobile number must be of digits 10.");
                     focusView = editText;
                     cancelLogin = true;
                 }
@@ -100,19 +99,24 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         yes.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 dialog.dismiss();
             }
         });
         dialog.show();
     }
-    private boolean isValidOTP(String pass) {
+
+    private boolean isValidOTP(String pass)
+    {
         return pass != null && pass.length() == 10;
     }
+
     public void forgotPwd() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(ForgotPasswordActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "forgot_password");

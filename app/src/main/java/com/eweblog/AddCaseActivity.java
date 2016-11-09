@@ -56,7 +56,7 @@ import java.util.Map;
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
     LinearLayout linearLayout;
-   Spinner /*sprDay, sprMonth, sprYear, sprNDay, sprNMonth, sprNYear,*/ sprCaseType/*, sprSDay, sprSMonth, sprSYear*/;
+   Spinner sprCaseType ;
 
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
@@ -71,7 +71,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ConnectionDetector cd;
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
-    Date dt1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,15 +80,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_add_case);
          prefshelper = new Prefshelper(AddCaseActivity.this);
-      /*  sprDay = (Spinner) findViewById(R.id.spinner_day);
-        sprMonth = (Spinner) findViewById(R.id.spinner_month);
-        sprYear = (Spinner) findViewById(R.id.spinner_year);
-        sprNDay = (Spinner) findViewById(R.id.spinner_nday);
-        sprNMonth = (Spinner) findViewById(R.id.spinner_nmonth);
-        sprNYear = (Spinner) findViewById(R.id.spinner_nyear);
-        sprSDay = (Spinner) findViewById(R.id.spinner_sday);
-        sprSMonth = (Spinner) findViewById(R.id.spinner_smonth);
-        sprSYear = (Spinner) findViewById(R.id.spinner_syear);*/
 
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
         btnAdd = (Button) findViewById(R.id.add);
@@ -179,100 +170,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     txtNextError.setVisibility(View.GONE);
                 }
 
-
-              /*  if(!strSYear.equalsIgnoreCase("") && !strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
-                {
-                    String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
-                    try {
-                        dt1 = dateFormatter2.parse(startDt);
-                         strStartDate = dateFormatter2.format(dt1);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    Log.e("year", strSYear);
-
-                }
-                if(!strYear.equalsIgnoreCase("") && !strMonth.equalsIgnoreCase("") && !strDay.equalsIgnoreCase(""))
-                {
-                    String prevDate = strYear + "-" + strMonth + "-" + strDay;
-                    try {
-                        Date date = dateFormatter2.parse(prevDate);
-                           strPreviousDt = dateFormatter2.format(date);
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                if(!strNYear.equalsIgnoreCase("") && !strNMonth.equalsIgnoreCase("") && !strNDay.equalsIgnoreCase(""))
-                {
-                    String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
-                    try {
-                        Date dt = dateFormatter2.parse(nextDate);
-                        strNextDt = dateFormatter2.format(dt);
-
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }*/
                 if (TextUtils.isEmpty(strTitle)) {
                     edtCaseTitle.setError("Field must not be empty.");
                     focusView = edtCaseTitle;
                     cancelLogin = true;
                 }
-             /*   if (TextUtils.isEmpty(strNumber)) {
-                    edtCaseNumber.setError("Field must not be empty.");
-                    focusView = edtCaseNumber;
-                    cancelLogin = true;
-                }
-
-                if (TextUtils.isEmpty(strCourt)) {
-                    edtCourtName.setError("Field must not be empty.");
-                    focusView = edtCourtName;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strOCName)) {
-                    edtOppositeName.setError("Field must not be empty.");
-                    focusView = edtOppositeName;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strStatus)) {
-                    edtStatus.setError("Field must not be empty.");
-                    focusView = edtStatus;
-                    cancelLogin = true;
-                }
-
-                if (TextUtils.isEmpty(strRName)) {
-                    edtRetainName.setError("Field must not be empty.");
-                    focusView = edtRetainName;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strOCName)) {
-                    edtOppositeName.setError("Field must not be empty.");
-                    focusView = edtOppositeName;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strRContact)) {
-                    edtRetainMobile.setError("Field must not be empty.");
-                    focusView = edtRetainMobile;
-                    cancelLogin = true;
-                } else if (!isValidPhone((strRContact))) {
-                    edtRetainMobile.setError("Mobile number must be of digits 10.");
-                    focusView = edtRetainMobile;
-                    cancelLogin = true;
-                }
-                if (TextUtils.isEmpty(strOCContact)) {
-                    edtOppositeNumber.setError("Field must not be empty.");
-                    focusView = edtOppositeNumber;
-                    cancelLogin = true;
-                } else if (!isValidPhone((strOCContact))) {
-                    edtOppositeNumber.setError("Mobile number must be of digits 10.");
-                    focusView = edtOppositeNumber;
-                    cancelLogin = true;
-                }*/
-
 
                 if (cancelLogin) {
                     // error in login
@@ -313,241 +215,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             sprCaseType.setAdapter(stringArrayAdapter);
         }
 
-        /*if (sprSDay.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
 
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprSDay.setAdapter(stringArrayAdapter);
-        }
-        if (sprSMonth.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprSMonth.setAdapter(stringArrayAdapter);
-        }
-        if (sprSYear.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprSYear.setAdapter(stringArrayAdapter);
-        }
-        if (sprDay.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprDay.setAdapter(stringArrayAdapter);
-        }
-        if (sprMonth.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprMonth.setAdapter(stringArrayAdapter);
-        }
-        if (sprYear.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprYear.setAdapter(stringArrayAdapter);
-        }
-        if (sprNDay.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNDay.setAdapter(stringArrayAdapter);
-        }
-        if (sprNMonth.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNMonth.setAdapter(stringArrayAdapter);
-        }
-        if (sprNYear.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNYear.setAdapter(stringArrayAdapter);
-        }*/
         sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
-      /*  sprDay.setOnItemSelectedListener(AddCaseActivity.this);
-        sprMonth.setOnItemSelectedListener(AddCaseActivity.this);
-        sprYear.setOnItemSelectedListener(AddCaseActivity.this);
-        sprNDay.setOnItemSelectedListener(AddCaseActivity.this);
-        sprNMonth.setOnItemSelectedListener(AddCaseActivity.this);
-        sprNYear.setOnItemSelectedListener(AddCaseActivity.this);
-        sprSDay.setOnItemSelectedListener(AddCaseActivity.this);
-        sprSMonth.setOnItemSelectedListener(AddCaseActivity.this);
-        sprSYear.setOnItemSelectedListener(AddCaseActivity.this);*/
 
     }
 
@@ -567,6 +236,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         try {
             final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
             pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
             pDialog.show();
 
             Log.e("", "SIGNUP " + MapAppConstant.API + "add_case");
@@ -663,19 +333,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         Spinner spinner = (Spinner) adapterView;
-      /*  sprMonth.getSelectedView();
-        sprMonth.setEnabled(false);
-        sprSMonth.getSelectedView();
-        sprSMonth.setEnabled(false);
-        sprNMonth.getSelectedView();
-        sprNMonth.setEnabled(false);
-        sprYear.getSelectedView();
-        sprYear.setEnabled(false);
-        sprSYear.getSelectedView();
-        sprSYear.setEnabled(false);
-        sprNYear.getSelectedView();
-        sprNYear.setEnabled(false);
-*/
+
         if (spinner.getId() == R.id.spinner_type) {
             if (i == 3) {
                 edtCaseType.setVisibility(View.VISIBLE);
@@ -690,223 +348,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
             }
         }
-    /*    if (spinner.getId() == R.id.spinner_day) {
-            if (i == 0)
-            {
-                strDay = "";
-            }
-            else {
 
-                strDay = sprDay.getSelectedItem().toString();
-                sprMonth.setEnabled(true);
-
-            }
-        }
-        if (spinner.getId() == R.id.spinner_month) {
-
-            if (i == 0) {
-                strMonth = "";
-            } else {
-                strMonth = String.valueOf(i);
-                sprYear.setEnabled(true);
-            }
-        }
-        if (spinner.getId() == R.id.spinner_year) {
-            if (i == 0) {
-                strYear = "";
-            } else {
-                sprYear.setEnabled(true);
-                sprMonth.setEnabled(true);
-                sprDay.setEnabled(true);
-                if (txtPrevError.getVisibility() == View.VISIBLE) {
-                    txtPrevError.setVisibility(View.GONE);
-                }
-                edtCaseTitle.requestFocus();
-                strYear = sprYear.getSelectedItem().toString();
-
-
-                if(!strMonth.equalsIgnoreCase("") && !strDay.equalsIgnoreCase(""))
-                {
-                    String prevDate = strYear + "-" + strMonth + "-" + strDay;
-                    try {
-                        Date date = dateFormatter2.parse(prevDate);
-                        if(dt1!=null) {
-                            if ((date.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))) || (date.after(dt1)) &&
-                                    date.before(dateFormatter2.parse(dateFormatter2.format(sysDate))))) {
-                                txtPrevError.setVisibility(View.GONE);
-                                strPreviousDt = dateFormatter2.format(date);
-                            } else {
-                                txtPrevError.setVisibility(View.VISIBLE);
-                                txtPrevError.setText("Previous date should be equals to or after than start date");
-                            }
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        if (spinner.getId() == R.id.spinner_nday) {
-            if (i == 0) {
-                strNDay = "";
-            } else {
-                strNDay = sprNDay.getSelectedItem().toString();
-                sprNMonth.setEnabled(true);
-
-            }
-        }
-        if (spinner.getId() == R.id.spinner_nmonth) {
-            if (i == 0) {
-                strNMonth = "";
-            } else {
-                strNMonth = String.valueOf(i);
-                sprNYear.setEnabled(true);
-            }
-        }
-        if (spinner.getId() == R.id.spinner_nyear) {
-            if (i == 0) {
-                strNYear = "";
-            } else {
-                sprNYear.setEnabled(true);
-                sprNMonth.setEnabled(true);
-                sprNDay.setEnabled(true);
-                if (txtNextError.getVisibility() == View.VISIBLE) {
-                    txtNextError.setVisibility(View.GONE);
-                }
-                edtRetainName.requestFocus();
-                strNYear = sprNYear.getSelectedItem().toString();
-
-                if(!strNMonth.equalsIgnoreCase("") && !strNDay.equalsIgnoreCase("")) {
-                    String nextDate = strNYear + "-" + strNMonth + "-" + strNDay;
-                    try {
-                        Date dt = dateFormatter2.parse(nextDate);
-                        if(dt.after(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
-                                dt.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
-                        {
-                            strNextDt = dateFormatter2.format(dt);
-                            txtNextError.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            txtNextError.setVisibility(View.VISIBLE);
-                            txtNextError.setText("Next date should be equals to or greater than current date");
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-        if (spinner.getId() == R.id.spinner_sday) {
-            if (i == 0) {
-                strSDay = "";
-            } else {
-                strSDay = sprSDay.getSelectedItem().toString();
-                sprSMonth.setEnabled(true);
-            }
-        }
-        if (spinner.getId() == R.id.spinner_smonth) {
-            if (i == 0) {
-                strSMonth = "";
-            } else {
-                strSMonth = String.valueOf(i);
-                sprSYear.setEnabled(true);
-            }
-        }
-        if (spinner.getId() == R.id.spinner_syear) {
-            if (i == 0)
-            {
-                strSYear = "";
-            }
-            else
-            {
-                sprSYear.setEnabled(true);
-                sprSMonth.setEnabled(true);
-                sprSDay.setEnabled(true);
-                if (txtStartError.getVisibility() == View.VISIBLE) {
-                    txtStartError.setVisibility(View.GONE);
-                }
-
-                strSYear = sprSYear.getSelectedItem().toString();
-                if(!strSMonth.equalsIgnoreCase("") && !strSDay.equalsIgnoreCase(""))
-                {
-                    String startDt = strSYear + "-" + strSMonth + "-" + strSDay;
-                    try {
-                         dt1 = dateFormatter2.parse(startDt);
-                        if(dt1.before(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
-                                dt1.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
-                        {
-                            strStartDate = dateFormatter2.format(dt1);
-                            txtStartError.setVisibility(View.GONE);
-                        }
-                        else
-                        {
-                            txtStartError.setVisibility(View.VISIBLE);
-                            txtStartError.setText("Please select a date before current date");
-                        }
-
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }*/
-      /*  if(spinner.getId()==R.id.spinner_time)
-        {
-            if (i==0)
-            {
-                strTime="";
-            }
-            else {
-                edtCaseTitle.requestFocus();
-                strTime= sprTime.getSelectedItem().toString();
-
-                prevTime= strTime.substring(0, strTime.length()-2);
-                Log.e("year", prevTime);
-
-
-                String prevDate=strYear+"-"+strMonth+"-"+strDay+" "+prevTime;
-                try {
-                    Date date=dateFormatter.parse(prevDate);
-                    strPreviousDt=dateFormatter.format(date);
-                    Log.e("year", strPreviousDt);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }
-        if(spinner.getId()==R.id.spinner_ntime)
-        {
-            if (i==0)
-            {
-                strNTime="";
-            }
-            else {
-                edtRetainName.requestFocus();
-                strNTime=sprNtime.getSelectedItem().toString();
-
-
-                nextTime=strNTime.substring(0, strNTime.length()-2);
-                Log.e("year", nextTime);
-
-
-                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay+" "+nextTime;
-                try {
-                    Date dt=dateFormatter.parse(nextDate);
-                    strNextDt=dateFormatter.format(dt);
-                    Log.e("year", strNextDt);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-        }*/
     }
 
     @Override
@@ -981,8 +423,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 }
                 else  if(prefshelper.getDate().equalsIgnoreCase("previous"))
                 {
-
-
                     dialog.dismiss();
                     strPreviousDt=year + "-" + strMonth + "-" + strDay;
                     try {

@@ -7,9 +7,9 @@ import java.util.List;
 
 public class CaseListModel implements Serializable{
    private String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
-    retainContact, caseStatus , comment, nextDate;
-   private ArrayList<String> nextDt, prevDt, comments;
- List<CaseListModel> list, arrayList;
+    retainContact, caseStatus , comment, nextDate, date;
+
+ private List<CaseListModel> arrayList, dataList;
 
     public String getCaseTitle() {
         return caseTitle;
@@ -51,12 +51,12 @@ public class CaseListModel implements Serializable{
         this.caseStartDate = name;
     }
 
-    public String getCasePrevDate() {
-        return casePrevDate;
+    public String getDate() {
+        return date;
     }
 
-    public void setCasePrevDate(String name) {
-        this.casePrevDate = name;
+    public void setDate(String name) {
+        this.date = name;
     }
 
     public String getCounsellorName() {
@@ -123,38 +123,6 @@ public class CaseListModel implements Serializable{
         this.nextDate = name;
     }
 
-    public ArrayList<String> getNextDateArray() {
-        return nextDt;
-    }
-
-    public void setNextDateArray(ArrayList name) {
-        this.nextDt = name;
-    }
-
-
-    public ArrayList<String> getPrevDateArray() {
-        return prevDt;
-    }
-
-    public void setPrevDateArray(ArrayList name) {
-        this.prevDt = name;
-    }
-
-    public ArrayList<String> getNCommentsArray() {
-        return comments;
-    }
-
-    public void setCommentsArray(ArrayList name) {
-        this.comments = name;
-    }
-
-    public List<CaseListModel> getCaseList() {
-        return list;
-    }
-
-    public void setCaseList(List<CaseListModel> name) {
-        this.list = name;
-    }
 
     public List<CaseListModel> getCaseArrayList() {
         return arrayList;
@@ -162,6 +130,13 @@ public class CaseListModel implements Serializable{
 
     public void setArrayCaseList(List<CaseListModel> name) {
         this.arrayList = name;
+    }
+    public List<CaseListModel> getDataList() {
+        return dataList;
+    }
+
+    public void setDataList(List<CaseListModel> name) {
+        this.dataList = name;
     }
 
 

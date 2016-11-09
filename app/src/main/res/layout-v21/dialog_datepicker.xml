@@ -19,5 +19,5 @@
         android:id="@+id/bt_yes"
         android:layout_gravity="center"
         android:background="@color/buttonbg"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="@android:color/white"/>
 </LinearLayout>
