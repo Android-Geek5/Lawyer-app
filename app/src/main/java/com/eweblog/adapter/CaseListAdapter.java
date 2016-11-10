@@ -13,17 +13,20 @@ import android.widget.TextView;
 import com.eweblog.CaseDetailActivity;
 import com.eweblog.R;
 import com.eweblog.common.ConnectionDetector;
+import com.eweblog.common.Prefshelper;
 import com.eweblog.model.CaseListModel;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class CaseListAdapter  extends BaseAdapter {
-    List<CaseListModel> caseList;
+    List<CaseListModel> caseList, newList;
     ConnectionDetector cd;
     private static LayoutInflater inflater=null;
     Context context;
+   Prefshelper prefshelper;
 
     public CaseListAdapter(Context contxt, List<CaseListModel> list) {
         // TODO Auto-generated constructor stub
@@ -61,19 +64,18 @@ public class CaseListAdapter  extends BaseAdapter {
         // TODO Auto-generated method stub
         Holder holder=new Holder();
         View rowView;
+
         rowView = inflater.inflate(R.layout.case_list_item, null);
         holder.txtCase=(TextView) rowView.findViewById(R.id.textView_title);
         holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
         holder.txtCase.setText(caseList.get(position).getCaseTitle());
-
+        prefshelper=new Prefshelper(context);
+        holder.txtNumber.setText(prefshelper.getSelectedDate());
         cd=new ConnectionDetector(context);
-        if(cd.isConnectingToInternet())
-        {
-            holder.txtNumber.setText(caseList.get(position).getCaseArrayList().get(position).getNextDate());
-        }
-        else
+        if(!cd.isConnectingToInternet())
         {
             List<CaseListModel> list=caseList.get(position).getCaseArrayList();
+            newList=new ArrayList<>();
             String caseId=caseList.get(position).getCaseId();
             for(int i=0; i<list.size(); i++)
             {
@@ -81,10 +83,12 @@ public class CaseListAdapter  extends BaseAdapter {
                 if((list.get(i).getCaseId()).equalsIgnoreCase(caseId))
                 {
 
-                    holder.txtNumber.setText(list.get(position).getNextDate());
+                    newList.add(list.get(i));
+
                 }
 
             }
+
 
         }
 
@@ -104,7 +108,16 @@ public class CaseListAdapter  extends BaseAdapter {
                 intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
                 intent.putExtra("rname", caseList.get(position).getRetainName());
                 intent.putExtra("rcontact",caseList.get(position).getRetainContact());
-                intent.putExtra("list1", (Serializable) caseList.get(position).getCaseArrayList());
+                if(cd.isConnectingToInternet()) {
+                    intent.putExtra("list1", (Serializable) caseList.get(position).getCaseArrayList());
+                }
+                else
+                {
+                    if(newList!=null)
+                    {
+                        intent.putExtra("list1", (Serializable) newList);
+                    }
+                }
                 context.startActivity(intent);
 
             }

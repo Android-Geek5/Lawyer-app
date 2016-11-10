@@ -225,7 +225,7 @@ public class LoginActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(LoginActivity.this, "Timeout Error",
+                        Toast.makeText(LoginActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());

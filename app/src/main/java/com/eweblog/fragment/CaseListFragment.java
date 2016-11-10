@@ -50,6 +50,7 @@ public class CaseListFragment extends Fragment {
             rootview = inflater.inflate(R.layout.fragment_case_list, container, false);
             listView = (ListView) rootview.findViewById(R.id.listView);
             caseList= (List<CaseListModel>) getArguments().getSerializable("list");
+
             Log.e("listtttttte", caseList+"");
             listView.setAdapter(new CaseListAdapter(getActivity(), caseList));
 

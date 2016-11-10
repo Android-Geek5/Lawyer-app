@@ -283,7 +283,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(AddCaseActivity.this, "Timeout Error",
+                        Toast.makeText(AddCaseActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());

@@ -74,6 +74,7 @@ public class CaseDetailActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_case_detail);
+        cd=new ConnectionDetector(CaseDetailActivity.this);
         linearLayout=(LinearLayout)findViewById(R.id.ll_navi);
         linearLayoutMain=(LinearLayout)findViewById(R.id.ll_main);
         linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +97,8 @@ public class CaseDetailActivity extends AppCompatActivity {
         counsellorContact=getIntent().getStringExtra("ocontact");
         retainedName=getIntent().getStringExtra("rname");
         retainedContact=getIntent().getStringExtra("rcontact");
-        caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list1");
+
+
         txtCaseNumber=(TextView)findViewById(R.id.textView_number);
         txtCaseTitle=(TextView)findViewById(R.id.textView_title);
         txtCaseType=(TextView)findViewById(R.id.textView_type);
@@ -120,7 +122,9 @@ public class CaseDetailActivity extends AppCompatActivity {
         llCName=(LinearLayout)findViewById(R.id.ll_oname);
         llCContact=(LinearLayout)findViewById(R.id.ll_ocontact);
         llCourtName=(LinearLayout)findViewById(R.id.ll_name);
-        cd=new ConnectionDetector(CaseDetailActivity.this);
+
+        caseArray= (List<CaseListModel>) getIntent().getSerializableExtra("list1");
+
 
         if(caseNumber.equalsIgnoreCase(""))
         {
@@ -289,13 +293,9 @@ public class CaseDetailActivity extends AppCompatActivity {
         else {
             if (caseArray != null) {
                 Log.e(caseArray.size() + "", "sizeeeeee");
-                for (int i = 0; i <caseArray.size(); i++) {
+                for (int i = 0; i <Math.sqrt(caseArray.size()); i++) {
 
-                    if (caseArray.get(i).getCaseId().equalsIgnoreCase(caseId))
-                    {
-                      /*  caseListModels = new ArrayList<>();
 
-                            caseListModels.add(caseArray.get(i));*/
                         LinearLayout llv = new LinearLayout(this);
                         llv.setOrientation(LinearLayout.VERTICAL);
                         LinearLayout ll = new LinearLayout(this);
@@ -331,7 +331,7 @@ public class CaseDetailActivity extends AppCompatActivity {
                         linearLayoutMain.addView(llv);
 
                     }
-                }
+
                /* List<CaseListModel> uniques = new ArrayList<>();
                 for (CaseListModel element : caseListModels)
                 {
@@ -473,7 +473,7 @@ public class CaseDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.d("", ".......response====" + response);
 
                     ////////
                     try {
@@ -509,7 +509,7 @@ public class CaseDetailActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(CaseDetailActivity.this, "Timeout Error",
+                        Toast.makeText(CaseDetailActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());

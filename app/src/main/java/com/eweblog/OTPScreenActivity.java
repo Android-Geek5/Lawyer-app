@@ -150,7 +150,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(OTPScreenActivity.this, "Timeout Error",
+                        Toast.makeText(OTPScreenActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
@@ -228,7 +228,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(OTPScreenActivity.this, "Timeout Error",
+                        Toast.makeText(OTPScreenActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());

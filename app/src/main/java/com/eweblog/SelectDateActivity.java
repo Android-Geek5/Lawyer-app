@@ -74,7 +74,7 @@ import java.util.TimeZone;
 public class SelectDateActivity extends AppCompatActivity {
 
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;
@@ -93,7 +93,7 @@ public class SelectDateActivity extends AppCompatActivity {
     List<CaseListModel> allCaseList = new ArrayList<>();
     List<CaseListModel> allCaseListArray=new ArrayList<>();
     List<CaseListModel> searchedList=new ArrayList<>();
-    List<CaseListModel> allDataList=new ArrayList<>();
+
     Date dateEvent;
     ConnectionDetector cd;
 
@@ -174,6 +174,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 }
                 daySelected = dateFormatForDisplaying.format(dateClicked);
+                prefshelper.storeSelectedDate(dateFormat.format(dateClicked));
                 Calendar cal = Calendar.getInstance();
                 Date sysDate = cal.getTime();
                 if(daySelected.equalsIgnoreCase(dateFormatForDisplaying.format(sysDate)))
@@ -196,6 +197,7 @@ public class SelectDateActivity extends AppCompatActivity {
                 }
                 else
                 {
+
                     if(allCaseList.size()>0)
                     {
                         for(int i=0; i<allCaseList.size(); i++)
@@ -213,6 +215,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     if(searchedList.size()>0)
                     {
                            Bundle bundle = new Bundle();
+
                         bundle.putSerializable("list", (Serializable) searchedList);
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -506,6 +509,7 @@ public class SelectDateActivity extends AppCompatActivity {
                             }
 
                             Bundle bundle = new Bundle();
+
                             bundle.putSerializable("list", (Serializable) caseList);
                             android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                             android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -529,7 +533,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "Timeout Error",
+                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
@@ -670,7 +674,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "Timeout Error",
+                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());

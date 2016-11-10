@@ -100,6 +100,17 @@ public class Prefshelper {
 
         return getPreferences().getString("date", "");
     }
+    public void storeSelectedDate(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("selected_date", contact);
+        edit.commit();
+
+    }
+
+    public String getSelectedDate() {
+
+        return getPreferences().getString("selected_date", "");
+    }
 
 
     public String getUserIdFromPreference() {
@@ -111,24 +122,7 @@ public class Prefshelper {
         return getPreferences().getString("user_security_hash", "");
     }
 
-    public String getUserNameFromPreference() {
-        return getPreferences().getString("user_name", "");
-    }
 
-    public String getUserEmailFromPreference() {
-        return getPreferences().getString("user_email", "");
-    }
-
-    public String getUserContactFromPreference() {
-        return getPreferences().getString("user_contact", "");
-    }
-
-    public String getUserStatusFromPreference() {
-        return getPreferences().getString("user_status", "");
-    }
-    public String getEmailVerification() {
-        return getPreferences().getString("user_email_verification_status", "");
-    }
     public String getMobileVerification() {
         return getPreferences().getString("user_mobile_verification_status", "");
     }
