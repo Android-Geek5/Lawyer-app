@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.IBinder;
 
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+
 import com.eweblog.SplashScreenActivity;
 
 public class MyAlarmService extends Service

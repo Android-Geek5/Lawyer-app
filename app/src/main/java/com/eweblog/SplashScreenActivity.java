@@ -32,6 +32,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.eweblog.common.AlarmReceiver;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.MyAlarmService;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 import com.eweblog.model.CaseListModel;
@@ -57,6 +58,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     Date sysDate = cal.getTime();
     List<CaseListModel> caseList ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,20 +70,22 @@ public class SplashScreenActivity extends AppCompatActivity {
         caseList = prefshelper.getList();
         if(caseList!=null) {
             if (caseList.size() > 0) {
-                for (int i = 0; i < caseList.size(); i++) {
-                    if (caseList.get(i).getDate().equalsIgnoreCase(dateFormat.format(sysDate))) {
-                        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                for (int i = 0; i < caseList.size(); i++)
+                {
+                    if (caseList.get(i).getDate().equalsIgnoreCase(dateFormat.format(sysDate)))
+                    {
 
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTimeInMillis(System.currentTimeMillis());
                         calendar.set(Calendar.MINUTE, 59);
-                        calendar.set(Calendar.HOUR, 5);
+                        calendar.set(Calendar.HOUR,5);
                         calendar.set(Calendar.AM_PM, Calendar.PM);
                         Intent myIntent = new Intent(this, AlarmReceiver.class);
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, myIntent, 0);
-
-                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        AlarmManager alarmManager2 = (AlarmManager) getSystemService(ALARM_SERVICE);
+                        alarmManager2.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
                                 AlarmManager.INTERVAL_DAY, pendingIntent);
+
                     }
                 }
             }
@@ -154,9 +158,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     public void onRestart() {
         super.onRestart();
-        Intent intent =new Intent(SplashScreenActivity.this, SplashScreenActivity.class);
-        finish();
-        startActivity(intent);
+
     }
     @Override
     public void onStop() {

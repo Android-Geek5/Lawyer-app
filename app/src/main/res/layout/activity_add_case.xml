@@ -481,7 +481,7 @@
             android:layout_height="45dp"
             android:textSize="15sp"
             android:textColor="@android:color/black"
-            android:hint="Court Name"
+            android:hint="Judge Name"
             android:layout_marginTop="10dp"
             android:textColorHint="@android:color/darker_gray"
             android:id="@+id/textView_name"

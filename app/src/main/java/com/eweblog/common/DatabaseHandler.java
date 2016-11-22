@@ -1,5 +1,4 @@
-/*
-package com.lawyerapp.common;
+
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,7 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.lawyerapp.model.CaseListModel;
+
+import com.eweblog.model.CaseListModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-*/
 /*
 CREATE TABLE IF NOT EXISTS `case_details` (
   `case_detail_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -44,7 +43,8 @@ CREATE TABLE IF NOT EXISTS `case_details` (
   `case_detail_modified` datetime NOT NULL,
   PRIMARY KEY (`case_detail_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-*//*
+*/
+
 
 
         String CREATE_ADD_CASE_TABLE = "CREATE TABLE IF NOT EXISTS " + "cases" + "(" + "case_id"
@@ -100,16 +100,16 @@ CREATE TABLE IF NOT EXISTS `case_details` (
         db.close(); // Closing database connection
     }
 
-   */
-/*public Cursor getListItem() {
+/*
+public Cursor getListItem() {
        String selectQuery = "SELECT  * FROM " + TABLE_LIST;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
         return cursor;
-    }*//*
+    }
 
+*/
 
 }
-*/

@@ -1,6 +1,8 @@
 package com.eweblog;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.AlarmReceiver;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -56,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        cd = new ConnectionDetector(getApplicationContext());
+         cd = new ConnectionDetector(getApplicationContext());
         edtContact = (EditText) findViewById(R.id.email);
         edtPwd = (EditText) findViewById(R.id.password);
         txtNotAUser = (TextView) findViewById(R.id.textView);
