@@ -15,7 +15,7 @@
         completions."
     </string>
     <string name="about">E-Weblog for court cases, this application is a replacement of heavy manual diary to manage day to day Case details and Adjournment for lawyers on daily basis. Using this app you can maintain your daily data in a very less time as well you can edit and add your case details. Moreover you can also see all your complete case history till closing date. Now there is no fear to loss your data due to any reason as this application will be a  backup tool to your data in which you can be easily accessible at anytime anywhere by providing proper credentials entered by you during registration. moreover the details of case can be sent by single click. Into making tools to simplify your data regarding court cases and making it more convenient and understandable to common person. We are further dedicated towards betterment and adding futuristic approaches in our products As per requirement of time. We want to make people smarter by use of our apps.</string>
-  <string name="vision">To become worlds leading IT company for digitalise every profesional work.</string>
+    <string name="vision">To become worlds leading IT company for digitalize every professional work.</string>
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string-array name="day">

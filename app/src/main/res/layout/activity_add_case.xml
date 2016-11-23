@@ -810,7 +810,31 @@
 
             </LinearLayout>
         </LinearLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp">
+    <CheckBox
+        android:text="SMS Alerts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkedTextView"
+        android:checked="true"
+        android:layout_gravity="center_vertical"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@android:color/black"
+        android:inputType="textAutoCorrect|textMultiLine"
+        android:hint="Client's Mobile Number"
+        android:textColorHint="@android:color/darker_gray"
+        android:id="@+id/textView_clientnumber"
+        android:layout_gravity="center_vertical"
+        />
+</LinearLayout>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -843,6 +867,8 @@
 
 
     </ScrollView>
+
+
 
 </LinearLayout>
 

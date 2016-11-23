@@ -20,6 +20,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -28,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.common.AlarmReceiver;
+import com.eweblog.common.CircularImageView;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -51,6 +54,7 @@ import com.eweblog.common.VolleySingleton;
 import com.eweblog.fragment.AboutUS;
 import com.eweblog.fragment.CaseListFragment;
 import com.eweblog.fragment.ChangePasswordFragment;
+import com.eweblog.fragment.EditProfileFragment;
 import com.eweblog.model.CaseListModel;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
@@ -96,10 +100,12 @@ public class SelectDateActivity extends AppCompatActivity {
     List<CaseListModel> allCaseList = new ArrayList<>();
     List<CaseListModel> allCaseListArray=new ArrayList<>();
     List<CaseListModel> searchedList=new ArrayList<>();
-
+    public  static TextView text_name, email_name;
     Date dateEvent;
     ConnectionDetector cd;
-
+    LinearLayout linearLayout, linearLayout_search;
+    String pic,name,email;
+    public static CircularImageView pimage;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -112,12 +118,6 @@ public class SelectDateActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
-        Intent intent1 = new Intent(this.getApplicationContext(), AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getActivity( this.getApplicationContext(),0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(sender);
-
-
         compactCalendar = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
@@ -128,6 +128,25 @@ public class SelectDateActivity extends AppCompatActivity {
         cd = new ConnectionDetector(getApplicationContext());
         imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
+        linearLayout_search=(LinearLayout)findViewById(R.id.imageView_back2);
+        linearLayout_search.setVisibility(View.VISIBLE);
+        linearLayout=(LinearLayout) LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
+        navigationView.addHeaderView(linearLayout);
+        pimage=(CircularImageView)linearLayout.findViewById(R.id.profile_img);
+        text_name=(TextView)linearLayout.findViewById(R.id.txt_usrName);
+        email_name=(TextView)linearLayout.findViewById(R.id.txt_userEmail);
+
+       /* pic=prefshelper.getProfileImage();
+        name=prefshelper.getName();
+        email=prefshelper.getEmail();*/
+
+//        text_name.setText(name);
+//        email_name.setText(email);
+
+        Intent intent1 = new Intent(this.getApplicationContext(), AlarmReceiver.class);
+        PendingIntent sender = PendingIntent.getActivity( this.getApplicationContext(),0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(sender);
         compactCalendar.setLocale(TimeZone.getDefault(), Locale.ENGLISH);
         compactCalendar.setUseThreeLetterAbbreviation(true);
         compactCalendar.setSelected(true);
@@ -273,6 +292,13 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
+        linearLayout_search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(SelectDateActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }
+        });
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -306,6 +332,14 @@ public class SelectDateActivity extends AppCompatActivity {
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new ChangePasswordFragment());
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                        return true;
+                    case R.id.drawer_edit:
+                        txtTitle.setText("Edit Profile");
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentTransaction = fragmentManager.beginTransaction();
+                        fragmentTransaction.replace(R.id.content_frame, new EditProfileFragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;

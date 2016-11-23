@@ -1,4 +1,4 @@
-
+package com.eweblog.common;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -29,21 +29,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
-
-/*
-CREATE TABLE IF NOT EXISTS `case_details` (
-  `case_detail_id` int(11) NOT NULL AUTO_INCREMENT,
-  `cases_id` int(11) NOT NULL COMMENT 'FK Reference FROM cases ON case_id',
-  `users_id` int(11) NOT NULL COMMENT 'FK Reference FROM users ON user_id',
-  `case_detail_previous_date` datetime NOT NULL,
-  `case_detail_next_date` datetime NOT NULL,
-  `case_detail_comment` text NOT NULL,
-  `case_detail_status` tinyint(1) NOT NULL COMMENT '0=inactive;1=active;-1=deleted',
-  `case_detail_created` datetime NOT NULL,
-  `case_detail_modified` datetime NOT NULL,
-  PRIMARY KEY (`case_detail_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-*/
 
 
 

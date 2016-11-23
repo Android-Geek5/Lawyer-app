@@ -13,5 +13,5 @@
     <color name="argu"> #f44336</color>
     <color name="cross"> #00bfa5</color>
     <color name="consider"> #ff9e80</color>
-
+    <color name="tabsScrollColor">#ffffff</color>
 </resources>

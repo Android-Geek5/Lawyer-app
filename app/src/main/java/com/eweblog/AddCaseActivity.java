@@ -18,6 +18,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -61,7 +63,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ArrayAdapter<String> stringArrayAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
-            edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate;
+            edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate, edtClientContact;
     Prefshelper prefshelper;
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
             strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear;
@@ -71,6 +73,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ConnectionDetector cd;
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
+    CheckBox chkSmsAlert;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,13 +122,27 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtStartDate = (EditText) findViewById(R.id.textView_startdt);
         edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
         edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
+        edtClientContact = (EditText) findViewById(R.id.textView_clientnumber);
+        chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
         edtNextDate.setHint(dateFormatter2.format(sysDate));
         edtPrevDate.setHint(dateFormatter2.format(sysDate));
         edtStartDate.setHint(dateFormatter2.format(sysDate));
         edtStartDate.setOnClickListener(this);
         edtPrevDate.setOnClickListener(this);
         edtNextDate.setOnClickListener(this);
-
+        chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(compoundButton.isChecked())
+                {
+                  edtClientContact.setEnabled(true);
+                }
+                else
+                {
+                    edtClientContact.setEnabled(false);
+                }
+            }
+        });
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -1,6 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
     compileSdkVersion 24
     buildToolsVersion "23.0.3"
     defaultConfig {
@@ -20,7 +25,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -30,4 +35,7 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     testCompile 'junit:junit:4.12'
     compile 'com.google.code.gson:gson:2.6.2'
+    compile files('libs/httpcore-4.3.jar')
+    compile files('libs/httpmime-4.3.jar')
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
