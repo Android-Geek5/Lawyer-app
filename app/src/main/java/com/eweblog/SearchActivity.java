@@ -31,8 +31,7 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TextView txtTitle = (TextView) findViewById(R.id.toolbar_title);
-        txtTitle.setText("Cases List");
+
         adapter =  new ListAdapter(getSupportFragmentManager(),Titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter

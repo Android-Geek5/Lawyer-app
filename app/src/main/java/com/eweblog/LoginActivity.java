@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     ViewPager pager;
     ViewPagerAdapter adapter;
     SlidingTabLayout tabs;
-    CharSequence Titles[]={"Free User","Corporate User"};
+    CharSequence Titles[]={"Individual User","Business User"};
     int Numboftabs =2;
 
     @Override
