@@ -14,4 +14,8 @@
     <color name="cross"> #00bfa5</color>
     <color name="consider"> #ff9e80</color>
     <color name="tabsScrollColor">#ffffff</color>
+    <color name="case_color">#ffab00</color>
+    <color name="user_color"> #ff9e80</color>
+    <color name="add_color"> #00bfa5</color>
+
 </resources>

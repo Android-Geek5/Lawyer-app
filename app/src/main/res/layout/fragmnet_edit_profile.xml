@@ -115,7 +115,7 @@
                     android:id="@+id/mobile"
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
-                    android:hint="Mobile Number"
+                    android:hint="State"
                     android:layout_weight="1"
                     android:inputType="number"
                     android:maxLines="1"
@@ -125,10 +125,72 @@
                     android:background="@color/colorText"
                     android:textColorHint="@android:color/darker_gray"
                     android:paddingLeft="10dp"
-
+                    android:drawableRight="@drawable/dropdown"
                     />
 
                </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:padding="10dp"
+                    android:background="@color/colorIcon"
+                    android:src="@drawable/location"/>
+                <EditText
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:hint="Location"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    android:maxLength="10"
+                    android:textColor="@android:color/white"
+                    android:background="@color/colorText"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:paddingLeft="10dp"
+                    android:drawableRight="@drawable/dropdown"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="45dp"
+                    android:padding="10dp"
+                    android:background="@color/colorIcon"
+                    android:src="@drawable/layers"/>
+                <EditText
+                    android:id="@+id/specialization"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:hint="Specialization"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:maxLines="1"
+                    android:textSize="16sp"
+                    android:maxLength="10"
+                    android:textColor="@android:color/white"
+                    android:background="@color/colorText"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:paddingLeft="10dp"
+                    android:drawableRight="@drawable/dropdown"
+                    />
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/email_sign_in_button"

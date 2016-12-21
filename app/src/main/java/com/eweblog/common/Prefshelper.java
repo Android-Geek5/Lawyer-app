@@ -100,6 +100,18 @@ public class Prefshelper {
 
         return getPreferences().getString("date", "");
     }
+
+    public void storeSearch(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("search", contact);
+        edit.commit();
+
+    }
+
+    public String getSearch() {
+
+        return getPreferences().getString("search", "");
+    }
     public void storeSelectedDate(String contact) {
         Editor edit = getPreferences().edit();
         edit.putString("selected_date", contact);

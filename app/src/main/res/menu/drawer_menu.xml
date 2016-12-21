@@ -16,13 +16,13 @@
         </item>
         <item
             android:id="@+id/drawer_view"
-            android:icon="@drawable/viewusers"
+            android:icon="@drawable/view"
             android:title="View Users" >
         </item>
         <item
             android:id="@+id/drawer_case"
             android:icon="@drawable/casetype"
-            android:title="Case Type" >
+            android:title="Case Status" >
         </item>
         <item
             android:id="@+id/drawer_add"
@@ -50,6 +50,16 @@
             android:id="@+id/drawer_logout"
             android:icon="@drawable/logout"
             android:title="Logout" >
+        </item>
+        <item
+            android:id="@+id/drawer_settings"
+            android:icon="@drawable/settings"
+            android:title="Settings" >
+        </item>
+        <item
+            android:id="@+id/drawer_fee"
+            android:icon="@drawable/fee"
+            android:title="Fee Management" >
         </item>
     </group>
 

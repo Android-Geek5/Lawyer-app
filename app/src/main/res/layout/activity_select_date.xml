@@ -136,7 +136,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-
+        android:scrollbars="none"
         android:background="@color/menuBG"
         app:itemTextColor="@android:color/white"
         app:theme="@style/list_item_appearance"

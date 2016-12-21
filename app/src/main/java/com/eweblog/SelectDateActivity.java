@@ -295,6 +295,7 @@ public class SelectDateActivity extends AppCompatActivity {
         linearLayout_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                prefshelper.storeSearch("filter");
                 Intent intent=new Intent(SelectDateActivity.this, SearchActivity.class);
                 startActivity(intent);
             }
@@ -351,11 +352,20 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
+                    case R.id.drawer_view:
+
+                        Intent in = new Intent(SelectDateActivity.this, ViewUsersActivity.class);
+                        startActivity(in);
+                        return true;
+                    case R.id.drawer_case:
+                        prefshelper.storeSearch("case_status");
+                        Intent intnt = new Intent(SelectDateActivity.this, SearchActivity.class);
+                        startActivity(intnt);
+                        return true;
                     case R.id.drawer_add:
                         txtTitle.setText("Add Case");
                         Intent intent1 = new Intent(SelectDateActivity.this, AddCaseActivity.class);
                         startActivity(intent1);
-                        finish();
                         return true;
                     case R.id.drawer_logout:
 

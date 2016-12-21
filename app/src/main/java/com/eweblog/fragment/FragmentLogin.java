@@ -263,6 +263,7 @@ public class FragmentLogin extends Fragment {
 
                     params.put("user_login", strContact);
                     params.put("user_login_password", strPwd);
+
                     return params;
                 }
             };
@@ -284,28 +285,7 @@ public class FragmentLogin extends Fragment {
 
         super.onResume();
 
-        getView().setFocusableInTouchMode(true);
-        getView().requestFocus();
-        getView().setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
 
-                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
-
-                    if(getFragmentManager().getBackStackEntryCount() > 0) {
-
-
-                            getFragmentManager().popBackStack();
-
-                    }
-
-                    return true;
-
-                }
-
-                return false;
-            }
-        });
     }
 
 }

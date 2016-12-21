@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.eweblog.adapter.ListAdapter;
 import com.eweblog.adapter.ViewPagerAdapter;
+import com.eweblog.common.Prefshelper;
 import com.eweblog.common.SlidingTabLayout;
 
 public class SearchActivity extends AppCompatActivity {
@@ -22,6 +23,8 @@ public class SearchActivity extends AppCompatActivity {
     int Numboftabs =2;
     LinearLayout llBack;
     TextView txtType, txtCaseTitle, txtJudge;
+    Prefshelper prefshelper;
+    LinearLayout llFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +34,9 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        prefshelper=new Prefshelper(this);
 
+       llFilters=(LinearLayout)findViewById(R.id.ll_filter);
         adapter =  new ListAdapter(getSupportFragmentManager(),Titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
@@ -64,6 +69,14 @@ public class SearchActivity extends AppCompatActivity {
         txtCaseTitle=(TextView)findViewById(R.id.text_title);
         txtType=(TextView)findViewById(R.id.text_type);
         txtJudge=(TextView)findViewById(R.id.text_judge);
+        if(prefshelper.getSearch().equalsIgnoreCase("case_status"))
+        {
+          llFilters.setVisibility(View.GONE);
+        }
+        else
+        {
+            llFilters.setVisibility(View.VISIBLE);
+        }
         llBack.setVisibility(View.VISIBLE);
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override

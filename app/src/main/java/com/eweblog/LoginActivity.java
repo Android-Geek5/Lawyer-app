@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
         // Set up the login form.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        TextView txtTitle = (TextView) findViewById(R.id.toolbar_title);
-        txtTitle.setText("Login");
+       /* TextView txtTitle = (TextView) findViewById(R.id.toolbar_title);
+        txtTitle.setText("Login");*/
         adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
