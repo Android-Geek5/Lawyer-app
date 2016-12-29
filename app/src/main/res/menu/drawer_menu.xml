@@ -9,7 +9,7 @@
             android:id="@+id/drawer_home"
             android:icon="@drawable/home"
             android:title="Home"/>
-        <item
+      <!--  <item
             android:id="@+id/drawer_edit"
             android:icon="@drawable/edit"
             android:title="Edit Profile" >
@@ -23,7 +23,7 @@
             android:id="@+id/drawer_case"
             android:icon="@drawable/casetype"
             android:title="Case Status" >
-        </item>
+        </item>-->
         <item
             android:id="@+id/drawer_add"
             android:icon="@drawable/add_case"
@@ -51,7 +51,7 @@
             android:icon="@drawable/logout"
             android:title="Logout" >
         </item>
-        <item
+      <!--  <item
             android:id="@+id/drawer_settings"
             android:icon="@drawable/settings"
             android:title="Settings" >
@@ -60,7 +60,7 @@
             android:id="@+id/drawer_fee"
             android:icon="@drawable/fee"
             android:title="Fee Management" >
-        </item>
+        </item>-->
     </group>
 
 

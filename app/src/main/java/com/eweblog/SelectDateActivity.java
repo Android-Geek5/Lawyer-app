@@ -128,13 +128,13 @@ public class SelectDateActivity extends AppCompatActivity {
         cd = new ConnectionDetector(getApplicationContext());
         imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
-        linearLayout_search=(LinearLayout)findViewById(R.id.imageView_back2);
+       /* linearLayout_search=(LinearLayout)findViewById(R.id.imageView_back2);
         linearLayout_search.setVisibility(View.VISIBLE);
         linearLayout=(LinearLayout) LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
         navigationView.addHeaderView(linearLayout);
         pimage=(CircularImageView)linearLayout.findViewById(R.id.profile_img);
         text_name=(TextView)linearLayout.findViewById(R.id.txt_usrName);
-        email_name=(TextView)linearLayout.findViewById(R.id.txt_userEmail);
+        email_name=(TextView)linearLayout.findViewById(R.id.txt_userEmail);*/
 
        /* pic=prefshelper.getProfileImage();
         name=prefshelper.getName();
@@ -292,14 +292,14 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
-        linearLayout_search.setOnClickListener(new View.OnClickListener() {
+      /*  linearLayout_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 prefshelper.storeSearch("filter");
                 Intent intent=new Intent(SelectDateActivity.this, SearchActivity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -336,14 +336,14 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
-                    case R.id.drawer_edit:
+                  /*  case R.id.drawer_edit:
                         txtTitle.setText("Edit Profile");
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new EditProfileFragment());
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
-                        return true;
+                        return true;*/
                     case R.id.about_us:
                         txtTitle.setText("About us");
                         fragmentManager = getSupportFragmentManager();
@@ -352,7 +352,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
-                    case R.id.drawer_view:
+                 /*   case R.id.drawer_view:
 
                         Intent in = new Intent(SelectDateActivity.this, ViewUsersActivity.class);
                         startActivity(in);
@@ -361,7 +361,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         prefshelper.storeSearch("case_status");
                         Intent intnt = new Intent(SelectDateActivity.this, SearchActivity.class);
                         startActivity(intnt);
-                        return true;
+                        return true;*/
                     case R.id.drawer_add:
                         txtTitle.setText("Add Case");
                         Intent intent1 = new Intent(SelectDateActivity.this, AddCaseActivity.class);
