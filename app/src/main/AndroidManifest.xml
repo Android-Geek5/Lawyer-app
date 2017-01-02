@@ -48,6 +48,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".FreeUserSelectDateActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".AddCaseActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
@@ -65,7 +69,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".AddCommentActivity" />
         <activity android:name=".SearchActivity" />
-        <activity android:name=".ViewUsersActivity"></activity>
+        <activity android:name=".ViewUsersActivity"/>
     </application>
 
 </manifest>

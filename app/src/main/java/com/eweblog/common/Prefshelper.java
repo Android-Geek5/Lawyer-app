@@ -86,8 +86,38 @@ public class Prefshelper {
         edit.commit();
 
     }
+    public String getEmail() {
+
+        return getPreferences().getString("user_email", "");
+    }
+    public String getName() {
+
+        return getPreferences().getString("user_name", "");
+    }
 
 
+    public void storeProfileImage(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("user_profile_image_url", contact);
+        edit.commit();
+
+    }
+
+    public String getProfileImage() {
+
+        return getPreferences().getString("user_profile_image_url", "");
+    }
+    public void storeCorporateUser(String contact) {
+        Editor edit = getPreferences().edit();
+        edit.putString("group_id", contact);
+        edit.commit();
+
+    }
+
+    public String getCorporateUser() {
+
+        return getPreferences().getString("group_id", "");
+    }
 
     public void storeDate(String contact) {
         Editor edit = getPreferences().edit();

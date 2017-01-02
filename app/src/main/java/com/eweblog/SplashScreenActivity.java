@@ -156,12 +156,14 @@ public class SplashScreenActivity extends AppCompatActivity {
         dialog.show();
     }
     @Override
-    public void onRestart() {
+    public void onRestart()
+    {
         super.onRestart();
 
     }
     @Override
-    public void onStop() {
+    public void onStop()
+    {
         super.onStop();
     }
     @Override

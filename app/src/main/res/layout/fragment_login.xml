@@ -6,12 +6,7 @@
     android:orientation="vertical"
 
     android:background="@drawable/bg">
-    <include
-        android:id="@+id/tool_bar"
-        layout="@layout/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        />
+
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"

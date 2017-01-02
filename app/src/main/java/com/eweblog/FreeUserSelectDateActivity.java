@@ -57,21 +57,16 @@ import com.eweblog.fragment.ChangePasswordFragment;
 import com.eweblog.fragment.EditProfileFragment;
 import com.eweblog.model.CaseListModel;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
-import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -79,7 +74,7 @@ import java.util.Map;
 import java.util.TimeZone;
 
 
-public class SelectDateActivity extends AppCompatActivity {
+public class FreeUserSelectDateActivity extends AppCompatActivity {
 
     private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
@@ -114,7 +109,7 @@ public class SelectDateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_select_date);
+        setContentView(R.layout.activity_free_user_select_date);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
@@ -130,21 +125,6 @@ public class SelectDateActivity extends AppCompatActivity {
         imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
 
-
-            linearLayout_search = (LinearLayout) findViewById(R.id.imageView_back2);
-            linearLayout_search.setVisibility(View.VISIBLE);
-            linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
-            navigationView.addHeaderView(linearLayout);
-            pimage = (CircularImageView) linearLayout.findViewById(R.id.profile_img);
-            text_name = (TextView) linearLayout.findViewById(R.id.txt_usrName);
-            email_name = (TextView) linearLayout.findViewById(R.id.txt_userEmail);
-
-            pic = prefshelper.getProfileImage();
-            name = prefshelper.getName();
-            email = prefshelper.getEmail();
-            text_name.setText(name);
-            email_name.setText(email);
-//            Picasso.with(this).load(pic).into(pimage);
 
         Intent intent1 = new Intent(this.getApplicationContext(), AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getActivity( this.getApplicationContext(),0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -183,7 +163,7 @@ public class SelectDateActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(SelectDateActivity.this, AddCaseActivity.class);
+                Intent intent = new Intent(FreeUserSelectDateActivity.this, AddCaseActivity.class);
                 startActivity(intent);
 
             }
@@ -257,7 +237,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     }
                     else
                     {
-                        Toast.makeText(SelectDateActivity.this, "No cases found",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FreeUserSelectDateActivity.this, "No cases found",Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -275,7 +255,7 @@ public class SelectDateActivity extends AppCompatActivity {
         if (drawerLayout != null) {
             drawerLayout.setDrawerShadow(R.drawable.list_back, GravityCompat.START);
 
-            mDrawerToggle = new ActionBarDrawerToggle(SelectDateActivity.this, drawerLayout,
+            mDrawerToggle = new ActionBarDrawerToggle(FreeUserSelectDateActivity.this, drawerLayout,
                     toolbar, R.string.drawer_open, R.string.drawer_close) {
 
                 public void onDrawerClosed(View view) {
@@ -295,14 +275,7 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
-        linearLayout_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prefshelper.storeSearch("filter");
-                Intent intent=new Intent(SelectDateActivity.this, SearchActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
@@ -325,7 +298,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.drawer_home:
                         txtTitle.setText("Home");
-                        Intent intent = new Intent(SelectDateActivity.this, SelectDateActivity.class);
+                        Intent intent = new Intent(FreeUserSelectDateActivity.this, FreeUserSelectDateActivity.class);
                         overridePendingTransition(0, 0);
                         startActivity(intent);
                         finish();
@@ -339,14 +312,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
-                    case R.id.drawer_edit:
-                        txtTitle.setText("Edit Profile");
-                        fragmentManager = getSupportFragmentManager();
-                        fragmentTransaction = fragmentManager.beginTransaction();
-                        fragmentTransaction.replace(R.id.content_frame, new EditProfileFragment());
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                        return true;
+
                     case R.id.about_us:
                         txtTitle.setText("About us");
                         fragmentManager = getSupportFragmentManager();
@@ -355,24 +321,16 @@ public class SelectDateActivity extends AppCompatActivity {
                         fragmentTransaction.addToBackStack(null);
                         fragmentTransaction.commit();
                         return true;
-                    case R.id.drawer_view:
 
-                        Intent in = new Intent(SelectDateActivity.this, ViewUsersActivity.class);
-                        startActivity(in);
-                        return true;
-                    case R.id.drawer_case:
-                        prefshelper.storeSearch("case_status");
-                        Intent intnt = new Intent(SelectDateActivity.this, SearchActivity.class);
-                        startActivity(intnt);
-                        return true;
+
                     case R.id.drawer_add:
                         txtTitle.setText("Add Case");
-                        Intent intent1 = new Intent(SelectDateActivity.this, AddCaseActivity.class);
+                        Intent intent1 = new Intent(FreeUserSelectDateActivity.this, AddCaseActivity.class);
                         startActivity(intent1);
                         return true;
                     case R.id.drawer_logout:
 
-                        final Dialog dialog = new Dialog(SelectDateActivity.this);
+                        final Dialog dialog = new Dialog(FreeUserSelectDateActivity.this);
                         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                         dialog.setCancelable(false);
                         dialog.setContentView(R.layout.back_layout);
@@ -391,7 +349,7 @@ public class SelectDateActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 dialog.dismiss();
                                 prefshelper.getPreferences().edit().clear().apply();
-                                ExitActivity.exitApplication(SelectDateActivity.this);
+                                ExitActivity.exitApplication(FreeUserSelectDateActivity.this);
                             }
                         });
                         dialog.show();
@@ -414,7 +372,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
     public void onClick()
     {
-        Intent intent = new Intent(SelectDateActivity.this, AddCaseActivity.class);
+        Intent intent = new Intent(FreeUserSelectDateActivity.this, AddCaseActivity.class);
         startActivity(intent);
     }
 
@@ -446,7 +404,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        final Dialog dialog = new Dialog(SelectDateActivity.this);
+        final Dialog dialog = new Dialog(FreeUserSelectDateActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.back_layout);
@@ -486,7 +444,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
     public void caseList() {
         try {
-            final ProgressDialog pDialog = new ProgressDialog(SelectDateActivity.this);
+            final ProgressDialog pDialog = new ProgressDialog(FreeUserSelectDateActivity.this);
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -509,7 +467,7 @@ public class SelectDateActivity extends AppCompatActivity {
                         if (serverCode.equalsIgnoreCase("0"))
                         {
 
-                            Toast.makeText(SelectDateActivity.this, serverMessage,Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FreeUserSelectDateActivity.this, serverMessage,Toast.LENGTH_SHORT).show();
 
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
@@ -588,7 +546,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
+                        Toast.makeText(FreeUserSelectDateActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
@@ -616,7 +574,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
             sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(SelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
+            VolleySingleton.getInstance(FreeUserSelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -624,7 +582,7 @@ public class SelectDateActivity extends AppCompatActivity {
     }
     public void getAllCases() {
         try {
-            final ProgressDialog pDialog = new ProgressDialog(SelectDateActivity.this);
+            final ProgressDialog pDialog = new ProgressDialog(FreeUserSelectDateActivity.this);
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
@@ -729,7 +687,7 @@ public class SelectDateActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
+                        Toast.makeText(FreeUserSelectDateActivity.this, "No Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
@@ -757,7 +715,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
             sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(SelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
+            VolleySingleton.getInstance(FreeUserSelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
 
         } catch (Exception e) {
             e.printStackTrace();
