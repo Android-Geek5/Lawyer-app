@@ -52,7 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     ConnectionDetector cd;
     Prefshelper prefshelper;
     private static int SPLASH_TIME_OUT = 2000;
-    String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified, userStatus;
+    String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified, userStatus, imgUrl;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
@@ -125,9 +125,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
                                (prefshelper.getMobileVerification().equalsIgnoreCase("1")))
                         {
-                            Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
-                            startActivity(intent);
-                            finish();
+                            if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+                            {
+
+                                Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                            else
+                            {
+                                Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
                         }
                         else
                         {
@@ -207,8 +217,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                                      userEmailVerified=jsonObject.getString("user_email_verification_status");
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
-
-
+                                    if(prefshelper.getCorporateUser().equalsIgnoreCase("1")) {
+                                        imgUrl = jsonObject.getString("user_profile_image_url");
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -224,10 +235,19 @@ public class SplashScreenActivity extends AppCompatActivity {
                         prefshelper.storeUserStatusToPreference(userStatus);
                         prefshelper.storeEmailVerification(userEmailVerified);
                         prefshelper.storeMobileVerification(userMobileVerified);
-
-                        Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
-                        startActivity(intent);
-                        finish();
+                        if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+                        {
+                            prefshelper.storeProfileImage(imgUrl);
+                            Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                       else
+                        {
+                            Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
 
 
                     } catch (Exception e) {

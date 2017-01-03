@@ -11,6 +11,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -232,20 +233,15 @@ public class SelectDateActivity extends AppCompatActivity {
                     {
                         for(int i=0; i<allCaseList.size(); i++)
                         {
-
                                 if ((allCaseList.get(i).getDate()).equalsIgnoreCase(daySelected))
                                 {
                                     searchedList.add(allCaseList.get(i));
-
                                 }
-
-
                         }
                     }
                     if(searchedList.size()>0)
                     {
-                           Bundle bundle = new Bundle();
-
+                        Bundle bundle = new Bundle();
                         bundle.putSerializable("list", (Serializable) searchedList);
                         android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
                         android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -308,7 +304,7 @@ public class SelectDateActivity extends AppCompatActivity {
 
             // This method will trigger on item Click of navigation menu
             @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
 
                 //Checking if the item is in checked state or not, if not make it in checked state
