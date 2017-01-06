@@ -227,7 +227,7 @@ public class FragmentLogin extends Fragment {
                             prefshelper.storeUserStatusToPreference(userStatus);
                             prefshelper.storeEmailVerification(userEmailVerified);
                             prefshelper.storeMobileVerification(userMobileVerified);
-
+                            prefshelper.storeCorporateUser("0");
                             Intent intent = new Intent(getActivity(), FreeUserSelectDateActivity.class);
                             startActivity(intent);
 

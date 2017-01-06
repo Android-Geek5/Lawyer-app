@@ -6,26 +6,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CaseListModel implements Serializable{
-   private String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
-    retainContact, caseStatus , comment, nextDate, date;
+        private String caseTitle, caseNumber, courtName, caseType, caseId, caseStartDate, casePrevDate, counsellorName, counsellorContact, retainName,
+                retainContact, caseStatus , comment, nextDate, date, statusId, statusName;
 
- private List<CaseListModel> arrayList, dataList;
+        private List<CaseListModel> arrayList, dataList;
 
-    public String getCaseTitle() {
-        return caseTitle;
-    }
+        public String getCaseTitle() {
+            return caseTitle;
+        }
 
-    public void setCaseTitle(String name) {
-        this.caseTitle = name;
-    }
+        public void setCaseTitle(String name) {
+            this.caseTitle = name;
+        }
 
-    public String getCaseNumber() {
-        return caseNumber;
-    }
+        public String getCaseNumber() {
+            return caseNumber;
+        }
 
-    public void setCaseNumber(String name) {
-        this.caseNumber = name;
-    }
+        public void setCaseNumber(String name) {
+            this.caseNumber = name;
+        }
 
     public String getCourtName() {
         return courtName;
@@ -139,5 +139,20 @@ public class CaseListModel implements Serializable{
         this.dataList = name;
     }
 
+    public String getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(String name) {
+        this.statusId = name;
+    }
+
+    public String getStatusName() {
+        return statusName;
+    }
+
+    public void setStatusName(String name) {
+        this.statusName = name;
+    }
 
 }

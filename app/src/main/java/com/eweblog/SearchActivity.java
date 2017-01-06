@@ -193,15 +193,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
-                            try
-                            {
-                                prefshelper.getPreferences().edit().clear().apply();
-                            }
-                            catch (Exception e) {
-                                e.printStackTrace();
-                            }
 
-                            finish();
                         }
 
 

@@ -43,24 +43,30 @@ import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
+import com.eweblog.model.CaseListModel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    LinearLayout linearLayout;
-   Spinner sprCaseType ;
+    LinearLayout linearLayout, llCaseStatus;
+    Spinner sprCaseType, sprCaseStaus ;
 
     ArrayAdapter<String> stringArrayAdapter;
+    ArrayAdapter<CaseListModel> stringArrayAdapter2;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
             edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate, edtClientContact;
@@ -73,7 +79,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ConnectionDetector cd;
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
-   CheckBox chkSmsAlert;
+    CheckBox chkSmsAlert;
+    List<CaseListModel> list;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +91,15 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_add_case);
          prefshelper = new Prefshelper(AddCaseActivity.this);
-
+        list= new ArrayList<>();
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
+        sprCaseStaus = (Spinner) findViewById(R.id.spinner_case_status);
         btnAdd = (Button) findViewById(R.id.add);
         txtStartError = (TextView) findViewById(R.id.tw_start_error);
         txtPrevError = (TextView) findViewById(R.id.tw_prev_error);
         txtNextError = (TextView) findViewById(R.id.tw_next_error);
         linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
+        llCaseStatus = (LinearLayout) findViewById(R.id.ll_case_status);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -123,13 +133,23 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
         edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
         edtClientContact = (EditText) findViewById(R.id.textView_clientnumber);
-       chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
+        chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
         edtNextDate.setHint(dateFormatter2.format(sysDate));
         edtPrevDate.setHint(dateFormatter2.format(sysDate));
         edtStartDate.setHint(dateFormatter2.format(sysDate));
         edtStartDate.setOnClickListener(this);
         edtPrevDate.setOnClickListener(this);
         edtNextDate.setOnClickListener(this);
+        if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+        {
+            llCaseStatus.setVisibility(View.VISIBLE);
+            edtStatus.setVisibility(View.GONE);
+        }
+        else
+        {
+            llCaseStatus.setVisibility(View.GONE);
+            edtStatus.setVisibility(View.VISIBLE);
+        }
         chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -234,7 +254,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
 
         sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
-
+        sprCaseStaus.setOnItemSelectedListener(AddCaseActivity.this);
+        getCaseStatuses();
     }
 
 
@@ -373,8 +394,132 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
+    public void getCaseStatuses() {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
 
-    public void dialog() {
+            Log.e("", "get_case_statuses " + MapAppConstant.API + "get_case_statuses");
+            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_case_statuses", new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.d("", ".......response====" + response);
+
+                    ////////
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Toast.makeText(AddCaseActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                        Log.e("error", response);
+                        if (serverCode.equalsIgnoreCase("0")) {
+
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+                                    JSONArray jsonArray=object.getJSONArray("data");
+                                    if(jsonArray.length()>0)
+                                    {
+                                        for(int i=0; i<jsonArray.length();i++)
+                                        {
+                                           JSONObject jsonObject=jsonArray.getJSONObject(i);
+                                            String id=jsonObject.getString("case_status_id");
+                                            String name=jsonObject.getString("case_status_name");
+                                            list.add(model(id, name));
+                                        }
+                                    }
+                                    setlist(list);
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (sprCaseStaus.getAdapter() == null) {
+                                stringArrayAdapter2 = new ArrayAdapter<CaseListModel>(AddCaseActivity.this, R.layout.layout_spinner, list)
+                                {
+                                    @Override
+                                    public boolean isEnabled(int position) {
+
+                                        return position != 0;
+                                    }
+
+                                    @Override
+                                    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                                        View view = super.getDropDownView(position, convertView, parent);
+                                        TextView tv = (TextView) view;
+                                        if (position == 0) {
+                                            // Set the hint text color gray
+                                            tv.setTextColor(Color.GRAY);
+                                        } else {
+                                            tv.setTextColor(Color.BLACK);
+                                        }
+
+                                        return view;
+                                    }
+                                };
+                                stringArrayAdapter2.setDropDownViewResource(R.layout.layout_spinner_dropdown);
+                                sprCaseStaus.setAdapter(stringArrayAdapter2);
+                            }
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(AddCaseActivity.this, "No Internet Connection",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    params.put("user_id", prefshelper.getUserIdFromPreference());
+                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public List<CaseListModel> getlist() {
+        return list;
+    }
+
+    public void setlist(List<CaseListModel> list) {
+        this.list = list;
+    }
+        public void dialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -501,5 +646,12 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             dialogDatePicker();
         }
 
+    }
+    private CaseListModel model( String id,String name) {
+        CaseListModel model = new CaseListModel();
+        model.setCaseId(id);
+        model.setNextDate(name);
+
+        return model;
     }
 }
