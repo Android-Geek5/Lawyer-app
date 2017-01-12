@@ -1,5 +1,6 @@
 package com.eweblog;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -66,9 +67,9 @@ public class LoginActivity extends AppCompatActivity {
         // Set up the login form.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-       /* TextView txtTitle = (TextView) findViewById(R.id.toolbar_title);
-        txtTitle.setText("Login");*/
-        adapter =  new ViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+        TextView txtTitle = (TextView) findViewById(R.id.toolbar_title);
+        txtTitle.setText("Login");
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -83,10 +84,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public int getIndicatorColor(int position) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    return getResources().getColor(R.color.tabsScrollColor,null);
-                }
-                else
-                {
+                    return getResources().getColor(R.color.tabsScrollColor, null);
+                } else {
                     return getResources().getColor(R.color.tabsScrollColor);
                 }
             }
@@ -94,8 +93,6 @@ public class LoginActivity extends AppCompatActivity {
 
         // Setting the ViewPager For the SlidingTabsLayout
         tabs.setViewPager(pager);
-
-
     }
 
 

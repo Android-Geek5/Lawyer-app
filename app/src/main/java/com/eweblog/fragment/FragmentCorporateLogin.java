@@ -49,8 +49,9 @@ import java.util.Map;
 
 public class FragmentCorporateLogin extends Fragment {
 
-    EditText edtContact,edtPwd;
-    String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified,userStatus;
+    EditText edtContact,edtPwd, edtCorporateId;
+    String strContact, strPwd, strCorporateId, userID, userSecHash, userName, userEmail,
+            userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
     Prefshelper prefshelper;
     ConnectionDetector cd;
 
@@ -73,6 +74,7 @@ public class FragmentCorporateLogin extends Fragment {
         cd = new ConnectionDetector(getActivity().getApplicationContext());
         edtContact = (EditText)rootview.findViewById(R.id.email);
         edtPwd = (EditText) rootview.findViewById(R.id.password);
+        edtCorporateId= (EditText) rootview.findViewById(R.id.id);
         prefshelper=new Prefshelper(getActivity());
 
         Button mEmailSignInButton = (Button)rootview.findViewById(R.id.email_sign_in_button);
@@ -84,7 +86,7 @@ public class FragmentCorporateLogin extends Fragment {
 
                 strContact=edtContact.getText().toString();
                 strPwd=edtPwd.getText().toString();
-
+                strCorporateId=edtCorporateId.getText().toString();
                 if (TextUtils.isEmpty(strContact)) {
                     edtContact.setError("Field must not be empty.");
                     focusView = edtContact;
@@ -104,7 +106,11 @@ public class FragmentCorporateLogin extends Fragment {
                     focusView = edtPwd;
                     cancelLogin = true;
                 }
-
+                if (TextUtils.isEmpty(strCorporateId)) {
+                    edtCorporateId.setError("Field must not be empty.");
+                    focusView = edtCorporateId;
+                    cancelLogin = true;
+                }
                 if (cancelLogin) {
                     // error in login
                     focusView.requestFocus();
@@ -193,7 +199,8 @@ public class FragmentCorporateLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
-
+                                    imgUrl=jsonObject.getString("user_profile_image_url");
+                                    corporateUser=jsonObject.getString("group_id");
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -206,6 +213,8 @@ public class FragmentCorporateLogin extends Fragment {
                             prefshelper.storeUserStatusToPreference(userStatus);
                             prefshelper.storeEmailVerification(userEmailVerified);
                             prefshelper.storeMobileVerification(userMobileVerified);
+                            prefshelper.storeProfileImage(imgUrl);
+                            prefshelper.storeCorporateUser("1");
                             Intent intent = new Intent(getActivity(), SelectDateActivity.class);
                             startActivity(intent);
 
@@ -244,6 +253,7 @@ public class FragmentCorporateLogin extends Fragment {
 
                     params.put("user_login", strContact);
                     params.put("user_login_password", strPwd);
+                    params.put("corporation_id", strCorporateId);
                     return params;
                 }
             };

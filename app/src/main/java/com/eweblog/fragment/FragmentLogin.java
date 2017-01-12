@@ -34,6 +34,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.ForgotPasswordActivity;
+import com.eweblog.FreeUserSelectDateActivity;
 import com.eweblog.LoginActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
@@ -52,7 +53,8 @@ import java.util.Map;
 public class FragmentLogin extends Fragment {
 
     EditText edtContact,edtPwd;
-    String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified,userStatus;
+    String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact,
+            userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
     Prefshelper prefshelper;
     ConnectionDetector cd;
     TextView txtNotAUser, txtForgotPwd;
@@ -225,7 +227,8 @@ public class FragmentLogin extends Fragment {
                             prefshelper.storeUserStatusToPreference(userStatus);
                             prefshelper.storeEmailVerification(userEmailVerified);
                             prefshelper.storeMobileVerification(userMobileVerified);
-                            Intent intent = new Intent(getActivity(), SelectDateActivity.class);
+                            prefshelper.storeCorporateUser("0");
+                            Intent intent = new Intent(getActivity(), FreeUserSelectDateActivity.class);
                             startActivity(intent);
 
 

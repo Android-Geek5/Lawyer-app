@@ -518,7 +518,43 @@
 
 
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:id="@+id/ll_case_status">
 
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@android:color/black"
+                android:layout_weight="0.8"
+                android:text="Case Status"
+                android:textColorHint="@color/colorAccent"
+                android:layout_marginLeft="5dp"
+                android:layout_gravity="center_vertical"
+
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner_case_status"
+
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
 
 
         <!--   <LinearLayout
