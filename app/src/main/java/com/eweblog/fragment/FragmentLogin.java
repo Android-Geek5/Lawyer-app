@@ -39,6 +39,7 @@ import com.eweblog.LoginActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
 import com.eweblog.SelectDateActivity;
+import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -82,11 +83,17 @@ public class FragmentLogin extends Fragment {
         txtNotAUser = (TextView)rootview. findViewById(R.id.textView);
         txtForgotPwd = (TextView) rootview.findViewById(R.id.textView_forgot);
         prefshelper=new Prefshelper(getActivity());
-        txtNotAUser.setOnClickListener(new View.OnClickListener() {
+      /*  txtNotAUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), RegisterationActivity.class);
                 startActivity(intent);
+            }
+        });*/
+        txtNotAUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              showDialog();
             }
         });
         txtForgotPwd.setOnClickListener(new View.OnClickListener() {
@@ -290,5 +297,32 @@ public class FragmentLogin extends Fragment {
 
 
     }
+    public void showDialog()
+    {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setTitle("Title");
 
+        TextView text = (TextView) dialog.findViewById(R.id.textDialog);
+        TextView type1text= (TextView) dialog.findViewById(R.id.type1);
+        TextView type2text= (TextView) dialog.findViewById(R.id.type2);
+        type1text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.showToast(getActivity(),"Premium User");
+                dialog.dismiss();
+            }
+        });
+        type2text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               dialog.dismiss();
+                Intent intent = new Intent(getActivity(), RegisterationActivity.class);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
+    }
 }

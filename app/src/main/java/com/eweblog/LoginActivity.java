@@ -61,14 +61,14 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-               WindowManager.LayoutParams.FLAG_FULLSCREEN);
+     // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+              // WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
         // Set up the login form.
-        Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
+       /* Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        TextView txtTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
-        txtTitle.setText("Login");
+       TextView txtTitle = (TextView)toolbar.findViewById(R.id.toolbar_title);
+        txtTitle.setText("Login");*/
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), Titles, Numboftabs);
 
         // Assigning ViewPager View and setting the adapter

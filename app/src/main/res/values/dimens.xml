@@ -3,4 +3,24 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!-- FRAGMENT LOGIN-->
+    <dimen name="margin_logo">50dp</dimen>
+    <dimen name="logo_width_height">120dp</dimen>
+    <dimen name="login_form_data_height">45dp</dimen>
+    <dimen name="login_images_padding">10dp</dimen>
+    <dimen name="login_form_data_text">16sp</dimen>
+    <dimen name="login_form_data_text_small">18sp</dimen>
+    <dimen name="login_form_data_top_margin">20dp</dimen>
+    <dimen name="login_form_data_top_margin_small">8dp</dimen>
+    <dimen name="button_text_size">20sp</dimen>
+
+
+    <!-- CUSTOM DIALOG-->
+    <dimen name="custom_dialog_min_width">300dp</dimen>
+    <dimen name="custom_dialog_layout_margin">30dp</dimen>
+    <dimen name="custom_dialog_bottom_margin">15dp</dimen>
+    <dimen name="custom_dialog_bottom_margin_small">8dp</dimen>
+    <dimen name="custom_dialog_text_size">20sp</dimen>
+    <dimen name="custom_dialog_text_size_small">18sp</dimen>
 </resources>

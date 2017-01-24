@@ -210,4 +210,8 @@
          <item>11:30 PM</item>
          <item>11:45 PM</item>
      </string-array>-->
+
+    <string name="custom_dialog_register_type">Register as an Individual Premium user to enjoy the advanced features.</string>
+    <string name="custom_dialog_register_type_1">Yes,Become Premium User</string>
+    <string name="custom_dialog_register_type_2">No thanks,Register for free</string>
 </resources>
