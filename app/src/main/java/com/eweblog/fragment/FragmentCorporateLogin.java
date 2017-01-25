@@ -37,6 +37,7 @@ import com.eweblog.ForgotPasswordActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
 import com.eweblog.SelectDateActivity;
+import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -53,6 +54,7 @@ public class FragmentCorporateLogin extends Fragment {
     EditText edtContact,edtPwd, edtCorporateId;
     String strContact, strPwd, strCorporateId, userID, userSecHash, userName, userEmail,
             userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
+    TextView register;
     Prefshelper prefshelper;
     ConnectionDetector cd;
 
@@ -75,9 +77,15 @@ public class FragmentCorporateLogin extends Fragment {
         cd = new ConnectionDetector(getActivity().getApplicationContext());
         edtContact = (EditText)rootview.findViewById(R.id.email);
         edtPwd = (EditText) rootview.findViewById(R.id.password);
+        register=(TextView) rootview.findViewById(R.id.textView_register);
         edtCorporateId= (EditText) rootview.findViewById(R.id.id);
         prefshelper=new Prefshelper(getActivity());
-
+        register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Utils.showToast(getActivity(),"Business user");
+            }
+        });
         Button mEmailSignInButton = (Button)rootview.findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,14 +171,13 @@ public class FragmentCorporateLogin extends Fragment {
             pDialog.setCancelable(false);
             pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "login");
+            Log.e("CLogin URL", MapAppConstant.API + "login");
             StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "login", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("Clogin response", response.toString());
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
@@ -255,6 +262,7 @@ public class FragmentCorporateLogin extends Fragment {
                     params.put("user_login", strContact);
                     params.put("user_login_password", strPwd);
                     params.put("corporation_id", strCorporateId);
+                    Log.e("CLogin request",params.toString());
                     return params;
                 }
             };

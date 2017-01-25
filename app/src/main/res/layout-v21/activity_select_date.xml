@@ -9,6 +9,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     >
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,111 +24,99 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/content_frame">
-            <android.support.design.widget.CoordinatorLayout
+            android:id="@+id/content_frame"
+            >
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 >
-
-                <ScrollView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg"
-                    android:focusableInTouchMode="true"
-                    android:focusable="true"
-                    >
+                    android:layout_height="150dp"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-
-                        <LinearLayout
+                        android:layout_height="150dp"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:background="@color/user_color">
+                        <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            >
-
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:text="Select Date To View Case"
-                                android:textSize="16sp"
-                                android:layout_marginBottom="20dp"
-                                android:textColor="@android:color/white"
-                                android:gravity="center_horizontal"
-                                android:layout_margin="10dp"
-                                android:id="@+id/task" />
-
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/image_previous"
-                                android:src="@drawable/prev"
-                                android:layout_width="wrap_content"
-                                android:layout_margin="10dp"
-                                android:layout_height="40dp"
-                                android:contentDescription="@string/action_sign_in" />
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="40dp"
-                                android:textSize="16sp"
-                                android:layout_weight="0.77"
-                                android:layout_margin="10dp"
-                                android:gravity="center_vertical|center"
-                                android:textColor="@android:color/white"
-                                android:id="@+id/txt_month" />
-
-                            <ImageView
-
-                                android:id="@+id/image_next"
-                                android:src="@drawable/next"
-                                android:layout_width="wrap_content"
-                                android:layout_margin="10dp"
-                                android:layout_height="40dp"
-                                android:contentDescription="@string/app_name" />
-                        </LinearLayout>
-
-
-
-                        <com.github.sundeepk.compactcalendarview.CompactCalendarView
-                            android:id="@+id/compactcalendar_view"
-                            android:layout_width="fill_parent"
-                            android:paddingRight="10dp"
-                            android:paddingLeft="10dp"
-                            android:layout_height="320dp"
-                            app:compactCalendarTextSize="12sp"
-                            app:compactCalendarBackgroundColor="@color/colorPrimary"
-                            app:compactCalendarTextColor="@android:color/white"
-                            app:compactCalendarCurrentSelectedDayBackgroundColor="@color/buttonbg"
-                            app:compactCalendarCurrentDayBackgroundColor="@color/eventDecorator"
-                            app:compactCalendarMultiEventIndicatorColor="#fff"
-
+                            android:layout_height="50dp"
+                            app:srcCompat="@drawable/view"
                             />
 
-                        <android.support.design.widget.FloatingActionButton
-                            android:id="@+id/fabbutton"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_marginRight="@dimen/fab_margin"
-                            android:src="@drawable/add"
-                            app:layout_anchorGravity="bottom|right|end"
-
-
+                        <TextView
+                            android:text="View Users"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
                             />
-
-
                     </LinearLayout>
-                </ScrollView>
+                    <View
+                        android:layout_width="2dp"
+                        android:layout_height="match_parent"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:background="@color/case_color">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            app:srcCompat="@drawable/view_file"
+                            />
 
-            </android.support.design.widget.CoordinatorLayout>
+                        <TextView
+                            android:text="View Cases"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:orientation="vertical"
+                    android:background="@color/add_color"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:srcCompat="@drawable/add_case"
+                        android:id="@+id/imageView6" />
+
+                    <TextView
+                        android:text="Add Case"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+
         </FrameLayout>
     </LinearLayout>
 

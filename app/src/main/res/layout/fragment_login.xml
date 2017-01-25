@@ -10,6 +10,7 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:paddingLeft="@dimen/activity_vertical_margin"
         android:paddingRight="@dimen/activity_vertical_margin">
 
@@ -105,7 +106,7 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/login_form_data_top_margin"
+                android:layout_marginTop="@dimen/login_form_data_top_margin_large"
                 android:background="@color/buttonbg"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/button_text_size"
@@ -118,7 +119,7 @@
                 android:textSize="@dimen/login_form_data_text_small"
                 android:text="Forgot Password?"
                 android:textColor="@color/buttonbg"
-                android:layout_marginTop="@dimen/login_form_data_text_small"
+                android:layout_marginTop="@dimen/login_form_data_top_margin"
                 android:id="@+id/textView_forgot"
                 android:layout_gravity="right" />
             <TextView
@@ -127,7 +128,7 @@
                 android:textSize="@dimen/login_form_data_text_small"
                 android:text="Not a User?"
                 android:textColor="@color/buttonbg"
-                android:layout_marginTop="@dimen/login_form_data_text_small"
+                android:layout_marginTop="@dimen/login_form_data_top_margin_small"
                 android:id="@+id/textView"
                 android:layout_gravity="right" />
         </LinearLayout>

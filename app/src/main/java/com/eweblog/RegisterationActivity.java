@@ -2,16 +2,21 @@ package com.eweblog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -45,6 +50,7 @@ public class RegisterationActivity extends AppCompatActivity {
     EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd;
     String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash;
     Prefshelper prefshelper;
+    LinearLayout layout;
     String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
     ConnectionDetector cd;
 
@@ -61,6 +67,14 @@ public class RegisterationActivity extends AppCompatActivity {
        edtPwd = (EditText) findViewById(R.id.password);
        prefshelper=new Prefshelper(RegisterationActivity.this);
        edtCPwd = (EditText) findViewById(R.id.confirm_password);
+        layout=(LinearLayout) findViewById(R.id.email_login_form);
+       /* layout.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Utils.hideSoftKeyboard(RegisterationActivity.this);
+            }
+        });*/
+
         cd=new ConnectionDetector(RegisterationActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -311,4 +325,5 @@ public class RegisterationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 }

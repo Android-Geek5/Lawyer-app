@@ -11,16 +11,32 @@
     <dimen name="login_images_padding">10dp</dimen>
     <dimen name="login_form_data_text">16sp</dimen>
     <dimen name="login_form_data_text_small">18sp</dimen>
+    <dimen name="login_form_data_top_margin_large">25dp</dimen>
     <dimen name="login_form_data_top_margin">20dp</dimen>
-    <dimen name="login_form_data_top_margin_small">8dp</dimen>
+    <dimen name="login_form_data_top_margin_small">10dp</dimen>
     <dimen name="button_text_size">20sp</dimen>
 
 
     <!-- CUSTOM DIALOG-->
     <dimen name="custom_dialog_min_width">300dp</dimen>
-    <dimen name="custom_dialog_layout_margin">30dp</dimen>
+    <dimen name="custom_dialog_layout_margin">20dp</dimen>
     <dimen name="custom_dialog_bottom_margin">15dp</dimen>
     <dimen name="custom_dialog_bottom_margin_small">8dp</dimen>
-    <dimen name="custom_dialog_text_size">20sp</dimen>
+    <dimen name="custom_dialog_text_size">22sp</dimen>
     <dimen name="custom_dialog_text_size_small">18sp</dimen>
+
+     <!-- REGISTARTION_FORM-->
+    <dimen name="register_progress_margin">8dp</dimen>
+    <dimen name="register_logo_width_height">115dp</dimen>
+    <dimen name="register_logo_margin">30dp</dimen>
+    <dimen name="register_form_data_top_margin">15dp</dimen>
+    <dimen name="register_form_data_text">16sp</dimen>
+
+    <!-- DRAWER HEADER-->
+    <dimen name="drawer_header_width">260dp</dimen>
+    <dimen name="drawer_header_height">150dp</dimen>
+    <dimen name="margin_small">10dp</dimen>
+    <dimen name="drawer_header_image_width_height">65dp</dimen>
+    <dimen name="drawer_username_text">16sp</dimen>
+    <dimen name="drawer_email_text">13sp</dimen>
 </resources>

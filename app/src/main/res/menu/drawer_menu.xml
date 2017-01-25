@@ -51,7 +51,7 @@
             android:icon="@drawable/logout"
             android:title="Logout" >
         </item>
-      <!--  <item
+      <item
             android:id="@+id/drawer_settings"
             android:icon="@drawable/settings"
             android:title="Settings" >
@@ -60,7 +60,7 @@
             android:id="@+id/drawer_fee"
             android:icon="@drawable/fee"
             android:title="Fee Management" >
-        </item>-->
+        </item>
     </group>
 
 

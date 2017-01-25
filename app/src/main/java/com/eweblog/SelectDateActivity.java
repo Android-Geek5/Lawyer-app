@@ -90,22 +90,10 @@ public class SelectDateActivity extends AppCompatActivity {
     FrameLayout f;
     ActionBarDrawerToggle mDrawerToggle;
     public static TextView txtTitle;
-    CompactCalendarView compactCalendar;
-    TextView txtMonth;
-    ImageView imgPrevious, imgNext;
-    private SimpleDateFormat dateFormatForMonth = new SimpleDateFormat("MMMM yyyy", Locale.US);
-    String  nextDate, comment, daySelected;
     Prefshelper prefshelper;
-    FloatingActionButton fab;
-    List<CaseListModel> caseList = new ArrayList<>();
-    List<CaseListModel> caseListArray=new ArrayList<>();
-    List<CaseListModel> allCaseList = new ArrayList<>();
-    List<CaseListModel> allCaseListArray=new ArrayList<>();
-    List<CaseListModel> searchedList=new ArrayList<>();
     static TextView text_name, email_name;
-    Date dateEvent;
     ConnectionDetector cd;
-    LinearLayout linearLayout, linearLayout_search;
+    LinearLayout linearLayout;
     String pic,name,email;
     public static CircularImageView pimage;
 
@@ -113,27 +101,19 @@ public class SelectDateActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+      /*  getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
         setContentView(R.layout.activity_select_date);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
-        compactCalendar = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);
-        txtMonth = (TextView) findViewById(R.id.txt_month);
-        fab = (FloatingActionButton)findViewById(R.id.fabbutton);
         prefshelper = new Prefshelper(this);
         cd = new ConnectionDetector(getApplicationContext());
-        imgNext = (ImageView) findViewById(R.id.image_next);
-        imgPrevious = (ImageView) findViewById(R.id.image_previous);
 
-
-            linearLayout_search = (LinearLayout) findViewById(R.id.imageView_back2);
-            linearLayout_search.setVisibility(View.VISIBLE);
             linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
             navigationView.addHeaderView(linearLayout);
             pimage = (CircularImageView) linearLayout.findViewById(R.id.profile_img);
@@ -147,125 +127,6 @@ public class SelectDateActivity extends AppCompatActivity {
             email_name.setText(email);
 //            Picasso.with(this).load(pic).into(pimage);
 
-        Intent intent1 = new Intent(this.getApplicationContext(), AlarmReceiver.class);
-        PendingIntent sender = PendingIntent.getActivity( this.getApplicationContext(),0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        alarmManager.cancel(sender);
-        compactCalendar.setLocale(TimeZone.getDefault(), Locale.ENGLISH);
-        compactCalendar.setUseThreeLetterAbbreviation(true);
-        compactCalendar.setSelected(true);
-
-
-        imgPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                compactCalendar.showPreviousMonth();
-                        }
-        });
-        imgNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                compactCalendar.showNextMonth();
-                          }
-        });
-        if (cd.isConnectingToInternet())
-        {
-          getAllCases();
-        }
-        else
-        {
-            allCaseList = prefshelper.getList();
-
-        }
-
-        fab.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#00bcd5")));
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(SelectDateActivity.this, AddCaseActivity.class);
-                startActivity(intent);
-
-            }
-        });
-        txtMonth.setText(dateFormatForMonth.format(compactCalendar.getFirstDayOfCurrentMonth()));
-
-
-        // define a listener to receive callbacks when certain events happen.
-        compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
-            @Override
-            public void onDayClick(Date dateClicked) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                {
-                    compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.colorPrimary, null));
-                }
-                else
-                {
-                    compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                }
-                daySelected = dateFormatForDisplaying.format(dateClicked);
-                prefshelper.storeSelectedDate(dateFormat.format(dateClicked));
-                Calendar cal = Calendar.getInstance();
-                Date sysDate = cal.getTime();
-                if(daySelected.equalsIgnoreCase(dateFormatForDisplaying.format(sysDate)))
-                {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    {
-                        compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.buttonbg, null));
-                    }
-                    else
-                    {
-                        compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.buttonbg));
-                    }
-                }
-
-                Log.e("day selected", daySelected);
-
-                if (cd.isConnectingToInternet())
-                {
-                    caseList();
-                }
-                else
-                {
-
-                    if(allCaseList.size()>0)
-                    {
-                        for(int i=0; i<allCaseList.size(); i++)
-                        {
-                                if ((allCaseList.get(i).getDate()).equalsIgnoreCase(daySelected))
-                                {
-                                    searchedList.add(allCaseList.get(i));
-                                }
-                        }
-                    }
-                    if(searchedList.size()>0)
-                    {
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("list", (Serializable) searchedList);
-                        android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                        android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        CaseListFragment caseListFragment = new CaseListFragment();
-                        caseListFragment.setArguments(bundle);
-                        fragmentTransaction.replace(R.id.content_frame, caseListFragment);
-                        fragmentTransaction.addToBackStack(null);
-                        fragmentTransaction.commit();
-                    }
-                    else
-                    {
-                        Toast.makeText(SelectDateActivity.this, "No cases found",Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-
-            @Override
-            public void onMonthScroll(Date firstDayOfNewMonth) {
-                dateEvent = firstDayOfNewMonth;
-                txtMonth.setText(dateFormatForMonth.format(firstDayOfNewMonth));
-
-            }
-        });
 
 
         if (drawerLayout != null) {
@@ -291,21 +152,13 @@ public class SelectDateActivity extends AppCompatActivity {
             drawerLayout.setDrawerListener(mDrawerToggle);
 
         }
-        linearLayout_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prefshelper.storeSearch("filter");
-                Intent intent=new Intent(SelectDateActivity.this, SearchActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             // This method will trigger on item Click of navigation menu
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
 
                 //Checking if the item is in checked state or not, if not make it in checked state
                 if (menuItem.isChecked()) menuItem.setChecked(false);
@@ -480,363 +333,4 @@ public class SelectDateActivity extends AppCompatActivity {
         startActivity(Intent.createChooser(share, "Share Via"));
     }
 
-    public void caseList() {
-        try {
-            final ProgressDialog pDialog = new ProgressDialog(SelectDateActivity.this);
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-            Log.e("", "list " + MapAppConstant.API + "get_user_cases");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_user_cases", new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
-                    getlist().clear();
-                    getNlist().clear();
-
-                    ////////
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        String serverCode = object.getString("code");
-                        String serverMessage = object.getString("message");
-
-                        if (serverCode.equalsIgnoreCase("0"))
-                        {
-
-                            Toast.makeText(SelectDateActivity.this, serverMessage,Toast.LENGTH_SHORT).show();
-
-                        }
-                        if (serverCode.equalsIgnoreCase("1")) {
-
-                            try {
-                                if ("1".equals(serverCode)) {
-
-                                    JSONArray jsonArray = object.getJSONArray("data");
-                                    if (jsonArray.length() > 0) {
-
-                                        for (int i = 0; i < jsonArray.length(); i++) {
-
-                                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                                            String caseId = jsonObject.getString("case_id");
-                                            String caseNumber = jsonObject.getString("case_number");
-                                            String caseTitle = jsonObject.getString("case_title");
-                                            String caseType = jsonObject.getString("case_type");
-                                            String casePositionStatus = jsonObject.getString("case_position_status");
-                                            String retainedName = jsonObject.getString("case_retained_name");
-                                            String retainedContact = jsonObject.getString("case_retained_contact");
-                                            String counselorName = jsonObject.getString("case_opposite_counselor_name");
-                                            String counselorContact = jsonObject.getString("case_opposite_counselor_contact");
-                                            String courtName = jsonObject.getString("case_court_name");
-                                            String caseStarted = jsonObject.getString("case_start_date");
-                                            JSONArray jsonArray2 = jsonObject.getJSONArray("case_details_array");
-                                            if (jsonArray2.length() > 0) {
-
-                                                for (int k = 0; k < jsonArray2.length(); k++) {
-                                                    JSONObject jsonObject2 = jsonArray2.getJSONObject(k);
-                                                    nextDate = jsonObject2.getString("case_detail_hearing_date");
-                                                    comment = jsonObject2.getString("case_detail_comment");
-                                                    caseListArray.add(model2(caseId,nextDate, comment));
-
-                                                }
-                                            }
-                                            setNlist(caseListArray);
-                                            caseList.add(model(caseId, caseNumber, caseTitle, caseType, casePositionStatus,
-                                                    retainedName, retainedContact, counselorName, counselorContact, courtName,
-                                                    caseStarted,caseListArray));
-
-                                        }
-
-                                    }
-
-                                    setlist(caseList);
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            Bundle bundle = new Bundle();
-
-                            bundle.putSerializable("list", (Serializable) caseList);
-                            android.support.v4.app.FragmentManager fragmentManager = getSupportFragmentManager();
-                            android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                            CaseListFragment caseListFragment = new CaseListFragment();
-                            caseListFragment.setArguments(bundle);
-                            fragmentTransaction.replace(R.id.content_frame, caseListFragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            }
-                    , new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    pDialog.dismiss();
-                    //  VolleyLog.d("", "Error: " + error.getMessage());
-                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
-                    } else if (error instanceof AuthFailureError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ServerError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof NetworkError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ParseError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    }
-                }
-            }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
-                    params.put("case_detail_hearing_date",daySelected);
-                    return params;
-                }
-            };
-            sr.setShouldCache(true);
-
-            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(SelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void getAllCases() {
-        try {
-            final ProgressDialog pDialog = new ProgressDialog(SelectDateActivity.this);
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
-
-            Log.e("", "list " + MapAppConstant.API + "get_user_all_cases");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_user_all_cases", new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    pDialog.dismiss();
-                    Log.d("", ".......response====" + response);
-                    getAllCaseList().clear();
-                    ////////
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        String serverCode = object.getString("code");
-                         if (serverCode.equalsIgnoreCase("0"))
-                        {
-
-                        }
-                        if (serverCode.equalsIgnoreCase("1"))
-                        {
-                            try {
-                                if ("1".equals(serverCode))
-                                {
-
-                                    JSONArray jsonArray=object.getJSONArray("data");
-                                    if (jsonArray.length() > 0)
-                                    {
-
-                                        for (int i = 0; i < jsonArray.length(); i++)
-                                        {
-
-                                            JSONObject jsonObject = jsonArray.getJSONObject(i);
-                                            String date=jsonObject.getString("date");
-                                            JSONArray jsonArray1=jsonObject.getJSONArray("details");
-                                            if(jsonArray1.length()>0)
-                                            {
-
-                                                for (int j = 0; j < jsonArray1.length(); j++)
-                                                {
-
-                                                    JSONObject jsonObject2 = jsonArray1.getJSONObject(j);
-                                                    String caseId = jsonObject2.getString("case_id");
-                                                    String caseNumber = jsonObject2.getString("case_number");
-                                                    String caseTitle = jsonObject2.getString("case_title");
-                                                    String caseType = jsonObject2.getString("case_type");
-                                                    String casePositionStatus = jsonObject2.getString("case_position_status");
-                                                    String retainedName = jsonObject2.getString("case_retained_name");
-                                                    String retainedContact = jsonObject2.getString("case_retained_contact");
-                                                    String counselorName = jsonObject2.getString("case_opposite_counselor_name");
-                                                    String counselorContact = jsonObject2.getString("case_opposite_counselor_contact");
-                                                    String courtName = jsonObject2.getString("case_court_name");
-                                                    String caseStarted = jsonObject2.getString("case_start_date");
-                                                    JSONArray jsonArray2 = jsonObject2.getJSONArray("case_details_array");
-
-                                                    if (jsonArray2.length() > 0)
-                                                    {
-
-                                                        for (int k = 0; k < jsonArray2.length(); k++)
-                                                        {
-                                                            JSONObject jsonObject3 = jsonArray2.getJSONObject(k);
-                                                            nextDate = jsonObject3.getString("case_detail_hearing_date");
-                                                            comment = jsonObject3.getString("case_detail_comment");
-                                                            allCaseListArray.add(model2(caseId,nextDate, comment));
-
-                                                        }
-                                                    }
-                                                    setAllCaseListArray(allCaseListArray);
-                                                    allCaseList.add(model3(date,caseId, caseNumber, caseTitle, caseType, casePositionStatus,
-                                                            retainedName, retainedContact, counselorName, counselorContact, courtName,
-                                                            caseStarted,allCaseListArray));
-
-                                                }
-                                            }
-
-                                        }
-
-                                    }
-
-                                    setAllCaseList(allCaseList);
-                                    prefshelper.setList(allCaseList);
-                                    Log.e("list",allCaseList.toString());
-                                }
-
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            }
-                    , new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    pDialog.dismiss();
-                    //  VolleyLog.d("", "Error: " + error.getMessage());
-                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(SelectDateActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
-                    } else if (error instanceof AuthFailureError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ServerError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof NetworkError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ParseError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    }
-                }
-            }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    Log.e( prefshelper.getUserIdFromPreference(),prefshelper.getUserSecHashFromPreference());
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
-
-                    return params;
-                }
-            };
-            sr.setShouldCache(true);
-
-            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(SelectDateActivity.this.getApplicationContext()).addToRequestQueue(sr);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public List<CaseListModel> getlist() {
-        return caseList;
-    }
-
-    public void setlist(List<CaseListModel> list) {
-        this.caseList = list;
-    }
-    public List<CaseListModel> getNlist() {
-        return caseListArray;
-    }
-
-    public void setNlist(List<CaseListModel> list) {
-        this.caseListArray = list;
-    }
-
-    public List<CaseListModel> getAllCaseList() {
-        return allCaseList;
-    }
-
-    public void setAllCaseList(List<CaseListModel> list) {
-        this.allCaseList = list;
-    }
-    public List<CaseListModel> getAllCaseListArray() {
-        return allCaseListArray;
-    }
-
-    public void setAllCaseListArray(List<CaseListModel> list) {
-        this.allCaseListArray = list;
-    }
-
-
-    private CaseListModel model(String casId, String caseNmber, String casTitle,
-                                 String casType, String casePstnStatus, String retainedNm, String retainedCntact,
-                                 String counselorNm, String counselorContct, String courtNm, String caseStrted,
-                                 List<CaseListModel> list) {
-        CaseListModel model = new CaseListModel();
-        model.setCaseId(casId);
-        model.setCaseNumber(caseNmber);
-        model.setCaseTitle(casTitle);
-        model.setCaseType(casType);
-        model.setCaseStatus(casePstnStatus);
-        model.setRetainName(retainedNm);
-        model.setRetainContact(retainedCntact);
-        model.setCounsellorName(counselorNm);
-        model.setCounsellorContact(counselorContct);
-        model.setCourtName(courtNm);
-        model.setCaseStartDate(caseStrted);
-        model.setArrayCaseList(list);
-
-        return model;
-    }
-    private CaseListModel model3(String date,String casId, String caseNmber, String casTitle,
-                                String casType, String casePstnStatus, String retainedNm, String retainedCntact,
-                                String counselorNm, String counselorContct, String courtNm, String caseStrted,
-                                List<CaseListModel> list) {
-        CaseListModel model = new CaseListModel();
-        model.setDate(date);
-        model.setCaseId(casId);
-        model.setCaseNumber(caseNmber);
-        model.setCaseTitle(casTitle);
-        model.setCaseType(casType);
-        model.setCaseStatus(casePstnStatus);
-        model.setRetainName(retainedNm);
-        model.setRetainContact(retainedCntact);
-        model.setCounsellorName(counselorNm);
-        model.setCounsellorContact(counselorContct);
-        model.setCourtName(courtNm);
-        model.setCaseStartDate(caseStrted);
-        model.setArrayCaseList(list);
-
-        return model;
-    }
-
-    private CaseListModel model2( String caseid,String nextDate, String comment) {
-        CaseListModel model = new CaseListModel();
-        model.setCaseId(caseid);
-        model.setNextDate(nextDate);
-        model.setComment(comment);
-        return model;
-    }
 }

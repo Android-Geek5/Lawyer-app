@@ -184,14 +184,13 @@ public class FragmentLogin extends Fragment {
             pDialog.setCancelable(false);
             pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "login");
+            Log.e("Login URL",MapAppConstant.API + "login");
             StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "login", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("Login Response",response);
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
@@ -237,8 +236,6 @@ public class FragmentLogin extends Fragment {
                             prefshelper.storeCorporateUser("0");
                             Intent intent = new Intent(getActivity(), FreeUserSelectDateActivity.class);
                             startActivity(intent);
-
-
                         }
 
 
@@ -273,7 +270,7 @@ public class FragmentLogin extends Fragment {
 
                     params.put("user_login", strContact);
                     params.put("user_login_password", strPwd);
-
+                    Log.e("Login request",params.toString());
                     return params;
                 }
             };
@@ -302,6 +299,7 @@ public class FragmentLogin extends Fragment {
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(true);
         dialog.setContentView(R.layout.custom_dialog);
         dialog.setTitle("Title");
 
