@@ -4,20 +4,17 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,10 +30,8 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.eweblog.ForgotPasswordActivity;
 import com.eweblog.R;
-import com.eweblog.RegisterationActivity;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
@@ -213,17 +208,23 @@ public class FragmentCorporateLogin extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            prefshelper.storeUserIdToPreference(userID);
-                            prefshelper.storeSecHashToPreference(userSecHash);
-                            prefshelper.storeEmailToPreference(userEmail);
-                            prefshelper.storeUserNameToPreference(userName);
-                            prefshelper.storeUserContactToPreference(userContact);
-                            prefshelper.storeUserStatusToPreference(userStatus);
-                            prefshelper.storeEmailVerification(userEmailVerified);
-                            prefshelper.storeMobileVerification(userMobileVerified);
-                            prefshelper.storeProfileImage(imgUrl);
-                            prefshelper.storeCorporateUser("1");
-                            Intent intent = new Intent(getActivity(), SelectDateActivity.class);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
+                            if(userEmailVerified.equalsIgnoreCase("1"))
+                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                            if(userMobileVerified.equalsIgnoreCase("1"))
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,true);
+                            Intent intent = new Intent(getActivity(), CorporateUserMainActivity.class);
                             startActivity(intent);
 
 

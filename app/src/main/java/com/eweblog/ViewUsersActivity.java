@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.eweblog.adapter.ListAdapter;
 import com.eweblog.adapter.ViewUserAdapter;
 import com.eweblog.common.SlidingTabLayout;
 
@@ -70,7 +69,7 @@ public class ViewUsersActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 finish();
-                Intent in = new Intent(ViewUsersActivity.this, SelectDateActivity.class);
+                Intent in = new Intent(ViewUsersActivity.this, CorporateUserMainActivity.class);
                 startActivity(in);
             }
         });

@@ -39,4 +39,15 @@
     <dimen name="drawer_header_image_width_height">65dp</dimen>
     <dimen name="drawer_username_text">16sp</dimen>
     <dimen name="drawer_email_text">13sp</dimen>
+    <dimen name="drawer_header_top_margin">30dp</dimen>
+
+    <!-- CORPORATE USER MAIN SCREEN-->
+    <dimen name="options_height">150dp</dimen>
+    <dimen name="options_image_height">50dp</dimen>
+    <dimen name="views_height">2dp</dimen>
+    <dimen name="options_text_size">15sp</dimen>
+
+
+    <!-- EDIT PROFILE-->
+    <dimen name="profile_image_width_height">100dp</dimen>
 </resources>

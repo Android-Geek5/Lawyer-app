@@ -263,8 +263,8 @@ public class RegisterationActivity extends AppCompatActivity {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
-                                    prefshelper.storeUserIdToPreference(userID);
-                                    prefshelper.storeSecHashToPreference(userSecHash);
+                                    Utils.storeUserPreferences(RegisterationActivity.this,Prefshelper.USER_ID,userID);
+                                    Utils.storeUserPreferences(RegisterationActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
                                 }
 
                             } catch (Exception e) {

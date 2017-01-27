@@ -1,22 +1,17 @@
 package com.eweblog.fragment;
 
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.eweblog.AddCaseActivity;
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
-import com.eweblog.adapter.CaseListAdapter;
+import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.model.CaseListModel;
 
@@ -90,7 +85,7 @@ public class WeeklyCaseListFragment extends Fragment {
 
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
-                        Intent intent=new Intent(getActivity(), SelectDateActivity.class);
+                        Intent intent=new Intent(getActivity(), CorporateUserMainActivity.class);
                         startActivity(intent);
 
                     }

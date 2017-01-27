@@ -18,5 +18,6 @@
     <color name="case_color">#ffab00</color>
     <color name="user_color"> #ff9e80</color>
     <color name="add_color"> #00bfa5</color>
+    <color name="drawer_header_color">#191919</color>
 
 </resources>

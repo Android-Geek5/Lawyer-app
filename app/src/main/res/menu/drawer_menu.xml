@@ -15,11 +15,6 @@
             android:title="Edit Profile" >
         </item>
         <item
-            android:id="@+id/drawer_view"
-            android:icon="@drawable/view"
-            android:title="View Users" >
-        </item>
-        <item
             android:id="@+id/drawer_case"
             android:icon="@drawable/casetype"
             android:title="Case Status" >
@@ -30,26 +25,29 @@
             android:title="Add Case" >
         </item>
         <item
+            android:id="@+id/drawer_view"
+            android:icon="@drawable/view"
+            android:title="View Users" >
+        </item>
+        <item
+            android:id="@+id/about_us"
+            android:title="About Us"
+            android:icon="@drawable/about">
+        </item>
+        <item
             android:id="@+id/changePwd"
             android:title="Change Password"
             android:icon="@drawable/change_pwd">
         </item>
         <item
-            android:id="@+id/about_us"
-            android:title="About Company"
-            android:icon="@drawable/about">
+            android:id="@+id/drawer_logout"
+            android:icon="@drawable/logout"
+            android:title="Logout" >
         </item>
-
-
         <item
             android:id="@+id/drawer_share"
             android:icon="@drawable/share"
             android:title="Share App" >
-        </item>
-        <item
-            android:id="@+id/drawer_logout"
-            android:icon="@drawable/logout"
-            android:title="Logout" >
         </item>
       <item
             android:id="@+id/drawer_settings"

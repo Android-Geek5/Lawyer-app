@@ -4,20 +4,17 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,10 +32,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.ForgotPasswordActivity;
 import com.eweblog.FreeUserSelectDateActivity;
-import com.eweblog.LoginActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
-import com.eweblog.SelectDateActivity;
 import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
@@ -59,7 +54,7 @@ public class FragmentLogin extends Fragment {
     Prefshelper prefshelper;
     ConnectionDetector cd;
     TextView txtNotAUser, txtForgotPwd;
-
+    int groupId;
 
 
     public FragmentLogin() {
@@ -178,6 +173,7 @@ public class FragmentLogin extends Fragment {
         dialog.show();
     }
     public void login() {
+
         try {
             final ProgressDialog pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading...");
@@ -220,20 +216,37 @@ public class FragmentLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
-
+                                    groupId=jsonObject.getInt("group_id");
+                                    if(groupId==4) {
+                                        imgUrl=jsonObject.getString("user_profile_image_url");
+                                    }
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            prefshelper.storeUserIdToPreference(userID);
-                            prefshelper.storeSecHashToPreference(userSecHash);
-                            prefshelper.storeEmailToPreference(userEmail);
-                            prefshelper.storeUserNameToPreference(userName);
-                            prefshelper.storeUserContactToPreference(userContact);
-                            prefshelper.storeUserStatusToPreference(userStatus);
-                            prefshelper.storeEmailVerification(userEmailVerified);
-                            prefshelper.storeMobileVerification(userMobileVerified);
-                            prefshelper.storeCorporateUser("0");
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
+                            if(userEmailVerified.equalsIgnoreCase("1"))
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                            if(userMobileVerified.equalsIgnoreCase("1"))
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
+
+                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,false);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.GROUP_ID,String.valueOf(groupId));
+                            if(groupId==4) {
+                                Utils.storeUserPreferencesBoolean(getActivity(), Prefshelper.FREE_OR_PAID, true);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            }
+                            else
+                             Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FREE_OR_PAID,false);
                             Intent intent = new Intent(getActivity(), FreeUserSelectDateActivity.class);
                             startActivity(intent);
                         }

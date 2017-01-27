@@ -1,11 +1,9 @@
 package com.eweblog;
 
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,7 +30,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.eweblog.common.AlarmReceiver;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.MyAlarmService;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 import com.eweblog.model.CaseListModel;
@@ -40,7 +37,6 @@ import com.eweblog.model.CaseListModel;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -57,6 +53,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
     List<CaseListModel> caseList ;
+    int groupId;
 
 
     @Override
@@ -99,41 +96,44 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     if (cd.isConnectingToInternet()) {
 
-                        if ((prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) ||
-                                (prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")))
+                        if ((Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) ||
+                                (Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")))
                         {
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                             startActivity(intent);
                             finish();
 
                         }
-                        else if ((!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) &&
-                                !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase(""))
-                        && !(prefshelper.getMobileVerification().equalsIgnoreCase("1"))))
+                        else if (!(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) &&
+                                !(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase(""))
+                        && !(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS)))
                         {
                             Intent intent = new Intent(SplashScreenActivity.this, OTPScreenActivity.class);
                             startActivity(intent);
                             finish();
                         }
-                        else if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) || !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
-                                (prefshelper.getMobileVerification().equalsIgnoreCase("1")))
+                        else if (!(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) || !(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")) &&
+                                (Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS)))
                         {
                             sessionLogin();
                         }
                     } else {
 
-                        if (!(prefshelper.getUserIdFromPreference().equalsIgnoreCase("")) && !(prefshelper.getUserSecHashFromPreference().equalsIgnoreCase("")) &&
-                               (prefshelper.getMobileVerification().equalsIgnoreCase("1")))
+                        if (!(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) && !(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")) &&
+                               (Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS).equalsIgnoreCase("1")))
                         {
-                            if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+                            if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
                             {
-
-                                Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
+                                Intent intent = new Intent(SplashScreenActivity.this, CorporateUserMainActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
                             else
                             {
+                                if(groupId==4)
+                                    Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,true);
+                                else
+                                    Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
                                 Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -188,12 +188,12 @@ public class SplashScreenActivity extends AppCompatActivity {
             pDialog.setCancelable(false);
             pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "session_login");
+            Log.e("SessionLogin URL",MapAppConstant.API + "session_login");
             StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "session_login", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("SessionLogin Response" ,response.toString());
 
                     ////////
                     try {
@@ -217,8 +217,12 @@ public class SplashScreenActivity extends AppCompatActivity {
                                      userEmailVerified=jsonObject.getString("user_email_verification_status");
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
-                                    if(prefshelper.getCorporateUser().equalsIgnoreCase("1")) {
+                                     groupId=jsonObject.getInt("group_id");
+                                    if(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.GROUP_ID).equalsIgnoreCase("1")) {
                                         imgUrl = jsonObject.getString("user_profile_image_url");
+                                    }
+                                    if(groupId==4) {
+                                        imgUrl=jsonObject.getString("user_profile_image_url");
                                     }
                                 }
                             } catch (Exception e) {
@@ -227,23 +231,29 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
                         }
-                        prefshelper.storeUserIdToPreference(userID);
-                        prefshelper.storeSecHashToPreference(userSecHash);
-                        prefshelper.storeEmailToPreference(userEmail);
-                        prefshelper.storeUserNameToPreference(userName);
-                        prefshelper.storeUserContactToPreference(userContact);
-                        prefshelper.storeUserStatusToPreference(userStatus);
-                        prefshelper.storeEmailVerification(userEmailVerified);
-                        prefshelper.storeMobileVerification(userMobileVerified);
-                        if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID,userID);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL,userEmail);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_NAME,userName);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CONTACT,userContact);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATUS,userStatus);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL_VERIFICATION_STATUS,userEmailVerified);
+                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,userMobileVerified);
+                        if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
                         {
-                            prefshelper.storeProfileImage(imgUrl);
-                            Intent intent = new Intent(SplashScreenActivity.this, SelectDateActivity.class);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            Intent intent = new Intent(SplashScreenActivity.this, CorporateUserMainActivity.class);
                             startActivity(intent);
                             finish();
                         }
                        else
                         {
+                            if(groupId==4) {
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID, true);
+                                Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            }
+                            else
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
                             Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
                             startActivity(intent);
                             finish();
@@ -279,8 +289,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH));
+                    Log.e("SessionLogin Request" ,params.toString());
                     return params;
                 }
             };

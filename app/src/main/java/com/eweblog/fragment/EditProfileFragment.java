@@ -42,7 +42,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
+import com.eweblog.Utils;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.MultipartRequest;
 import com.eweblog.common.Prefshelper;
@@ -54,8 +55,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class EditProfileFragment extends Fragment
@@ -90,7 +94,7 @@ public class EditProfileFragment extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview= inflater.inflate(R.layout.fragmnet_edit_profile, container, false);
-        SelectDateActivity.txtTitle.setText("Edit Profile");
+        CorporateUserMainActivity.txtTitle.setText("Edit Profile");
         prefHelper=new Prefshelper(getActivity());
 
         edtName =(EditText)rootview.findViewById(R.id.name);
@@ -115,6 +119,9 @@ public class EditProfileFragment extends Fragment
         edtContact.setText(prefHelper.getContact());
         edtDateOfBirth.setText(prefHelper.getDOB());*/
 
+        edtName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_NAME));
+        edtEmail.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_EMAIL));
+        edtContact.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CONTACT));
 
         btn_submit=(Button) rootview.findViewById(R.id.email_sign_in_button);
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -132,17 +139,27 @@ public class EditProfileFragment extends Fragment
                     focusView = edtName;
                     cancelSignup = true;
                 } 
-                else if (TextUtils.isEmpty(contact)) {
+                if (TextUtils.isEmpty(contact)) {
                     edtContact.setError("Contact Number is Required");
                     focusView = edtContact;
                     cancelSignup = true;
                 }
-                else if (TextUtils.isEmpty(email)) {
-                    edtEmail.setError("Email is Required");
+                else if (!isValidPhone((contact))) {
+                    edtContact.setError("Mobile number must be of digits 10.");
+                    focusView = edtContact;
+                    cancelSignup = true;
+                }
+                if (TextUtils.isEmpty(email)) {
+                    edtEmail.setError("Field must not be empty.");
                     focusView = edtEmail;
                     cancelSignup = true;
                 }
-                else if (cancelSignup) {
+                else if (!isValidEmail(email)) {
+                    edtEmail.setError("Invalid Email.");
+                    focusView = edtEmail;
+                    cancelSignup = true;
+                }
+                if (cancelSignup) {
                     // error in login
                     focusView.requestFocus();
                 } else {
@@ -162,26 +179,23 @@ public class EditProfileFragment extends Fragment
                 final ProgressDialog pDialog = new ProgressDialog(getActivity());
                 pDialog.setMessage("Loading...");
                 pDialog.show();
-
-                Log.e("", "Strings" + MapAppConstant.API + "edit_profile");
-                StringRequest sr = new StringRequest(Request.Method.POST,MapAppConstant.API+"edit_profile", new Response.Listener<String>() {
+                String URL_EDIT_PROFILE=MapAppConstant.API + MapAppConstant.EDIT_PROFILE;
+                Log.e("Edit Profile URL",URL_EDIT_PROFILE);
+                StringRequest sr = new StringRequest(Request.Method.POST, URL_EDIT_PROFILE, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         pDialog.dismiss();
-                        Log.e("response",""+response);
+                        Log.e("Edit Profile response",""+response);
                         try {
                             JSONObject object = new JSONObject(response);
                             String serverCode = object.getString("code");
                             String serverMessage = object.getString("message");
-                            Toast.makeText(getActivity(), "" + serverMessage, Toast.LENGTH_SHORT).show();
-                            if (serverCode.equalsIgnoreCase("0")) {
 
+                            if (serverCode.equalsIgnoreCase("0")) {
+                                Utils.showToast(getActivity(),serverMessage);
                             }
                             if (serverCode.equalsIgnoreCase("1")) {
                                 try {
-
-
-
                                     if ("1".equals(serverCode)) {
                                         JSONObject object1 = object.getJSONObject("data");
 
@@ -190,18 +204,16 @@ public class EditProfileFragment extends Fragment
                                         email=object1.getString("user_email");
 
                                         }
-                               /*     prefHelper.setName(u_name);
-                                    prefHelper.storeContact(contact);
-                                    prefHelper.setGender(userGender);*/
-
-
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,u_name);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,email);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,contact);
                                 }
 
                                 catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                Intent intent=new Intent(getActivity(), SelectDateActivity.class);
+                                Intent intent=new Intent(getActivity(), CorporateUserMainActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
 
@@ -237,12 +249,11 @@ public class EditProfileFragment extends Fragment
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
 
-                        params.put("user_id", prefHelper.getUserIdFromPreference());
-                        params.put("user_security_hash", prefHelper.getUserSecHashFromPreference());
+                        params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
+                        params.put("user_security_hash",Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
                         params.put("user_name", u_name);
                         params.put("user_contact", contact);
                         params.put("user_dob",email);
-
                         return params;
                     }
                 };
@@ -262,7 +273,14 @@ public class EditProfileFragment extends Fragment
     private boolean isValidPhone(String pass) {
         return pass != null && pass.length() == 10;
     }
+    private boolean isValidEmail(String email) {
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
     public void dialog()
     {
         final Dialog dialog = new Dialog(getActivity());
@@ -529,8 +547,9 @@ public class EditProfileFragment extends Fragment
 
             Log.e("", "LOGIN " + MapAppConstant.API + "profile_image");
             HashMap params = new HashMap<String, String>();
-            params.put("user_id", prefHelper.getUserIdFromPreference());
-            params.put("user_security_hash", prefHelper.getUserSecHashFromPreference());
+
+            params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
+            params.put("user_security_hash",Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
             MultipartRequest sr = new MultipartRequest(MapAppConstant.API +"profile_image", new Response.Listener<String>() {
 
                 @Override
@@ -629,7 +648,7 @@ public class EditProfileFragment extends Fragment
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
                         getFragmentManager().popBackStack();
-                        SelectDateActivity.txtTitle.setText("Home");
+                        CorporateUserMainActivity.txtTitle.setText("Home");
                     }
 
                     return true;

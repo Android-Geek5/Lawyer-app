@@ -29,7 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -63,7 +63,7 @@ public class ChangePasswordFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_change_password, container, false);
         prefshelper=new Prefshelper(getActivity());
-        SelectDateActivity.txtTitle.setText("Change Password");
+        CorporateUserMainActivity.txtTitle.setText("Change Password");
         cd=new ConnectionDetector(getActivity());
         edtPwd = (EditText) rootview.findViewById(R.id.password);
         edtConfirmPwd = (EditText) rootview.findViewById(R.id.cpassword);
@@ -184,7 +184,7 @@ public class ChangePasswordFragment extends Fragment {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Intent intent = new Intent(getActivity(), SelectDateActivity.class);
+                            Intent intent = new Intent(getActivity(), CorporateUserMainActivity.class);
                             startActivity(intent);
                             getActivity().finish();
 
@@ -255,7 +255,7 @@ public class ChangePasswordFragment extends Fragment {
 
 
                         getFragmentManager().popBackStack();
-                        SelectDateActivity.txtTitle.setText("Home");
+                        CorporateUserMainActivity.txtTitle.setText("Home");
 
                     }
 

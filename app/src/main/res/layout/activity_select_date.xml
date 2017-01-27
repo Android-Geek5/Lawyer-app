@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@color/whiteColor"
@@ -33,21 +33,21 @@
                 >
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="@dimen/options_height"
                     android:orientation="horizontal"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin">
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="@dimen/options_height"
                         android:orientation="vertical"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:background="@color/user_color">
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/options_image_height"
                             app:srcCompat="@drawable/view"
                             />
 
@@ -56,24 +56,24 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/options_text_size"
                             android:textStyle="bold"
                             />
                     </LinearLayout>
                     <View
-                        android:layout_width="2dp"
+                        android:layout_width="@dimen/views_height"
                         android:layout_height="match_parent"
                         />
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="150dp"
+                        android:layout_height="@dimen/options_height"
                         android:orientation="vertical"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
                         android:background="@color/case_color">
                         <ImageView
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="@dimen/options_image_height"
                             app:srcCompat="@drawable/view_file"
                             />
 
@@ -82,26 +82,26 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_horizontal"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/options_text_size"
                             android:textStyle="bold"
                             />
                     </LinearLayout>
                 </LinearLayout>
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="2dp"/>
+                    android:layout_height="@dimen/views_height"/>
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="@dimen/options_height"
                     android:orientation="vertical"
                     android:background="@color/add_color"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp">
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="@dimen/options_image_height"
                         app:srcCompat="@drawable/add_case"
                         android:id="@+id/imageView6" />
 
@@ -110,7 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:textSize="15sp"
+                        android:textSize="@dimen/options_text_size"
                         android:textStyle="bold"
                         />
                 </LinearLayout>

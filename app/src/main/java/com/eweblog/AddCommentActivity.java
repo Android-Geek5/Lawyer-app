@@ -80,10 +80,10 @@ public class AddCommentActivity extends AppCompatActivity{
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(AddCommentActivity.this, SelectDateActivity.class);
+                Intent intent1 = new Intent(AddCommentActivity.this, CorporateUserMainActivity.class);
                 startActivity(intent1);
                 finish();
-                SelectDateActivity.txtTitle.setText("Home");
+                CorporateUserMainActivity.txtTitle.setText("Home");
             }
         });
         strId=getIntent().getStringExtra("id");
@@ -261,7 +261,7 @@ public class AddCommentActivity extends AppCompatActivity{
                                 e.printStackTrace();
                             }
 
-                            Intent intent1 = new Intent(AddCommentActivity.this, SelectDateActivity.class);
+                            Intent intent1 = new Intent(AddCommentActivity.this, CorporateUserMainActivity.class);
                             startActivity(intent1);
                             finish();
                         }

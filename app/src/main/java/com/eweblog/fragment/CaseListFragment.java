@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.eweblog.AddCaseActivity;
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.adapter.CaseListAdapter;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.model.CaseListModel;
@@ -69,7 +69,7 @@ public class CaseListFragment extends Fragment {
             });
 
 
-        SelectDateActivity.txtTitle.setText("Case List");
+        CorporateUserMainActivity.txtTitle.setText("Case List");
 
 
         return rootview;
@@ -91,8 +91,8 @@ public class CaseListFragment extends Fragment {
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
 
-                        SelectDateActivity.txtTitle.setText("Home");
-                        Intent intent=new Intent(getActivity(), SelectDateActivity.class);
+                        CorporateUserMainActivity.txtTitle.setText("Home");
+                        Intent intent=new Intent(getActivity(), CorporateUserMainActivity.class);
                         startActivity(intent);
 
                     }

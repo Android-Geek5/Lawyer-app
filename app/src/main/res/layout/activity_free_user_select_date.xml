@@ -140,7 +140,7 @@
         android:background="@color/menuBG"
         app:itemTextColor="@android:color/white"
         app:theme="@style/list_item_appearance"
-        app:menu="@menu/free_user_drawer_menu" >
+        app:menu="@menu/drawer_menu" >
 
     </android.support.design.widget.NavigationView>
 

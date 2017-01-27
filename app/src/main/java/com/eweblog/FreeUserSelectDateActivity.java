@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -102,18 +103,22 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
     LinearLayout linearLayout, linearLayout_search;
     String pic,name,email;
     public static CircularImageView pimage;
+    boolean paidOrNot;
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+            //    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        paidOrNot=Utils.getUserPreferencesBoolean(FreeUserSelectDateActivity.this,Prefshelper.FREE_OR_PAID);
+
         setContentView(R.layout.activity_free_user_select_date);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
+
         compactCalendar = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
@@ -122,10 +127,23 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
         fab = (FloatingActionButton)findViewById(R.id.fabbutton);
         prefshelper = new Prefshelper(this);
         cd = new ConnectionDetector(getApplicationContext());
-        imgNext = (ImageView) findViewById(R.id.image_next);
+        if(paidOrNot) {
+            linearLayout = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.drawer_header, null);
+            navigationView.addHeaderView(linearLayout);
+            pimage = (CircularImageView) linearLayout.findViewById(R.id.profile_img);
+            text_name = (TextView) linearLayout.findViewById(R.id.txt_usrName);
+            email_name = (TextView) linearLayout.findViewById(R.id.txt_userEmail);
+
+            pic = prefshelper.getProfileImage();
+            name = prefshelper.getName();
+            email = prefshelper.getEmail();
+            text_name.setText(name);
+            email_name.setText(email);
+       }
+            imgNext = (ImageView) findViewById(R.id.image_next);
         imgPrevious = (ImageView) findViewById(R.id.image_previous);
 
-
+        hideItem();
         Intent intent1 = new Intent(this.getApplicationContext(), AlarmReceiver.class);
         PendingIntent sender = PendingIntent.getActivity( this.getApplicationContext(),0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -801,4 +819,19 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
         model.setComment(comment);
         return model;
     }
+
+    private void hideItem()
+    {
+        Menu nav_Menu = navigationView.getMenu();
+        nav_Menu.findItem(R.id.drawer_view).setVisible(false);
+        if(!paidOrNot)
+        {
+            nav_Menu.findItem(R.id.drawer_edit).setVisible(false);
+            nav_Menu.findItem(R.id.drawer_case).setVisible(false);
+            nav_Menu.findItem(R.id.drawer_add).setVisible(false);
+            nav_Menu.findItem(R.id.drawer_settings).setVisible(false);
+            nav_Menu.findItem(R.id.drawer_fee).setVisible(false);
+        }
+    }
+
 }

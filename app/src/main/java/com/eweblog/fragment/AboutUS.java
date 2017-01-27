@@ -12,12 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
 
 
 public class AboutUS extends Fragment {
@@ -40,7 +39,7 @@ public class AboutUS extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        View rootview= inflater.inflate(R.layout.fragment_about_us, container, false);
-       SelectDateActivity.txtTitle.setText("About Us");
+       CorporateUserMainActivity.txtTitle.setText("About Us");
 
         llContactUs=(LinearLayout)rootview.findViewById(R.id.ll_call);
 
@@ -107,7 +106,7 @@ public class AboutUS extends Fragment {
 
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
-                            SelectDateActivity.txtTitle.setText("Home");
+                            CorporateUserMainActivity.txtTitle.setText("Home");
                             getFragmentManager().popBackStack();
 
                     }

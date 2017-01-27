@@ -2,7 +2,6 @@ package com.eweblog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,7 +46,6 @@ import com.eweblog.model.CaseListModel;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -103,10 +100,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
                 startActivity(intent1);
                 finish();
-                SelectDateActivity.txtTitle.setText("Home");
+                CorporateUserMainActivity.txtTitle.setText("Home");
             }
         });
         cd= new ConnectionDetector(AddCaseActivity.this);
@@ -261,10 +258,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onBackPressed() {
-        Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+        Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
         startActivity(intent1);
         finish();
-        SelectDateActivity.txtTitle.setText("Home");
+        CorporateUserMainActivity.txtTitle.setText("Home");
         super.onBackPressed();
 
     }
@@ -304,7 +301,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
 
-                            Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                            Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
                             startActivity(intent1);
                             finish();
                         }
@@ -531,7 +528,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent1 = new Intent(AddCaseActivity.this, SelectDateActivity.class);
+                Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
                 startActivity(intent1);
                 finish();
             }

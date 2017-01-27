@@ -1,7 +1,6 @@
 package com.eweblog.fragment;
 
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.eweblog.R;
-import com.eweblog.SelectDateActivity;
+import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.adapter.UserAdapter;
 import com.eweblog.model.CaseListModel;
 
@@ -69,7 +68,7 @@ public class ActiveUsersFragement extends Fragment {
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
                         getFragmentManager().popBackStack();
-                        SelectDateActivity.txtTitle.setText("Home");
+                        CorporateUserMainActivity.txtTitle.setText("Home");
                     }
 
                     return true;
