@@ -54,7 +54,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     Date sysDate = cal.getTime();
     List<CaseListModel> caseList ;
     int groupId;
-
+    JSONObject jsonObject;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,8 +96,8 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                     if (cd.isConnectingToInternet()) {
 
-                        if ((Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) ||
-                                (Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")))
+                        if (((Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID)==null || Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase(""))) ||
+                                ((Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH)==null || Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase(""))))
                         {
                             Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                             startActivity(intent);
@@ -120,7 +120,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     } else {
 
                         if (!(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) && !(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")) &&
-                               (Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS).equalsIgnoreCase("1")))
+                                (Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS)))
                         {
                             if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
                             {
@@ -208,7 +208,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if (serverCode.equalsIgnoreCase("1")) {
                             try {
                                 if ("1".equals(serverCode)) {
-                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    jsonObject=object.getJSONObject("data");
                                      userID=jsonObject.getString("user_id");
                                      userSecHash=jsonObject.getString("user_security_hash");
                                      userName=jsonObject.getString("user_name");
@@ -218,10 +218,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
                                      groupId=jsonObject.getInt("group_id");
-                                    if(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.GROUP_ID).equalsIgnoreCase("1")) {
+                                    if(groupId==5)  Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT,true);
+                                    if(groupId==4) Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID, true);
+                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID,false);
+                                    if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT)) {
                                         imgUrl = jsonObject.getString("user_profile_image_url");
                                     }
-                                    if(groupId==4) {
+                                    if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID)) {
                                         imgUrl=jsonObject.getString("user_profile_image_url");
                                     }
                                 }
@@ -230,7 +233,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             }
 
 
-                        }
+
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID,userID);
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL,userEmail);
@@ -238,10 +241,21 @@ public class SplashScreenActivity extends AppCompatActivity {
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CONTACT,userContact);
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATUS,userStatus);
                         Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL_VERIFICATION_STATUS,userEmailVerified);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,userMobileVerified);
+                            if(userMobileVerified.equalsIgnoreCase("1"))
+                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                            else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
                         if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
                         {
+                            String lastName,stateOfPractise,cityOfPractise,specialization;
                             Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            lastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
+                            stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                            cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                            specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_LAST_NAME,lastName);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SPECIALIZATION,specialization);
                             Intent intent = new Intent(SplashScreenActivity.this, CorporateUserMainActivity.class);
                             startActivity(intent);
                             finish();
@@ -258,7 +272,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish();
                         }
-
+                        }
 
                     } catch (Exception e) {
                         e.printStackTrace();

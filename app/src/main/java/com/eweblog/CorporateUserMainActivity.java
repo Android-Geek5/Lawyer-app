@@ -76,9 +76,9 @@ public class CorporateUserMainActivity extends AppCompatActivity {
             text_name = (TextView) linearLayout.findViewById(R.id.txt_usrName);
             email_name = (TextView) linearLayout.findViewById(R.id.txt_userEmail);
 
-            pic = prefshelper.getProfileImage();
-            name = prefshelper.getName();
-            email = prefshelper.getEmail();
+            pic = Utils.getUserPreferences(CorporateUserMainActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL);
+            name = Utils.getUserPreferences(CorporateUserMainActivity.this,Prefshelper.USER_NAME);
+            email = Utils.getUserPreferences(CorporateUserMainActivity.this,Prefshelper.USER_EMAIL);
             text_name.setText(name);
             email_name.setText(email);
 //            Picasso.with(this).load(pic).into(pimage);
@@ -166,7 +166,7 @@ public class CorporateUserMainActivity extends AppCompatActivity {
                         startActivity(in);
                         return true;
                     case R.id.drawer_case:
-                        prefshelper.storeSearch("case_status");
+                       Utils.storeUserPreferences(CorporateUserMainActivity.this,Prefshelper.SEARCH,"case_status");
                         Intent intnt = new Intent(CorporateUserMainActivity.this, SearchActivity.class);
                         startActivity(intnt);
                         return true;

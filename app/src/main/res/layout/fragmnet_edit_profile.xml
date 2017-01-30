@@ -49,10 +49,10 @@
                     android:src="@drawable/person"/>
 
                 <EditText
-                    android:id="@+id/name"
+                    android:id="@+id/fname"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_form_data_height"
-                    android:hint="Name"
+                    android:hint="First Name"
                     android:layout_weight="1"
                     android:inputType="number"
                     android:maxLines="1"
@@ -76,6 +76,35 @@
                     android:layout_height="@dimen/login_form_data_height"
                     android:padding="@dimen/login_images_padding"
                     android:background="@color/colorIcon"
+                    android:src="@drawable/person"/>
+
+                <EditText
+                    android:id="@+id/lname"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_form_data_height"
+                    android:hint="Last Name"
+                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="@dimen/login_form_data_text"
+                    android:textColor="@android:color/white"
+                    android:background="@color/colorText"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:paddingLeft="@dimen/login_images_padding"
+                    />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/login_form_data_top_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/login_form_data_height"
+                    android:padding="@dimen/login_images_padding"
+                    android:background="@color/colorIcon"
                     android:src="@drawable/mail"/>
                    <EditText
                     android:id="@+id/email"
@@ -83,10 +112,9 @@
                     android:layout_height="@dimen/login_form_data_height"
                     android:hint="Email"
                     android:layout_weight="1"
-                    android:inputType="number"
+                    android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:textSize="@dimen/login_form_data_text"
-                    android:maxLength="10"
                     android:textColor="@android:color/white"
                     android:background="@color/colorText"
                     android:textColorHint="@android:color/darker_gray"
@@ -139,20 +167,48 @@
                     android:background="@color/colorIcon"
                     android:src="@drawable/location"/>
                 <EditText
-                    android:id="@+id/location"
+                    android:id="@+id/state"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_form_data_height"
-                    android:hint="Location"
+                    android:hint="State"
                     android:layout_weight="1"
-                    android:inputType="number"
+                    android:inputType="text"
                     android:maxLines="1"
                     android:textSize="@dimen/login_form_data_text"
-                    android:maxLength="10"
                     android:textColor="@android:color/white"
                     android:background="@color/colorText"
                     android:textColorHint="@android:color/darker_gray"
                     android:paddingLeft="@dimen/login_images_padding"
-                    android:drawableRight="@drawable/dropdown"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/login_form_data_top_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/login_form_data_height"
+                    android:padding="@dimen/login_images_padding"
+                    android:background="@color/colorIcon"
+                    android:src="@drawable/location"/>
+                <EditText
+                    android:id="@+id/city"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/login_form_data_height"
+                    android:hint="City"
+                    android:layout_weight="1"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textSize="@dimen/login_form_data_text"
+                    android:textColor="@android:color/white"
+                    android:background="@color/colorText"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:paddingLeft="@dimen/login_images_padding"
                     />
 
             </LinearLayout>
@@ -169,21 +225,15 @@
                     android:padding="@dimen/login_images_padding"
                     android:background="@color/colorIcon"
                     android:src="@drawable/layers"/>
-                <EditText
+
+                <Spinner
                     android:id="@+id/specialization"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/login_form_data_height"
                     android:hint="Specialization"
                     android:layout_weight="1"
-                    android:inputType="number"
-                    android:maxLines="1"
-                    android:textSize="@dimen/login_form_data_text"
-                    android:maxLength="10"
                     android:textColor="@android:color/white"
-                    android:background="@color/colorText"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:paddingLeft="@dimen/login_images_padding"
-                    android:drawableRight="@drawable/dropdown"
+                    android:spinnerMode="dropdown"
                     />
 
             </LinearLayout>
@@ -194,6 +244,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/login_form_data_top_margin_large"
+                android:layout_marginBottom="@dimen/login_form_data_top_margin"
                 android:background="@color/buttonbg"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/button_text_size"

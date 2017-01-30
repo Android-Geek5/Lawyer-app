@@ -134,9 +134,9 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
             text_name = (TextView) linearLayout.findViewById(R.id.txt_usrName);
             email_name = (TextView) linearLayout.findViewById(R.id.txt_userEmail);
 
-            pic = prefshelper.getProfileImage();
-            name = prefshelper.getName();
-            email = prefshelper.getEmail();
+            pic = Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL);
+            name = Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_NAME);
+            email = Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_EMAIL);
             text_name.setText(name);
             email_name.setText(email);
        }
@@ -202,7 +202,7 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
                     compactCalendar.setCurrentDayBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 }
                 daySelected = dateFormatForDisplaying.format(dateClicked);
-                prefshelper.storeSelectedDate(dateFormat.format(dateClicked));
+                Utils.storeUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.SELECTED_DATE,dateFormat.format(dateClicked));
                 Calendar cal = Calendar.getInstance();
                 Date sysDate = cal.getTime();
                 if(daySelected.equalsIgnoreCase(dateFormatForDisplaying.format(sysDate)))
@@ -582,8 +582,8 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_SECURITY_HASH));
                     params.put("case_detail_hearing_date",daySelected);
                     return params;
                 }
@@ -722,9 +722,8 @@ public class FreeUserSelectDateActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    Log.e( prefshelper.getUserIdFromPreference(),prefshelper.getUserSecHashFromPreference());
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(FreeUserSelectDateActivity.this,Prefshelper.USER_SECURITY_HASH));
 
                     return params;
                 }

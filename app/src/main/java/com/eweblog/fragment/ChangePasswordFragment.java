@@ -30,6 +30,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
+import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
@@ -178,7 +179,7 @@ public class ChangePasswordFragment extends Fragment {
 
                                     String userSecHash=jsonObject.getString("user_security_hash");
 
-                                    prefshelper.storeSecHashToPreference(userSecHash);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
 
                                 }
                             } catch (Exception e) {
@@ -219,9 +220,8 @@ public class ChangePasswordFragment extends Fragment {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
                     params.put("user_login_password", strPwd);
                     params.put("confirm_login_password", strConfirmPwd);
 

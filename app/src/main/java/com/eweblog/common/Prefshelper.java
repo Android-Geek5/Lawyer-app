@@ -34,6 +34,10 @@ public class Prefshelper {
     public static final String SEARCH="search";
     public static final String SELECTED_DATE="selected_date";
     public static final String CORPORATE_OR_NOT="corporate_or_not";
+    public static final String USER_LAST_NAME="user_last_name";
+    public static final String USER_STATE_OF_PRACTISE="user_state_of_practice";
+    public static final String USER_CITY_OF_PRACTISE="user_city_of_practice";
+    public static final String USER_SPECIALIZATION="user_specialization";
 
    public Prefshelper(Context context) {
         this.context = context;

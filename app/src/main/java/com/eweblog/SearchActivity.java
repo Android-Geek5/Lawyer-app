@@ -97,7 +97,7 @@ public class SearchActivity extends AppCompatActivity {
         txtCaseTitle=(TextView)findViewById(R.id.text_title);
         txtType=(TextView)findViewById(R.id.text_type);
         txtJudge=(TextView)findViewById(R.id.text_judge);
-        if(prefshelper.getSearch().equalsIgnoreCase("case_status"))
+        if(Utils.getUserPreferences(SearchActivity.this,Prefshelper.SEARCH).equalsIgnoreCase("case_status"))
         {
             llFilters.setVisibility(View.GONE);
             spinner.setVisibility(View.VISIBLE);
@@ -226,8 +226,8 @@ public class SearchActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_SECURITY_HASH));
 
                     return params;
                 }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.eweblog.CaseDetailActivity;
 import com.eweblog.R;
+import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.model.CaseListModel;
@@ -70,7 +71,7 @@ public class CaseListAdapter  extends BaseAdapter {
         holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
         holder.txtCase.setText(caseList.get(position).getCaseTitle());
         prefshelper=new Prefshelper(context);
-        holder.txtNumber.setText(prefshelper.getSelectedDate());
+        holder.txtNumber.setText(Utils.getUserPreferences(context,Prefshelper.SELECTED_DATE));
         cd=new ConnectionDetector(context);
         if(!cd.isConnectingToInternet())
         {

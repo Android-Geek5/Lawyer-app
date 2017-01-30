@@ -299,8 +299,8 @@ public class AddCommentActivity extends AppCompatActivity{
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(AddCommentActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(AddCommentActivity.this,Prefshelper.USER_SECURITY_HASH));
                     params.put("case_id", strId);
                     params.put("case_detail_comment", strComment);
                     params.put("case_next_date", strNextDt);

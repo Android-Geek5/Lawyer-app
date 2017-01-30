@@ -22,10 +22,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +52,7 @@ import com.eweblog.common.MultipartRequest;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -56,15 +60,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class EditProfileFragment extends Fragment
 {
-    EditText edtName, edtContact,edtEmail;
+    EditText edtName, edtLastName, edtContact,edtEmail;
+    Spinner specialization;
     Prefshelper prefHelper;
     File f;
     Button btn_submit;
@@ -75,7 +84,7 @@ public class EditProfileFragment extends Fragment
     LinearLayout llProfilePic;
 
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 2500;
-    String  u_name,contact,email, filename;
+    String  u_name,l_name,contact,email, filename;
 
     View rootview;
 
@@ -97,10 +106,42 @@ public class EditProfileFragment extends Fragment
         CorporateUserMainActivity.txtTitle.setText("Edit Profile");
         prefHelper=new Prefshelper(getActivity());
 
-        edtName =(EditText)rootview.findViewById(R.id.name);
+        edtName =(EditText)rootview.findViewById(R.id.fname);
+        edtLastName=(EditText) rootview.findViewById(R.id.lname);
         edtContact =(EditText)rootview.findViewById(R.id.mobile);
         edtEmail=(EditText)rootview.findViewById(R.id.email);
+        specialization=(Spinner) rootview.findViewById(R.id.specialization);
 
+        // Spinner Drop down elements
+        List<String> languages = new ArrayList<String>();
+        languages.add("Andorid");
+        languages.add("IOS");
+        languages.add("PHP");
+        languages.add("Java");
+        languages.add(".Net");
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, languages);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        specialization.setAdapter(dataAdapter);
+        specialization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+
+                Toast.makeText(parent.getContext(), "Android Simple Spinner Example Output..." + item, Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         imageView_profile = (ImageView)rootview.findViewById(R.id.imageView_profile);
         llProfilePic=(LinearLayout)rootview.findViewById(R.id.ll_profilePic);
 
@@ -167,7 +208,7 @@ public class EditProfileFragment extends Fragment
                 }
             }
         });
-
+              getSpecialisations();
                 return  rootview;
     }
 
@@ -190,9 +231,9 @@ public class EditProfileFragment extends Fragment
                             JSONObject object = new JSONObject(response);
                             String serverCode = object.getString("code");
                             String serverMessage = object.getString("message");
-
+                            Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                             if (serverCode.equalsIgnoreCase("0")) {
-                                Utils.showToast(getActivity(),serverMessage);
+
                             }
                             if (serverCode.equalsIgnoreCase("1")) {
                                 try {
@@ -251,9 +292,10 @@ public class EditProfileFragment extends Fragment
 
                         params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
                         params.put("user_security_hash",Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
-                        params.put("user_name", u_name);
+                        params.put("first_name", u_name);
                         params.put("user_contact", contact);
-                        params.put("user_dob",email);
+                        params.put("user_email",email);
+                        params.put("user_contact",)
                         return params;
                     }
                 };
@@ -660,7 +702,104 @@ public class EditProfileFragment extends Fragment
         });
     }
 
+    public void getSpecialisations()
+    {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(getActivity());
+            pDialog.setMessage("Loading...");
+            pDialog.show();
+            String URL_GET_SPECIALIZATION=MapAppConstant.API + MapAppConstant.GET_SPECIALIZATION;
+            Log.e("Specialization URL",URL_GET_SPECIALIZATION);
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_GET_SPECIALIZATION, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.e("Specialization response",""+response);
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                        if (serverCode.equalsIgnoreCase("0")) {
 
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+                                    JSONArray object1 = object.getJSONArray("data");
+                                    HashMap<Integer,String> hash = new HashMap<Integer,String>();
+                                    if(object1.length()>0)
+                                    {
+                                        for(int i=0;i<object1.length();i++)
+                                        {
+                                            JSONObject object2=object1.getJSONObject(i);
+                                            hash.put(object2.getInt("specialization_id"),object2.getString("specialization_name"));
+                                        }
+                                    }
+                                    Log.e("HASHMAP",hash.toString());
+                                    Set<Map.Entry<Integer, String>> set = hash.entrySet();
+
+                                    for (Map.Entry<Integer,String> me : set) {
+                                        Log.e("Hashmap","Key :"+me.getKey() +" Name : "+ me.getValue());
+
+                                    }
+                                }
+                            }
+
+                            catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    ;
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(getActivity(), "Timeout Error",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
+                    params.put("user_security_hash",Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
+                    Log.e("Specialization Request",params.toString());
+                    return params;
+                }
+            };
+            sr.setRetryPolicy(new DefaultRetryPolicy(100000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+            sr.setShouldCache(true);
+            VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(sr);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 }

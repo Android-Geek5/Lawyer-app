@@ -3,6 +3,7 @@ package com.eweblog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -46,28 +47,28 @@ public class Utils {
 
     public static void storeUserPreferences(Context context,String key,String value)
     {
-        SharedPreferences.Editor editor = context.getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putString(key, value);
         editor.commit();
     }
 
     public static void storeUserPreferencesBoolean(Context context,String key,boolean value)
     {
-        SharedPreferences.Editor editor = context.getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
         editor.putBoolean(key,value);
         editor.commit();
     }
 
     public static String getUserPreferences(Context context,String key)
     {
-        SharedPreferences prefs = context.getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         String string = prefs.getString(key, null);
         return string;
     }
 
     public static boolean getUserPreferencesBoolean(Context context,String key)
     {
-        SharedPreferences prefs = context.getSharedPreferences("USER_PREFERENCES", MODE_PRIVATE);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
         Boolean bool = prefs.getBoolean(key,false);
         return bool;
     }

@@ -137,7 +137,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtStartDate.setOnClickListener(this);
         edtPrevDate.setOnClickListener(this);
         edtNextDate.setOnClickListener(this);
-        if(prefshelper.getCorporateUser().equalsIgnoreCase("1"))
+        if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
         {
             llCaseStatus.setVisibility(View.VISIBLE);
             edtStatus.setVisibility(View.GONE);
@@ -336,8 +336,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
                    Log.e(strPreviousDt, strNextDt);
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_SECURITY_HASH));
                     params.put("case_number", strNumber);
                     params.put("case_title", strTitle);
                     params.put("case_type", strType);
@@ -493,8 +493,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_SECURITY_HASH));
 
                     return params;
                 }
@@ -568,7 +568,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     strMonth= String.valueOf(month);
                 }
 
-                if(prefshelper.getDate().equalsIgnoreCase("start")) {
+                if(Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.DATE).equalsIgnoreCase("start")) {
                     dialog.dismiss();
 
                     strStartDate=year + "-" + strMonth + "-" + strDay;
@@ -580,7 +580,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                         e.printStackTrace();
                     }
                 }
-                else  if(prefshelper.getDate().equalsIgnoreCase("previous"))
+                else  if(Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.DATE).equalsIgnoreCase("previous"))
                 {
                     dialog.dismiss();
                     strPreviousDt=year + "-" + strMonth + "-" + strDay;
@@ -599,7 +599,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                         e.printStackTrace();
                     }
                 }
-                else  if(prefshelper.getDate().equalsIgnoreCase("next"))
+                else  if(Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.DATE).equalsIgnoreCase("next"))
                 {
 
                     dialog.dismiss();
@@ -629,17 +629,17 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
         if(view==edtPrevDate)
         {
-            prefshelper.storeDate("previous");
+            Utils.storeUserPreferences(AddCaseActivity.this,Prefshelper.DATE,"previous");
            dialogDatePicker();
         }
         if(view==edtNextDate)
         {
-            prefshelper.storeDate("next");
+            Utils.storeUserPreferences(AddCaseActivity.this,Prefshelper.DATE,"next");
             dialogDatePicker();
         }
         if(view==edtStartDate)
         {
-            prefshelper.storeDate("start");
+            Utils.storeUserPreferences(AddCaseActivity.this,Prefshelper.DATE,"start");
             dialogDatePicker();
         }
 

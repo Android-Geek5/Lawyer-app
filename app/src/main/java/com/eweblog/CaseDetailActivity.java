@@ -526,9 +526,8 @@ public class CaseDetailActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());
+                    params.put("user_id", Utils.getUserPreferences(CaseDetailActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(CaseDetailActivity.this,Prefshelper.USER_SECURITY_HASH));
                     params.put("case_id", caseId);
                     return params;
                 }

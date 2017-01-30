@@ -49,6 +49,7 @@ public class FragmentCorporateLogin extends Fragment {
     EditText edtContact,edtPwd, edtCorporateId;
     String strContact, strPwd, strCorporateId, userID, userSecHash, userName, userEmail,
             userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
+    String lastName,stateOfPractise,cityOfPractise,specialization;
     TextView register;
     Prefshelper prefshelper;
     ConnectionDetector cd;
@@ -204,6 +205,11 @@ public class FragmentCorporateLogin extends Fragment {
                                     userStatus=jsonObject.getString("user_status");
                                     imgUrl=jsonObject.getString("user_profile_image_url");
                                     corporateUser=jsonObject.getString("group_id");
+                                    lastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
+                                    stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                    cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                    specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
+
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -224,6 +230,10 @@ public class FragmentCorporateLogin extends Fragment {
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
                             Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,true);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,lastName);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,specialization);
                             Intent intent = new Intent(getActivity(), CorporateUserMainActivity.class);
                             startActivity(intent);
 
