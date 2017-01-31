@@ -295,7 +295,6 @@ public class EditProfileFragment extends Fragment
                         params.put("first_name", u_name);
                         params.put("user_contact", contact);
                         params.put("user_email",email);
-                        params.put("user_contact",)
                         return params;
                     }
                 };

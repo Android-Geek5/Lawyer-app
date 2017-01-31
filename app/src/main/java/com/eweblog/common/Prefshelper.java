@@ -19,7 +19,7 @@ public class Prefshelper {
     public static final String KEY_PREFS_USER_INFO = "user_info";
     private Context context;
     public static SharedPreferences preferences;
-    public static final String FREE_OR_PAID="free_or_paid";
+    public static final String FREE_OR_PAID="free_or_paid"; //TRUE FOR PAID
     public static final String USER_EMAIL="user_email";
     public static final String USER_NAME="user_name";
     public static final String USER_ID="user_id";
@@ -38,6 +38,8 @@ public class Prefshelper {
     public static final String USER_STATE_OF_PRACTISE="user_state_of_practice";
     public static final String USER_CITY_OF_PRACTISE="user_city_of_practice";
     public static final String USER_SPECIALIZATION="user_specialization";
+    public static final String SMS_ALERT="sms_alert";
+    public static final String FEE_MANAGEMENT="fee_management";
 
    public Prefshelper(Context context) {
         this.context = context;

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompatSideChannelService;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,11 +38,13 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.adapter.CommonListAdapter;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 import com.eweblog.model.CaseListModel;
+import com.eweblog.model.CommonList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -53,17 +56,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    LinearLayout linearLayout, llCaseStatus;
-    Spinner sprCaseType, sprCaseStaus ;
+    LinearLayout linearLayout, llCaseStatus,llAssignedTo;
+    Spinner sprCaseType, sprCaseStaus ,sprAssignedTo ;
 
     ArrayAdapter<String> stringArrayAdapter;
-    ArrayAdapter<CaseListModel> stringArrayAdapter2;
+    ArrayAdapter<String> caseStatusAdapter;
+    ArrayAdapter<String> assignedToAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
             edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate, edtClientContact;
@@ -78,6 +84,12 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     Date sysDate = cal.getTime();
     CheckBox chkSmsAlert;
     List<CaseListModel> list;
+    List<String> commonList=new ArrayList<>();
+    List<String> commonList2=new ArrayList<>();
+    HashMap<String,String> hash = new HashMap<String,String>();
+    HashMap<String,String> hash2 = new HashMap<String,String>();
+    int selectedStatusCaseId=0;
+    int selectedChildUser=0;
 
 
     @Override
@@ -91,12 +103,14 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         list= new ArrayList<>();
         sprCaseType = (Spinner) findViewById(R.id.spinner_type);
         sprCaseStaus = (Spinner) findViewById(R.id.spinner_case_status);
+        sprAssignedTo=(Spinner) findViewById(R.id.spinner_assigned_to);
         btnAdd = (Button) findViewById(R.id.add);
         txtStartError = (TextView) findViewById(R.id.tw_start_error);
         txtPrevError = (TextView) findViewById(R.id.tw_prev_error);
         txtNextError = (TextView) findViewById(R.id.tw_next_error);
         linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
         llCaseStatus = (LinearLayout) findViewById(R.id.ll_case_status);
+        llAssignedTo = (LinearLayout) findViewById(R.id.ll_assigned_to);
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,26 +154,47 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
         {
             llCaseStatus.setVisibility(View.VISIBLE);
+            llAssignedTo.setVisibility(View.VISIBLE);
             edtStatus.setVisibility(View.GONE);
+            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
+                chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (compoundButton.isChecked()) {
+                            edtClientContact.setEnabled(true);
+                        } else {
+                            edtClientContact.setEnabled(false);
+                        }
+                    }
+                });
+            }
         }
         else
         {
-            llCaseStatus.setVisibility(View.GONE);
-            edtStatus.setVisibility(View.VISIBLE);
-        }
-        chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(compoundButton.isChecked())
-                {
-                  edtClientContact.setEnabled(true);
-                }
-                else
-                {
-                    edtClientContact.setEnabled(false);
+            llAssignedTo.setVisibility(View.GONE);
+            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID))
+            {
+                llCaseStatus.setVisibility(View.VISIBLE);
+                edtStatus.setVisibility(View.GONE);
+                if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
+                    chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (compoundButton.isChecked()) {
+                                edtClientContact.setEnabled(true);
+                            } else {
+                                edtClientContact.setEnabled(false);
+                            }
+                        }
+                    });
                 }
             }
-        });
+            else {
+                llCaseStatus.setVisibility(View.GONE);
+                edtStatus.setVisibility(View.VISIBLE);
+            }
+        }
+
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -251,7 +286,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
 
         sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
-        sprCaseStaus.setOnItemSelectedListener(AddCaseActivity.this);
+        //sprCaseStaus.setOnItemSelectedListener(AddCaseActivity.this);
         getCaseStatuses();
     }
 
@@ -274,14 +309,13 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             pDialog.setCancelable(false);
             pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "add_case");
+            Log.e("ADD CASE URL", MapAppConstant.API + MapAppConstant.ADD_CASE);
             StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "add_case", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response);
+                    Log.e("ADD CASE URL",  response);
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
@@ -335,14 +369,22 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-                   Log.e(strPreviousDt, strNextDt);
+
                     params.put("user_id", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_ID));
                     params.put("user_security_hash", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_SECURITY_HASH));
                     params.put("case_number", strNumber);
                     params.put("case_title", strTitle);
                     params.put("case_type", strType);
                     params.put("case_court_name", strCourt);
-                    params.put("case_position_status", strStatus);
+                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID)){
+                    params.put("case_position_status", strStatus);}
+                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID) ||
+                            Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
+                    {
+                        params.put("case_statuses_id",String.valueOf(selectedStatusCaseId));
+                    }
+                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
+                    {params.put("case_assigned_to",String.valueOf(selectedChildUser));}
                     params.put("case_previous_date", strPreviousDt);
                     params.put("case_next_date", strNextDt);
                     params.put("case_opposite_counselor_name", strOCName);
@@ -351,6 +393,9 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     params.put("case_retained_contact", strRContact);
                     params.put("case_detail_comment", strComment);
                     params.put("case_start_date", strStartDate);
+                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT) && edtClientContact.isEnabled()) {
+                        params.put("case_sms_contact", edtClientContact.getText().toString());}
+                    Log.e("ADD CASE REQUEST",params.toString());
                     return params;
                 }
             };
@@ -397,21 +442,20 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
-
-            Log.e("", "get_case_statuses " + MapAppConstant.API + "get_case_statuses");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "get_case_statuses", new Response.Listener<String>() {
+            String URL_CASE_STATUS=MapAppConstant.API + MapAppConstant.GET_CASE_STATUS;
+            Log.e("CASE STATUS URL" ,URL_CASE_STATUS);
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_CASE_STATUS, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response);
+                    Log.e("CASE STATUS RESPONSE",response);
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
                         Toast.makeText(AddCaseActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-                        Log.e("error", response);
+
                         if (serverCode.equalsIgnoreCase("0")) {
 
                         }
@@ -419,6 +463,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONArray jsonArray=object.getJSONArray("data");
+                                   // CommonList commonListObject1=new CommonList(0,"Case Status");
+                                   // commonList.add(commonListObject1);
+                                    commonList.add("Case Status");
+                                    hash.put("0","Case Status");
                                     if(jsonArray.length()>0)
                                     {
                                         for(int i=0; i<jsonArray.length();i++)
@@ -426,17 +474,20 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                            JSONObject jsonObject=jsonArray.getJSONObject(i);
                                             String id=jsonObject.getString("case_status_id");
                                             String name=jsonObject.getString("case_status_name");
-                                            list.add(model(id, name));
+                                            hash.put(id,name);
+                                            commonList.add(name);
+                                            //CommonList commonListObject=new CommonList(id,name);
+                                           // commonList.add(commonListObject);
                                         }
                                     }
-                                    setlist(list);
+
 
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             if (sprCaseStaus.getAdapter() == null) {
-                                stringArrayAdapter2 = new ArrayAdapter<CaseListModel>(AddCaseActivity.this, R.layout.layout_spinner, list)
+                             caseStatusAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, commonList)
                                 {
                                     @Override
                                     public boolean isEnabled(int position) {
@@ -458,8 +509,40 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                         return view;
                                     }
                                 };
-                                stringArrayAdapter2.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-                                sprCaseStaus.setAdapter(stringArrayAdapter2);
+                               caseStatusAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
+                                sprCaseStaus.setAdapter(caseStatusAdapter);
+                               sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                   @Override
+                                   public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                       for (Map.Entry<String, String> entry : hash.entrySet()) {
+                                           if (entry.getValue().equals(commonList.get(i))) {
+                                               Log.e("KEY",entry.getKey());
+                                           }
+                                       }
+                                   }
+
+                                   @Override
+                                   public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                   }
+                               });
+                          /* caseStatusAdapter=new CommonListAdapter(AddCaseActivity.this, R.layout.layout_spinner_dropdown,commonList);
+                                sprCaseStaus.setAdapter(caseStatusAdapter);
+
+                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
+                                     selectedStatusCaseId=commonList.get(position).getId();
+                                        Log.e("SELECTED CASE STATUS ID",String.valueOf(selectedStatusCaseId));
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parentView) {
+                                        // your code here
+                                    }
+
+                                });
+*/
                             }
                         }
 
@@ -650,5 +733,175 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         model.setNextDate(name);
 
         return model;
+    }
+
+    public void getChildUsers()
+    {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(AddCaseActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            String URL_VIEW_CHILD=MapAppConstant.API + MapAppConstant.VIEW_CHILD;
+            Log.e("VIEW CHILD URL" ,URL_VIEW_CHILD);
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_VIEW_CHILD, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.e("VIEW CHILD RESPONSE",response);
+
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Toast.makeText(AddCaseActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+
+                        if (serverCode.equalsIgnoreCase("0")) {
+
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    String userId=Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_ID);
+                                    String userName="Me("+Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_NAME)+")";
+                                      commonList2.add(userName);
+                                      hash2.put(userId,userName);
+                                    JSONArray inactive=jsonObject.getJSONArray("inactive_users");
+                                    if(inactive.length()>0)
+                                    {
+                                        for(int i=0; i<inactive.length();i++)
+                                        {
+                                            JSONObject jsonObject2=inactive.getJSONObject(i);
+                                            String id=jsonObject2.getString("user_id");
+                                            String name=jsonObject2.getString("user_details");
+                                            hash2.put(id,name);
+                                            commonList2.add(name);
+                                            //CommonList commonListObject=new CommonList(id,name);
+                                            // commonList.add(commonListObject);
+                                        }
+                                    }
+
+                                    JSONArray active=jsonObject.getJSONArray("active_users");
+                                    if(active.length()>0)
+                                    {
+                                        for(int i=0; i<active.length();i++)
+                                        {
+                                            JSONObject jsonObject3=inactive.getJSONObject(i);
+                                            String id=jsonObject3.getString("user_id");
+                                            String name=jsonObject3.getString("user_details");
+                                            hash2.put(id,name);
+                                            commonList2.add(name);
+                                        }
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (sprAssignedTo.getAdapter() == null) {
+                                caseStatusAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, commonList2)
+                                {
+                                    @Override
+                                    public boolean isEnabled(int position) {
+
+                                        return position != 0;
+                                    }
+
+                                    @Override
+                                    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                                        View view = super.getDropDownView(position, convertView, parent);
+                                        TextView tv = (TextView) view;
+                                        if (position == 0) {
+                                            // Set the hint text color gray
+                                            tv.setTextColor(Color.GRAY);
+                                        } else {
+                                            tv.setTextColor(Color.BLACK);
+                                        }
+
+                                        return view;
+                                    }
+                                };
+                                assignedToAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
+                                sprAssignedTo.setAdapter(assignedToAdapter);
+                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                        for (Map.Entry<String, String> entry : hash.entrySet()) {
+                                            if (entry.getValue().equals(commonList.get(i))) {
+                                                Log.e("KEY",entry.getKey());
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                    }
+                                });
+                          /* caseStatusAdapter=new CommonListAdapter(AddCaseActivity.this, R.layout.layout_spinner_dropdown,commonList);
+                                sprCaseStaus.setAdapter(caseStatusAdapter);
+
+                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
+                                     selectedStatusCaseId=commonList.get(position).getId();
+                                        Log.e("SELECTED CASE STATUS ID",String.valueOf(selectedStatusCaseId));
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parentView) {
+                                        // your code here
+                                    }
+
+                                });
+*/
+                            }
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(AddCaseActivity.this, "No Internet Connection",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    params.put("user_id", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_SECURITY_HASH));
+
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

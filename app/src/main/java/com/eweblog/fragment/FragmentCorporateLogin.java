@@ -38,6 +38,7 @@ import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -209,6 +210,29 @@ public class FragmentCorporateLogin extends Fragment {
                                     stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
                                     cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
                                     specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
+                                    JSONArray servicesArray=jsonObject.getJSONArray("services_array");
+                                    if(servicesArray.length()>0)
+                                    {
+                                        for(int i=0;i<servicesArray.length();i++)
+                                        {
+                                            JSONObject jsonObject1=servicesArray.getJSONObject(i);
+                                            String name=jsonObject1.getString("service_name");
+                                            if(name.equalsIgnoreCase("Sms Alert"))
+                                            {
+                                                int status=jsonObject1.getInt("service_status");
+                                                if(status==1)
+                                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.SMS_ALERT,true);
+                                            else Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.SMS_ALERT,false);
+                                            }
+                                            if(name.equalsIgnoreCase("Fee Management"))
+                                            {
+                                                int status=jsonObject1.getInt("service_status");
+                                                if(status==1)
+                                                    Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FEE_MANAGEMENT,true);
+                                                else Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FEE_MANAGEMENT,false);
+                                            }
+                                        }
+                                    }
 
                                 }
                             } catch (Exception e) {
