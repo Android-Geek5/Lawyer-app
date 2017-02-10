@@ -38,6 +38,7 @@ import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 import com.eweblog.model.CaseListModel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.ParseException;
@@ -488,7 +489,14 @@ public class CaseDetailActivity extends AppCompatActivity {
                         if (serverCode.equalsIgnoreCase("1")) {
                             try {
                                 if ("1".equals(serverCode)) {
+                                    JSONArray array=object.getJSONArray("data");
+                                    if(array.length()>0)
+                                    {
+                                        for(int i=0;i<array.length();i++)
+                                        {
 
+                                        }
+                                    }
 
                                 }
                             } catch (Exception e) {

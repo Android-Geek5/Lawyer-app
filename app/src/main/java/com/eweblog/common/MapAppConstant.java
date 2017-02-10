@@ -8,4 +8,6 @@ public class MapAppConstant {
     public static final String GET_CASE_STATUS="/get_case_statuses";
     public static final String ADD_CASE="/add_case";
     public static final String VIEW_CHILD="/view_childs";
+    public static final String SEARCH="/search";
+    public static final String ADVANCED_SEARCH="/advanced_search";
 }

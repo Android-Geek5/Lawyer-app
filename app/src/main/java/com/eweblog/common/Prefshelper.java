@@ -41,6 +41,14 @@ public class Prefshelper {
     public static final String SMS_ALERT="sms_alert";
     public static final String FEE_MANAGEMENT="fee_management";
 
+    public static final String CASE_SEARCH_KEYWORD="case_search_keyword";
+    public static final String CASE_SEARCH_PERIOD="case_search_period";
+    public static final String CASE_SEARCH_IN="case_search_in";
+
+    public static final String CASE_ID="case_id";
+    public static final String CASE_TITLE="case_title";
+    public static final String CASE_DATE="case_start_date";
+
    public Prefshelper(Context context) {
         this.context = context;
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
