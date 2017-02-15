@@ -30,6 +30,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
@@ -258,7 +259,7 @@ public class FragmentCorporateLogin extends Fragment {
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,specialization);
-                            Intent intent = new Intent(getActivity(), CorporateUserMainActivity.class);
+                            Intent intent = new Intent(getActivity(), MainAcitivity.class);
                             startActivity(intent);
 
 

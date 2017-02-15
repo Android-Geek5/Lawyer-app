@@ -38,8 +38,6 @@ import java.util.Locale;
 
 public class CorporateUserMainActivity extends AppCompatActivity {
 
-    private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     private CharSequence mDrawerTitle;

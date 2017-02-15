@@ -1,0 +1,155 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <include
+        android:id="@+id/tool_bar"
+        layout="@layout/toolbar_search"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+   
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/ll_filter"
+            >
+           
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/tabs_text_size"
+                    android:textColor="@android:color/white"
+                    android:text="Case Type"
+                    android:layout_weight="1"
+                    android:id="@+id/text_type"
+                    android:padding="@dimen/custom_tabs_padding"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:layout_gravity="center"
+                    />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:layout_gravity="center"
+                android:textSize="@dimen/tabs_text_size"
+                android:text="Case Title"
+                android:textColor="@android:color/white"
+                android:padding="@dimen/custom_tabs_padding"
+                android:layout_weight="1"
+                android:id="@+id/text_title" />
+
+
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/tabs_text_size"
+                    android:textColor="@android:color/white"
+                    android:gravity="center_vertical|center_horizontal"
+                android:padding="@dimen/custom_tabs_padding"
+                    android:layout_gravity="center"
+                    android:text="Judge Name"
+                    android:id="@+id/text_judge" />
+            </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:id="@+id/ll_underline"
+        >
+        <View
+            android:id="@+id/underline1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"/>
+        <View android:id="@+id/underline2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:background="@color/colorAccent"/>
+        <View
+            android:id="@+id/underline3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ll_weeklyall"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/tabs_text_size"
+            android:textColor="@android:color/white"
+            android:text="Weekly"
+            android:layout_weight="1"
+            android:id="@+id/text_weekly"
+            android:padding="@dimen/custom_tabs_padding"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:layout_gravity="center"
+            android:textSize="@dimen/tabs_text_size"
+            android:text="All"
+            android:textColor="@android:color/white"
+            android:padding="@dimen/custom_tabs_padding"
+            android:layout_weight="1"
+            android:id="@+id/text_all" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:id="@+id/ll_underline2"
+        >
+        <View
+            android:id="@+id/underline4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"/>
+        <View android:id="@+id/underline5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:background="@color/colorAccent"/>
+    </LinearLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/whiteColor">
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/recyclerView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:overScrollMode="never"
+    >
+
+</android.support.v7.widget.RecyclerView>
+</LinearLayout>
+
+</LinearLayout>

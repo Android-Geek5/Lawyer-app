@@ -10,4 +10,5 @@ public class MapAppConstant {
     public static final String VIEW_CHILD="/view_childs";
     public static final String SEARCH="/search";
     public static final String ADVANCED_SEARCH="/advanced_search";
+    public static final String GET_USER_CASES="/get_user_cases";
 }

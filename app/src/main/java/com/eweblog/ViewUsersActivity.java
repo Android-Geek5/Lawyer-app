@@ -1,18 +1,48 @@
 package com.eweblog;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.StringRequest;
 import com.eweblog.adapter.ViewUserAdapter;
+import com.eweblog.common.MapAppConstant;
+import com.eweblog.common.Prefshelper;
 import com.eweblog.common.SlidingTabLayout;
+import com.eweblog.common.VolleySingleton;
+import com.eweblog.fragment.ActiveUsersFragement;
+import com.eweblog.fragment.InactiveUsersFragement;
+import com.eweblog.model.ChildUsersList;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ViewUsersActivity extends AppCompatActivity {
     ViewPager pager;
@@ -69,9 +99,142 @@ public class ViewUsersActivity extends AppCompatActivity {
             public void onClick(View view)
             {
                 finish();
-                Intent in = new Intent(ViewUsersActivity.this, CorporateUserMainActivity.class);
+                Intent in = new Intent(ViewUsersActivity.this,  MainAcitivity.class);
                 startActivity(in);
             }
         });
+        getChildUsers();
+    }
+
+    public void getChildUsers()
+    {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(ViewUsersActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            String VIEW_CHILD_USERS= MapAppConstant.API+MapAppConstant.VIEW_CHILD;
+            Log.e("VIEW CHILD URL", VIEW_CHILD_USERS);
+            StringRequest sr = new StringRequest(Request.Method.POST, VIEW_CHILD_USERS, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.e("VIEW CHILD RESPONSE",response);
+
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Toast.makeText(ViewUsersActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+
+                        if (serverCode.equalsIgnoreCase("0")) {
+
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            JSONObject data=object.getJSONObject("data");
+                            JSONArray inactiveUsers=data.getJSONArray("inactive_users");
+                            if(inactiveUsers.length()>0)
+                            {
+                                List<ChildUsersList> childUsersLists=new ArrayList<>();
+                                for(int i = 0; i<inactiveUsers.length(); i++)
+                            {
+                                JSONObject jsonObject=inactiveUsers.getJSONObject(i);
+                                ChildUsersList childUsersListObject=new ChildUsersList();
+                                childUsersListObject.setId(jsonObject.getInt(Prefshelper.USER_ID));
+                                childUsersListObject.setUserDetail(jsonObject.getString(Prefshelper.USER_DETAILS));
+                                childUsersListObject.setCasesCount(jsonObject.getInt(Prefshelper.CASES_COUNT));
+                                childUsersLists.add(childUsersListObject);
+                            }
+                                inflateInactiveUsers(childUsersLists);
+                            }
+                            JSONArray activeUsers=data.getJSONArray("active_users");
+                            if(activeUsers.length()>0)
+                            {
+                                List<ChildUsersList> childUsersLists2=new ArrayList<>();
+                                for(int i = 0; i<activeUsers.length(); i++)
+                                {
+                                    JSONObject jsonObject=activeUsers.getJSONObject(i);
+                                    ChildUsersList childUsersListObject=new ChildUsersList();
+                                    childUsersListObject.setId(jsonObject.getInt(Prefshelper.USER_ID));
+                                    childUsersListObject.setUserDetail(jsonObject.getString(Prefshelper.USER_DETAILS));
+                                    childUsersListObject.setCasesCount(jsonObject.getInt(Prefshelper.CASES_COUNT));
+                                    childUsersLists2.add(childUsersListObject);
+                                }
+                                inflateActiveUsers(childUsersLists2);
+                            }
+
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(ViewUsersActivity.this, "No Internet Connection",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put(Prefshelper.USER_ID, Utils.getUserPreferences(ViewUsersActivity.this,Prefshelper.USER_ID));
+                    params.put(Prefshelper.USER_SECURITY_HASH, Utils.getUserPreferences(ViewUsersActivity.this,Prefshelper.USER_SECURITY_HASH));
+
+                    Log.e("VIEW CHILD REQUEST",params.toString());
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void inflateInactiveUsers(List<ChildUsersList> childUsersList)
+    {
+        Fragment reference = null;
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        //int size=bottomBar.getMaxItemCount();
+        for (int i = 0; i < fragmentList.size(); i++) {
+            reference = fragmentList.get(i);
+            if (reference != null && reference instanceof InactiveUsersFragement) {
+                ((InactiveUsersFragement) reference).inflateList(childUsersList);
+            }
+        }
+    }
+
+    public void inflateActiveUsers(List<ChildUsersList> childUsersList)
+    {
+        Fragment reference = null;
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        //int size=bottomBar.getMaxItemCount();
+        for (int i = 0; i < fragmentList.size(); i++) {
+            reference = fragmentList.get(i);
+            if (reference != null && reference instanceof ActiveUsersFragement) {
+                ((ActiveUsersFragement) reference).inflateList(childUsersList);
+            }
+        }
     }
 }

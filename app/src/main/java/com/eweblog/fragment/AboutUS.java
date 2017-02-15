@@ -15,6 +15,7 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 
@@ -39,7 +40,7 @@ public class AboutUS extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
        View rootview= inflater.inflate(R.layout.fragment_about_us, container, false);
-       CorporateUserMainActivity.txtTitle.setText("About Us");
+       MainAcitivity.txtTitle.setText("About Us");
 
         llContactUs=(LinearLayout)rootview.findViewById(R.id.ll_call);
 
@@ -106,7 +107,8 @@ public class AboutUS extends Fragment {
 
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
-                            CorporateUserMainActivity.txtTitle.setText("Home");
+                            //CorporateUserMainActivity.txtTitle.setText("Home");
+                        MainAcitivity.txtTitle.setText("Home");
                             getFragmentManager().popBackStack();
 
                     }

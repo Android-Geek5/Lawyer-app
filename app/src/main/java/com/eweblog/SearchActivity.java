@@ -3,6 +3,8 @@ package com.eweblog;
 import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.adapter.SearchCaseListAdapter;
 import com.eweblog.common.MapAppConstant;
 import com.eweblog.common.Prefshelper;
 import com.eweblog.common.SlidingTabLayout;
@@ -40,7 +43,7 @@ import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     SlidingTabLayout tabs;
-    LinearLayout llBack;
+    LinearLayout llBack,llSearch;
     TextView txtType, txtCaseTitle, txtJudge,txtWeekly,txtAll;
     Prefshelper prefshelper;
     LinearLayout llFilters;
@@ -50,6 +53,8 @@ public class SearchActivity extends AppCompatActivity {
     int search_period=0;
     int search_in=0;
     String search_keyword;
+    RecyclerView recyclerView;
+    SearchCaseListAdapter searchCaseListAdapter;
     List<SearchCaseList> searchCaseList=new ArrayList<>();
 
     @Override
@@ -73,6 +78,8 @@ public class SearchActivity extends AppCompatActivity {
         spinner=(Spinner)toolbar.findViewById(R.id.spinner);
         edtSearch=(EditText)toolbar.findViewById(R.id.toolbar_title);
         llBack=(LinearLayout)toolbar.findViewById(R.id.imageView_back);
+        llSearch=(LinearLayout)toolbar.findViewById(R.id.imageView_back2);
+        llSearch.setVisibility(View.VISIBLE);
         llBack.setVisibility(View.VISIBLE);
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
                 finish();
             }
         });
-        edtSearch.setOnClickListener(new View.OnClickListener() {
+        llSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                if(edtSearch.getText().toString()!=null || !edtSearch.getText().toString().isEmpty())
@@ -103,6 +110,10 @@ public class SearchActivity extends AppCompatActivity {
         txtJudge=(TextView)findViewById(R.id.text_judge);
         txtWeekly=(TextView) findViewById(R.id.text_weekly);
         txtAll=(TextView) findViewById(R.id.text_all);
+        recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        searchCaseListAdapter=new SearchCaseListAdapter(SearchActivity.this,searchCaseList);
+        recyclerView.setAdapter(searchCaseListAdapter);
     }
 
     public void onClickMainTabs()
@@ -196,6 +207,9 @@ public class SearchActivity extends AppCompatActivity {
                         String serverMessage = object.getString("message");
                         Toast.makeText(SearchActivity.this, serverMessage,Toast.LENGTH_LONG).show();
                         Log.e("error", response);
+                        searchCaseList.clear();
+                        searchCaseListAdapter.notifyDataSetChanged();
+
                         if (serverCode.equalsIgnoreCase("0")) {
 
                         }
@@ -209,8 +223,10 @@ public class SearchActivity extends AppCompatActivity {
                                     SearchCaseList searchCaseListObject=new SearchCaseList();
                                     searchCaseListObject.setCase_id(jsonObject.getInt(Prefshelper.CASE_ID));
                                     searchCaseListObject.setCase_date(jsonObject.getString(Prefshelper.CASE_DATE));
-                                    searchCaseListObject.setCase_title(jsonObject.getString(Pre));
+                                    searchCaseListObject.setCase_title(jsonObject.getString(Prefshelper.CASE_TITLE));
+                                    searchCaseList.add(searchCaseListObject);
                                 }
+                                searchCaseListAdapter.notifyDataSetChanged();
                             }
                         }
 
@@ -253,6 +269,7 @@ public class SearchActivity extends AppCompatActivity {
                 }
             };
             sr.setShouldCache(true);
+
 
             sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));

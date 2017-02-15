@@ -80,7 +80,7 @@ public class AddCommentActivity extends AppCompatActivity{
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(AddCommentActivity.this, CorporateUserMainActivity.class);
+                Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
                 startActivity(intent1);
                 finish();
                 CorporateUserMainActivity.txtTitle.setText("Home");
@@ -261,7 +261,7 @@ public class AddCommentActivity extends AppCompatActivity{
                                 e.printStackTrace();
                             }
 
-                            Intent intent1 = new Intent(AddCommentActivity.this, CorporateUserMainActivity.class);
+                            Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
                             startActivity(intent1);
                             finish();
                         }

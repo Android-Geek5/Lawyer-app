@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center|center_vertical"
+    android:background="@color/colorPrimary"
+            >
+
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="Gallery"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:padding="10dp"
+        android:drawableLeft="@drawable/galery_small"
+        android:drawablePadding="15dp"
+        android:id="@+id/textView_gallery"/>
+    <TextView
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:text="Camera"
+        android:drawablePadding="15dp"
+        android:drawableLeft="@drawable/camera"
+        android:padding="10dp"
+        android:id="@+id/textView_camera"/>
+</LinearLayout>

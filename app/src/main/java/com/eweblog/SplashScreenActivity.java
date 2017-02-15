@@ -49,7 +49,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     ConnectionDetector cd;
     Prefshelper prefshelper;
     private static int SPLASH_TIME_OUT = 2000;
-    String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified, userStatus, imgUrl;
+    String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified,
+            userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
@@ -123,7 +124,14 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if (!(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID).equalsIgnoreCase("")) && !(Utils.getUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH).equalsIgnoreCase("")) &&
                                 (Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS)))
                         {
-                            if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
+                            if(groupId==4)
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
+                             Intent intent=new Intent(SplashScreenActivity.this,MainAcitivity.class);
+                            startActivity(intent);
+                            finish();
+                          /*  if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
                             {
                                 Intent intent = new Intent(SplashScreenActivity.this, CorporateUserMainActivity.class);
                                 startActivity(intent);
@@ -131,14 +139,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                             }
                             else
                             {
-                                if(groupId==4)
-                                    Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,true);
-                                else
-                                    Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
-                                Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
+
+                                Intent intent = new Intent(SplashScreenActivity.this, MainAcitivity.class);
                                 startActivity(intent);
                                 finish();
-                            }
+                            }*/
                         }
                         else
                         {
@@ -218,6 +223,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                                      userEmailVerified=jsonObject.getString("user_email_verification_status");
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
+                                    // userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                  //  userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                   // userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
                                      groupId=jsonObject.getInt("group_id");
                                     if(groupId==5)  Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT,true);
                                     if(groupId==4) Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID, true);
@@ -280,9 +288,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                             Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
                             Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
                             Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SPECIALIZATION,specialization);
-                            Intent intent = new Intent(SplashScreenActivity.this, CorporateUserMainActivity.class);
-                            startActivity(intent);
-                            finish();
+
                         }
                        else
                         {
@@ -292,10 +298,11 @@ public class SplashScreenActivity extends AppCompatActivity {
                             }
                             else
                                 Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
-                            Intent intent = new Intent(SplashScreenActivity.this, FreeUserSelectDateActivity.class);
+
+                        }
+                            Intent intent = new Intent(SplashScreenActivity.this, MainAcitivity.class);
                             startActivity(intent);
                             finish();
-                        }
                         }
 
                     } catch (Exception e) {

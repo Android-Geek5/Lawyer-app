@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.eweblog.AddCaseActivity;
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.adapter.CaseListAdapter;
@@ -47,7 +48,7 @@ public class CaseListFragment extends Fragment {
         // Inflate the layout for this fragment
         prefshelper=new Prefshelper(getActivity());
 
-            rootview = inflater.inflate(R.layout.fragment_case_list, container, false);
+            rootview = inflater.inflate(R.layout.fragment_case_list_main, container, false);
             listView = (ListView) rootview.findViewById(R.id.listView);
             caseList= (List<CaseListModel>) getArguments().getSerializable("list");
 
@@ -69,7 +70,7 @@ public class CaseListFragment extends Fragment {
             });
 
 
-        CorporateUserMainActivity.txtTitle.setText("Case List");
+        MainAcitivity.txtTitle.setText("Case List");
 
 
         return rootview;
@@ -91,8 +92,8 @@ public class CaseListFragment extends Fragment {
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
 
-                        CorporateUserMainActivity.txtTitle.setText("Home");
-                        Intent intent=new Intent(getActivity(), CorporateUserMainActivity.class);
+                        MainAcitivity.txtTitle.setText("Home");
+                        Intent intent=new Intent(getActivity(), MainAcitivity.class);
                         startActivity(intent);
 
                     }

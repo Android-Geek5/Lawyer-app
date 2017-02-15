@@ -64,7 +64,7 @@ import java.util.Set;
 
 
 public class AddCaseActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
-    LinearLayout linearLayout, llCaseStatus,llAssignedTo;
+    LinearLayout linearLayout, llCaseStatus,llAssignedTo,smsLayout;
     Spinner sprCaseType, sprCaseStaus ,sprAssignedTo ;
 
     ArrayAdapter<String> stringArrayAdapter;
@@ -95,31 +95,14 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+              //  WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_add_case);
          prefshelper = new Prefshelper(AddCaseActivity.this);
         list= new ArrayList<>();
-        sprCaseType = (Spinner) findViewById(R.id.spinner_type);
-        sprCaseStaus = (Spinner) findViewById(R.id.spinner_case_status);
-        sprAssignedTo=(Spinner) findViewById(R.id.spinner_assigned_to);
-        btnAdd = (Button) findViewById(R.id.add);
-        txtStartError = (TextView) findViewById(R.id.tw_start_error);
-        txtPrevError = (TextView) findViewById(R.id.tw_prev_error);
-        txtNextError = (TextView) findViewById(R.id.tw_next_error);
-        linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
-        llCaseStatus = (LinearLayout) findViewById(R.id.ll_case_status);
-        llAssignedTo = (LinearLayout) findViewById(R.id.ll_assigned_to);
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
-                startActivity(intent1);
-                finish();
-                CorporateUserMainActivity.txtTitle.setText("Home");
-            }
-        });
+        inflateLayout();
+        setOnClicks();
         cd= new ConnectionDetector(AddCaseActivity.this);
         if (!cd.isConnectingToInternet())
         {
@@ -130,175 +113,19 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         {
             btnAdd.setEnabled(true);
         }
-        edtCourtName = (EditText) findViewById(R.id.textView_name);
-        edtCaseNumber = (EditText) findViewById(R.id.textView_number);
-        edtCaseTitle = (EditText) findViewById(R.id.textView_title);
-        edtCaseType = (EditText) findViewById(R.id.textView_type);
-        edtStatus = (EditText) findViewById(R.id.textView_position);
-        edtRetainName = (EditText) findViewById(R.id.textView_nm);
-        edtRetainMobile = (EditText) findViewById(R.id.textView_mobile);
-        edtOppositeName = (EditText) findViewById(R.id.textView_cname);
-        edtOppositeNumber = (EditText) findViewById(R.id.textView_cmobile);
-        edtComments = (EditText) findViewById(R.id.textView_comments);
-        edtStartDate = (EditText) findViewById(R.id.textView_startdt);
-        edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
-        edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
-        edtClientContact = (EditText) findViewById(R.id.textView_clientnumber);
-        chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
-        edtNextDate.setHint(dateFormatter2.format(sysDate));
-        edtPrevDate.setHint(dateFormatter2.format(sysDate));
-        edtStartDate.setHint(dateFormatter2.format(sysDate));
-        edtStartDate.setOnClickListener(this);
-        edtPrevDate.setOnClickListener(this);
-        edtNextDate.setOnClickListener(this);
-        if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
-        {
-            llCaseStatus.setVisibility(View.VISIBLE);
-            llAssignedTo.setVisibility(View.VISIBLE);
-            edtStatus.setVisibility(View.GONE);
-            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
-                chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (compoundButton.isChecked()) {
-                            edtClientContact.setEnabled(true);
-                        } else {
-                            edtClientContact.setEnabled(false);
-                        }
-                    }
-                });
-            }
-        }
-        else
-        {
-            llAssignedTo.setVisibility(View.GONE);
-            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID))
-            {
-                llCaseStatus.setVisibility(View.VISIBLE);
-                edtStatus.setVisibility(View.GONE);
-                if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
-                    chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            if (compoundButton.isChecked()) {
-                                edtClientContact.setEnabled(true);
-                            } else {
-                                edtClientContact.setEnabled(false);
-                            }
-                        }
-                    });
-                }
-            }
-            else {
-                llCaseStatus.setVisibility(View.GONE);
-                edtStatus.setVisibility(View.VISIBLE);
-            }
-        }
+         showHideItems();
+         setDropDownOnCaseType();
 
-        btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                View focusView = null;
-                boolean cancelLogin = false;
-
-                strNumber = edtCaseNumber.getText().toString();
-                strTitle = edtCaseTitle.getText().toString();
-                strCourt = edtCourtName.getText().toString();
-                strOCName = edtOppositeName.getText().toString();
-                strOCContact = edtOppositeNumber.getText().toString();
-                strRName = edtRetainName.getText().toString();
-                strRContact = edtRetainMobile.getText().toString();
-                strComment = edtComments.getText().toString();
-                strStatus = edtStatus.getText().toString();
-
-                if(strStartDate==null)
-                {
-                    strStartDate=dateFormatter.format(sysDate);
-                    Log.d("start date", strStartDate);
-                }
-                if (edtCaseType.getVisibility() == View.VISIBLE)
-                {
-                    strType = edtCaseType.getText().toString();
-                }
-
-                if (strPreviousDt==null)
-                {
-                    txtPrevError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    txtPrevError.setVisibility(View.GONE);
-                }
-                if (strNextDt==null)
-                {
-                    txtNextError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    txtNextError.setVisibility(View.GONE);
-                }
-
-                if (TextUtils.isEmpty(strTitle)) {
-                    edtCaseTitle.setError("Field must not be empty.");
-                    focusView = edtCaseTitle;
-                    cancelLogin = true;
-                }
-
-                if (cancelLogin) {
-                    // error in login
-                    focusView.requestFocus();
-                } else {
-
-                    addCase();
-                }
-
-
-            }
-        });
-
-        if (sprCaseType.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.case_type)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    return position != 0;
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprCaseType.setAdapter(stringArrayAdapter);
-        }
-
-
-        sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
-        //sprCaseStaus.setOnItemSelectedListener(AddCaseActivity.this);
-        getCaseStatuses();
     }
 
 
     @Override
     public void onBackPressed() {
-        Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
-        startActivity(intent1);
-        finish();
-        CorporateUserMainActivity.txtTitle.setText("Home");
         super.onBackPressed();
-
+        finish();
+        //Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
+        //startActivity(intent1);
+        //CorporateUserMainActivity.txtTitle.setText("Home");
     }
 
 
@@ -335,7 +162,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
 
-                            Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
+                            Intent intent1 = new Intent(AddCaseActivity.this, MainAcitivity.class);
                             startActivity(intent1);
                             finish();
                         }
@@ -526,6 +353,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
                                    }
                                });
+                                sprCaseStaus.setSelection(1);
                           /* caseStatusAdapter=new CommonListAdapter(AddCaseActivity.this, R.layout.layout_spinner_dropdown,commonList);
                                 sprCaseStaus.setAdapter(caseStatusAdapter);
 
@@ -611,7 +439,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
+                Intent intent1 = new Intent(AddCaseActivity.this,  MainAcitivity.class);
                 startActivity(intent1);
                 finish();
             }
@@ -767,29 +595,26 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                     String userName="Me("+Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_NAME)+")";
                                       commonList2.add(userName);
                                       hash2.put(userId,userName);
-                                    JSONArray inactive=jsonObject.getJSONArray("inactive_users");
-                                    if(inactive.length()>0)
+                                    JSONArray inactiveUsers=jsonObject.getJSONArray("inactive_users");
+                                    if(inactiveUsers.length()>0)
                                     {
-                                        for(int i=0; i<inactive.length();i++)
+                                        for(int i = 0; i<inactiveUsers.length(); i++)
                                         {
-                                            JSONObject jsonObject2=inactive.getJSONObject(i);
-                                            String id=jsonObject2.getString("user_id");
-                                            String name=jsonObject2.getString("user_details");
+                                            JSONObject jsonObject2=inactiveUsers.getJSONObject(i);
+                                            String id=jsonObject2.getString(Prefshelper.USER_ID);
+                                            String name=jsonObject2.getString(Prefshelper.USER_DETAILS);
                                             hash2.put(id,name);
                                             commonList2.add(name);
-                                            //CommonList commonListObject=new CommonList(id,name);
-                                            // commonList.add(commonListObject);
                                         }
                                     }
-
-                                    JSONArray active=jsonObject.getJSONArray("active_users");
-                                    if(active.length()>0)
+                                    JSONArray activeUsers=jsonObject.getJSONArray("active_users");
+                                    if(activeUsers.length()>0)
                                     {
-                                        for(int i=0; i<active.length();i++)
+                                        for(int i = 0; i<activeUsers.length(); i++)
                                         {
-                                            JSONObject jsonObject3=inactive.getJSONObject(i);
-                                            String id=jsonObject3.getString("user_id");
-                                            String name=jsonObject3.getString("user_details");
+                                            JSONObject jsonObject3=activeUsers.getJSONObject(i);
+                                            String id=jsonObject3.getString(Prefshelper.USER_ID);
+                                            String name=jsonObject3.getString(Prefshelper.USER_DETAILS);
                                             hash2.put(id,name);
                                             commonList2.add(name);
                                         }
@@ -799,7 +624,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                 e.printStackTrace();
                             }
                             if (sprAssignedTo.getAdapter() == null) {
-                                caseStatusAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, commonList2)
+                                assignedToAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, commonList2)
                                 {
                                     @Override
                                     public boolean isEnabled(int position) {
@@ -811,19 +636,19 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                                         View view = super.getDropDownView(position, convertView, parent);
                                         TextView tv = (TextView) view;
-                                        if (position == 0) {
+                                      /*  if (position == 0) {
                                             // Set the hint text color gray
                                             tv.setTextColor(Color.GRAY);
-                                        } else {
+                                        } else {*/
                                             tv.setTextColor(Color.BLACK);
-                                        }
+                                        //}
 
                                         return view;
                                     }
                                 };
                                 assignedToAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
                                 sprAssignedTo.setAdapter(assignedToAdapter);
-                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                sprAssignedTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                         for (Map.Entry<String, String> entry : hash.entrySet()) {
@@ -838,23 +663,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
                                     }
                                 });
-                          /* caseStatusAdapter=new CommonListAdapter(AddCaseActivity.this, R.layout.layout_spinner_dropdown,commonList);
-                                sprCaseStaus.setAdapter(caseStatusAdapter);
-
-                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parentView, View v, int position, long id) {
-                                     selectedStatusCaseId=commonList.get(position).getId();
-                                        Log.e("SELECTED CASE STATUS ID",String.valueOf(selectedStatusCaseId));
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parentView) {
-                                        // your code here
-                                    }
-
-                                });
-*/
                             }
                         }
 
@@ -903,5 +711,200 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    public void inflateLayout()
+    {
+        sprCaseType = (Spinner) findViewById(R.id.spinner_type);
+        sprCaseStaus = (Spinner) findViewById(R.id.spinner_case_status);
+        sprAssignedTo=(Spinner) findViewById(R.id.spinner_assigned_to);
+        btnAdd = (Button) findViewById(R.id.add);
+        txtStartError = (TextView) findViewById(R.id.tw_start_error);
+        txtPrevError = (TextView) findViewById(R.id.tw_prev_error);
+        txtNextError = (TextView) findViewById(R.id.tw_next_error);
+        linearLayout = (LinearLayout) findViewById(R.id.ll_navi);
+        llCaseStatus = (LinearLayout) findViewById(R.id.ll_case_status);
+        llAssignedTo = (LinearLayout) findViewById(R.id.ll_assigned_to);
+        edtCourtName = (EditText) findViewById(R.id.textView_name);
+        edtCaseNumber = (EditText) findViewById(R.id.textView_number);
+        edtCaseTitle = (EditText) findViewById(R.id.textView_title);
+        edtCaseType = (EditText) findViewById(R.id.textView_type);
+        edtStatus = (EditText) findViewById(R.id.textView_position);
+        edtRetainName = (EditText) findViewById(R.id.textView_nm);
+        edtRetainMobile = (EditText) findViewById(R.id.textView_mobile);
+        edtOppositeName = (EditText) findViewById(R.id.textView_cname);
+        edtOppositeNumber = (EditText) findViewById(R.id.textView_cmobile);
+        edtComments = (EditText) findViewById(R.id.textView_comments);
+        edtStartDate = (EditText) findViewById(R.id.textView_startdt);
+        edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
+        edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
+        edtClientContact = (EditText) findViewById(R.id.textView_clientnumber);
+        chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
+        smsLayout=(LinearLayout) findViewById(R.id.smsLayout);
+        edtNextDate.setHint(dateFormatter2.format(sysDate));
+        edtPrevDate.setHint(dateFormatter2.format(sysDate));
+        edtStartDate.setHint(dateFormatter2.format(sysDate));
+    }
+    public void setOnClicks()
+    {
+        edtStartDate.setOnClickListener(this);
+        edtPrevDate.setOnClickListener(this);
+        edtNextDate.setOnClickListener(this);
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onClickAdd();
+            }
+        });
+    }
+
+    public void showHideItems()
+    {
+        if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
+        {
+            llCaseStatus.setVisibility(View.VISIBLE);
+            llAssignedTo.setVisibility(View.VISIBLE);
+            edtStatus.setVisibility(View.GONE);
+            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
+                chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        if (compoundButton.isChecked()) {
+                            edtClientContact.setEnabled(true);
+                        } else {
+                            edtClientContact.setEnabled(false);
+                        }
+                    }
+                });
+            }
+            getCaseStatuses();
+            getChildUsers();
+        }
+        else
+        {
+            llAssignedTo.setVisibility(View.GONE);
+            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID))
+            {
+                llCaseStatus.setVisibility(View.VISIBLE);
+                edtStatus.setVisibility(View.GONE);
+                if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
+                    chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                            if (compoundButton.isChecked()) {
+                                edtClientContact.setEnabled(true);
+                            } else {
+                                edtClientContact.setEnabled(false);
+                            }
+                        }
+                    });
+                }
+                getCaseStatuses();
+            }
+            else {
+                llCaseStatus.setVisibility(View.GONE);
+                edtStatus.setVisibility(View.VISIBLE);
+                smsLayout.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    public void onClickAdd()
+    {
+        View focusView = null;
+        boolean cancelLogin = false;
+
+        strNumber = edtCaseNumber.getText().toString();
+        strTitle = edtCaseTitle.getText().toString();
+        strCourt = edtCourtName.getText().toString();
+        strOCName = edtOppositeName.getText().toString();
+        strOCContact = edtOppositeNumber.getText().toString();
+        strRName = edtRetainName.getText().toString();
+        strRContact = edtRetainMobile.getText().toString();
+        strComment = edtComments.getText().toString();
+        strStatus = edtStatus.getText().toString();
+
+        if(strStartDate==null)
+        {
+            strStartDate=dateFormatter.format(sysDate);
+            Log.d("start date", strStartDate);
+        }
+        if (edtCaseType.getVisibility() == View.VISIBLE)
+        {
+            strType = edtCaseType.getText().toString();
+        }
+
+        if (strPreviousDt==null)
+        {
+            txtPrevError.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            txtPrevError.setVisibility(View.GONE);
+        }
+        if (strNextDt==null)
+        {
+            txtNextError.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            txtNextError.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(strTitle)) {
+            edtCaseTitle.setError("Field must not be empty.");
+            focusView = edtCaseTitle;
+            cancelLogin = true;
+        }
+
+        if (cancelLogin) {
+            // error in login
+            focusView.requestFocus();
+        } else {
+
+            addCase();
+        }
+
+
+    }
+
+    public void setDropDownOnCaseType()
+    {
+
+        if (sprCaseType.getAdapter() == null) {
+            stringArrayAdapter = new ArrayAdapter<String>(AddCaseActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.case_type)) {
+
+                @Override
+                public boolean isEnabled(int position) {
+
+                    return position != 0;
+                }
+
+                @Override
+                public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                    View view = super.getDropDownView(position, convertView, parent);
+                    TextView tv = (TextView) view;
+                    if (position == 0) {
+                        // Set the hint text color gray
+                        tv.setTextColor(Color.GRAY);
+                    } else {
+                        tv.setTextColor(Color.BLACK);
+                    }
+
+                    return view;
+                }
+            };
+            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
+            sprCaseType.setAdapter(stringArrayAdapter);
+        }
+
+
+        sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
     }
 }

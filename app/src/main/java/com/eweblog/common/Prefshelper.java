@@ -22,6 +22,7 @@ public class Prefshelper {
     public static final String FREE_OR_PAID="free_or_paid"; //TRUE FOR PAID
     public static final String USER_EMAIL="user_email";
     public static final String USER_NAME="user_name";
+    public static final String USER_LAST_NAME="user_last_name";
     public static final String USER_ID="user_id";
     public static final String USER_SECURITY_HASH="user_security_hash";
     public static final String USER_CONTACT="user_contact";
@@ -33,8 +34,7 @@ public class Prefshelper {
     public static final String DATE="date";
     public static final String SEARCH="search";
     public static final String SELECTED_DATE="selected_date";
-    public static final String CORPORATE_OR_NOT="corporate_or_not";
-    public static final String USER_LAST_NAME="user_last_name";
+    public static final String CORPORATE_OR_NOT="corporate_or_not"; //TRUE FOR CORPORATE
     public static final String USER_STATE_OF_PRACTISE="user_state_of_practice";
     public static final String USER_CITY_OF_PRACTISE="user_city_of_practice";
     public static final String USER_SPECIALIZATION="user_specialization";
@@ -48,6 +48,9 @@ public class Prefshelper {
     public static final String CASE_ID="case_id";
     public static final String CASE_TITLE="case_title";
     public static final String CASE_DATE="case_start_date";
+
+    public static final String USER_DETAILS="user_details";
+    public static final String CASES_COUNT="cases_count";
 
    public Prefshelper(Context context) {
         this.context = context;

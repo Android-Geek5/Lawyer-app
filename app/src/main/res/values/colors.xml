@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#212121</color>
+    <color name="colorAccent">#00bcd5</color>
+    <color name="colorText">#525961</color>
+    <color name="colorIcon">#2a2e31</color>
+    <color name="buttonbg">#00bcd5</color>
+    <color name="bgcolor">#f3f3f3</color>
+    <color name="eventDecorator">#f44336</color>
+    <color name="menuBG">#303030</color>
+    <color name="reply"> #8bc34a</color>
+    <color name="argu"> #f44336</color>
+    <color name="cross"> #00bfa5</color>
+    <color name="consider"> #ff9e80</color>
+    <color name="tabsScrollColor">#00bcd5</color>
+    <color name="whiteColor">#ffffff</color>
+    <color name="case_color">#ffab00</color>
+    <color name="user_color"> #ff9e80</color>
+    <color name="add_color"> #00bfa5</color>
+    <color name="drawer_header_color">#191919</color>
+    <color name="toolbar_bottom_line_color">#525961</color>
+
+
+</resources>

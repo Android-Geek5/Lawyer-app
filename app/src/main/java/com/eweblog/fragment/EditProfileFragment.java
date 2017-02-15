@@ -44,6 +44,7 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
@@ -72,9 +73,7 @@ import java.util.regex.Pattern;
 
 public class EditProfileFragment extends Fragment
 {
-    EditText edtName, edtLastName, edtContact,edtEmail;
-    Spinner specialization;
-    Prefshelper prefHelper;
+    EditText edtName, edtLastName, edtContact,edtEmail,edtCity,edtState;
     File f;
     Button btn_submit;
     private static final int PHOTO_PICKER_ID = 1;
@@ -84,7 +83,7 @@ public class EditProfileFragment extends Fragment
     LinearLayout llProfilePic;
 
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 2500;
-    String  u_name,l_name,contact,email, filename;
+    String  u_name,l_name,contact,email, filename,state,city;
 
     View rootview;
 
@@ -103,54 +102,9 @@ public class EditProfileFragment extends Fragment
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootview= inflater.inflate(R.layout.fragmnet_edit_profile, container, false);
-        CorporateUserMainActivity.txtTitle.setText("Edit Profile");
-        prefHelper=new Prefshelper(getActivity());
+        MainAcitivity.txtTitle.setText("Edit Profile");
 
-        edtName =(EditText)rootview.findViewById(R.id.fname);
-        edtLastName=(EditText) rootview.findViewById(R.id.lname);
-        edtContact =(EditText)rootview.findViewById(R.id.mobile);
-        edtEmail=(EditText)rootview.findViewById(R.id.email);
-        specialization=(Spinner) rootview.findViewById(R.id.specialization);
-
-        // Spinner Drop down elements
-        List<String> languages = new ArrayList<String>();
-        languages.add("Andorid");
-        languages.add("IOS");
-        languages.add("PHP");
-        languages.add("Java");
-        languages.add(".Net");
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, languages);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        specialization.setAdapter(dataAdapter);
-        specialization.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                String item = parent.getItemAtPosition(position).toString();
-
-                Toast.makeText(parent.getContext(), "Android Simple Spinner Example Output..." + item, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-        imageView_profile = (ImageView)rootview.findViewById(R.id.imageView_profile);
-        llProfilePic=(LinearLayout)rootview.findViewById(R.id.ll_profilePic);
-
-       llProfilePic.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               dialog();
-           }
-       });
+        inflateLayout(rootview);
       /*  if(!(prefHelper.getProfileImage().equalsIgnoreCase("")))
         {
             Picasso.with(getActivity()).load(prefHelper.getProfileImage()).into(imageView_profile);
@@ -160,55 +114,14 @@ public class EditProfileFragment extends Fragment
         edtContact.setText(prefHelper.getContact());
         edtDateOfBirth.setText(prefHelper.getDOB());*/
 
-        edtName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_NAME));
-        edtEmail.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_EMAIL));
-        edtContact.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CONTACT));
+       setInformation();
 
-        btn_submit=(Button) rootview.findViewById(R.id.email_sign_in_button);
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean cancelSignup = false;
-                View focusView = null;
-
-                u_name = edtName.getText().toString();
-                contact = edtContact.getText().toString();
-                email =edtEmail.getText().toString();
-
-                if (TextUtils.isEmpty(u_name)) {
-                    edtName.setError("Name is required");
-                    focusView = edtName;
-                    cancelSignup = true;
-                } 
-                if (TextUtils.isEmpty(contact)) {
-                    edtContact.setError("Contact Number is Required");
-                    focusView = edtContact;
-                    cancelSignup = true;
-                }
-                else if (!isValidPhone((contact))) {
-                    edtContact.setError("Mobile number must be of digits 10.");
-                    focusView = edtContact;
-                    cancelSignup = true;
-                }
-                if (TextUtils.isEmpty(email)) {
-                    edtEmail.setError("Field must not be empty.");
-                    focusView = edtEmail;
-                    cancelSignup = true;
-                }
-                else if (!isValidEmail(email)) {
-                    edtEmail.setError("Invalid Email.");
-                    focusView = edtEmail;
-                    cancelSignup = true;
-                }
-                if (cancelSignup) {
-                    // error in login
-                    focusView.requestFocus();
-                } else {
-                    profile_update();
-                }
+               submit();
             }
         });
-              getSpecialisations();
                 return  rootview;
     }
 
@@ -233,7 +146,15 @@ public class EditProfileFragment extends Fragment
                             String serverMessage = object.getString("message");
                             Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                             if (serverCode.equalsIgnoreCase("0")) {
+                                if(serverMessage.contains("|"))
+                                {
 
+                                    Toast.makeText(getActivity(),  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
+                                }
                             }
                             if (serverCode.equalsIgnoreCase("1")) {
                                 try {
@@ -243,18 +164,24 @@ public class EditProfileFragment extends Fragment
                                         u_name=object1.getString("user_name");
                                         contact=object1.getString("user_contact");
                                         email=object1.getString("user_email");
+                                        l_name=object1.getString("user_last_name");
+                                        state=object1.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                        city=object1.getString(Prefshelper.USER_CITY_OF_PRACTISE);
 
                                         }
                                     Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,u_name);
                                     Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,email);
                                     Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,contact);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,l_name);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,state);
+                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,city);
                                 }
 
                                 catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                Intent intent=new Intent(getActivity(), CorporateUserMainActivity.class);
+                                Intent intent=new Intent(getActivity(),  MainAcitivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
 
@@ -311,17 +238,7 @@ public class EditProfileFragment extends Fragment
 
 
     }
-    private boolean isValidPhone(String pass) {
-        return pass != null && pass.length() == 10;
-    }
-    private boolean isValidEmail(String email) {
-        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
     public void dialog()
     {
         final Dialog dialog = new Dialog(getActivity());
@@ -689,7 +606,8 @@ public class EditProfileFragment extends Fragment
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
                         getFragmentManager().popBackStack();
-                        CorporateUserMainActivity.txtTitle.setText("Home");
+                        //CorporateUserMainActivity.txtTitle.setText("Home");
+                        MainAcitivity.txtTitle.setText("Home");
                     }
 
                     return true;
@@ -701,9 +619,97 @@ public class EditProfileFragment extends Fragment
         });
     }
 
+
+    public void inflateLayout(View rootview)
+    {
+    edtName =(EditText)rootview.findViewById(R.id.fname);
+    edtLastName=(EditText) rootview.findViewById(R.id.lname);
+    edtContact =(EditText)rootview.findViewById(R.id.mobile);
+    edtEmail=(EditText)rootview.findViewById(R.id.email);
+    edtCity=(EditText) rootview.findViewById(R.id.city);
+    edtState=(EditText) rootview.findViewById(R.id.state);
+
+    imageView_profile = (ImageView)rootview.findViewById(R.id.imageView_profile);
+    llProfilePic=(LinearLayout)rootview.findViewById(R.id.ll_profilePic);
+
+    llProfilePic.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dialog();
+        }
+    });
+    btn_submit=(Button) rootview.findViewById(R.id.email_sign_in_button);
+}
+
+    public void setInformation()
+    {
+        edtName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_NAME));
+        edtLastName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME));
+        edtEmail.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_EMAIL));
+        edtContact.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CONTACT));
+        edtCity.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE));
+        edtState.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE));
+    }
+
+    public void submit()
+    {
+        boolean cancelSignup = false;
+        View focusView = null;
+
+        u_name = edtName.getText().toString();
+        contact = edtContact.getText().toString();
+        email =edtEmail.getText().toString();
+        l_name=edtLastName.getText().toString();
+        state=edtState.getText().toString();
+        city=edtCity.getText().toString();
+
+        if (TextUtils.isEmpty(u_name)) {
+            edtName.setError("Name is required");
+            focusView = edtName;
+            cancelSignup = true;
+        }
+        if (TextUtils.isEmpty(contact)) {
+            edtContact.setError("Contact Number is Required");
+            focusView = edtContact;
+            cancelSignup = true;
+        }
+        else if (!Utils.isValidPhone((contact))) {
+            edtContact.setError("Mobile number must be of digits 10.");
+            focusView = edtContact;
+            cancelSignup = true;
+        }
+        if (TextUtils.isEmpty(email)) {
+            edtEmail.setError("Field must not be empty.");
+            focusView = edtEmail;
+            cancelSignup = true;
+        }
+        else if (!Utils.isValidEmail(email)) {
+            edtEmail.setError("Invalid Email.");
+            focusView = edtEmail;
+            cancelSignup = true;
+        }
+        else if(TextUtils.isEmpty(state))
+        {
+            edtState.setError("Field must not be empty.");
+            focusView = edtState;
+            cancelSignup = true;
+        }
+        else if(TextUtils.isEmpty(city))
+        {
+            edtCity.setError("Field must not be empty.");
+            focusView = edtCity;
+            cancelSignup = true;
+        }
+        if (cancelSignup) {
+            // error in login
+            focusView.requestFocus();
+        } else {
+            profile_update();
+        }
+    }
     public void getSpecialisations()
     {
-        try {
+        /*try {
             final ProgressDialog pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading...");
             pDialog.show();
@@ -797,8 +803,6 @@ public class EditProfileFragment extends Fragment
             e.printStackTrace();
         }
 
-
+*/
     }
-
-
 }

@@ -5,25 +5,30 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.adapter.UserAdapter;
 import com.eweblog.model.CaseListModel;
+import com.eweblog.model.ChildUsersList;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class ActiveUsersFragement extends Fragment {
-    ListView listView;
-    FloatingActionButton fab;
-    List<CaseListModel> list;
+    List<ChildUsersList> childUsersLists=new ArrayList<>();
+    UserAdapter userAdapter;
+    RecyclerView recyclerView;
+
     public ActiveUsersFragement() {
         // Required empty public constructor
     }
@@ -40,15 +45,10 @@ public class ActiveUsersFragement extends Fragment {
         // Inflate the layout for this fragment
        View rootview= inflater.inflate(R.layout.fragment_case_list, container, false);
 
-        listView = (ListView) rootview.findViewById(R.id.listView);
-        fab = (FloatingActionButton)rootview.findViewById(R.id.fab);
-        fab.setVisibility(View.GONE);
-        CaseListModel model=new CaseListModel();
-        list=new ArrayList<>();
-        list.add(model);
-        UserAdapter userAdapter=new UserAdapter(getActivity(), list);
-        listView.setAdapter(userAdapter);
-
+        recyclerView=(RecyclerView)rootview.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
+        userAdapter=new UserAdapter(getActivity(),childUsersLists);
+        recyclerView.setAdapter(userAdapter);
         return  rootview;
     }
 
@@ -68,7 +68,8 @@ public class ActiveUsersFragement extends Fragment {
                     if(getFragmentManager().getBackStackEntryCount() > 0) {
 
                         getFragmentManager().popBackStack();
-                        CorporateUserMainActivity.txtTitle.setText("Home");
+                        //CorporateUserMainActivity.txtTitle.setText("Home");
+                        MainAcitivity.txtTitle.setText("Home");
                     }
 
                     return true;
@@ -80,5 +81,11 @@ public class ActiveUsersFragement extends Fragment {
         });
 
     }
+public void inflateList(List<ChildUsersList> childUsers)
+{
+    childUsersLists.clear();
+    childUsersLists.addAll(childUsers);
+    userAdapter.notifyDataSetChanged();
 
+}
 }

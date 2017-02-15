@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -40,9 +43,9 @@ public class Utils {
         imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
-    public void clearData(Context context)
+    public static void clearData(Context context)
     {
-
+        PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit();
     }
 
     public static void storeUserPreferences(Context context,String key,String value)
@@ -73,4 +76,18 @@ public class Utils {
         return bool;
     }
 
+    public static boolean isValidPhone(String pass) {
+        return pass != null && pass.length() == 10;
+    }
+    public static boolean isValidEmail(String email) {
+        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    public static boolean isValidPass(String pass) {
+        return pass != null && pass.length() >= 6;
+    }
 }

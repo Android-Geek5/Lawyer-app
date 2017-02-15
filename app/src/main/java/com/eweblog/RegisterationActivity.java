@@ -47,8 +47,8 @@ import java.util.regex.Pattern;
 public class RegisterationActivity extends AppCompatActivity {
 
     Button btnRegister;
-    EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd;
-    String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash;
+    EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd,edtLastName;
+    String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash,strLastName;
     Prefshelper prefshelper;
     LinearLayout layout;
     String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
@@ -60,14 +60,7 @@ public class RegisterationActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
-        btnRegister = (Button) findViewById(R.id.email_sign_in_button);
-       edtName = (EditText) findViewById(R.id.name);
-       edtEmail = (EditText) findViewById(R.id.email);
-       edtContact = (EditText) findViewById(R.id.mobile);
-       edtPwd = (EditText) findViewById(R.id.password);
-       prefshelper=new Prefshelper(RegisterationActivity.this);
-       edtCPwd = (EditText) findViewById(R.id.confirm_password);
-        layout=(LinearLayout) findViewById(R.id.email_login_form);
+       inflateLayout();
        /* layout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -79,113 +72,11 @@ public class RegisterationActivity extends AppCompatActivity {
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                View focusView = null;
-                boolean cancelLogin = false;
-                strName=edtName.getText().toString();
-                strEmail=edtEmail.getText().toString();
-                strContact=edtContact.getText().toString();
-                strPwd=edtPwd.getText().toString();
-                strCPwd=edtCPwd.getText().toString();
-
-
-                            if (TextUtils.isEmpty(strName)) {
-                                edtName.setError("Field must not be empty.");
-                                focusView = edtName;
-                                cancelLogin = true;
-                            }
-                            else if(strName.length()<2)
-                            {
-                                edtName.setError("Field must be atleast of length 2.");
-                                focusView = edtName;
-                                cancelLogin = true;
-                            }
-                            if (TextUtils.isEmpty(strContact)) {
-                                edtContact.setError("Field must not be empty.");
-                                focusView = edtContact;
-                                cancelLogin = true;
-                            }
-                            else if(!isValidPhone(strContact))
-                            {
-                                edtContact.setError("Mobile Number must be of 10 digits.");
-                                focusView = edtContact;
-                                cancelLogin = true;
-                            }
-
-                            if (TextUtils.isEmpty(strEmail)) {
-                                edtEmail.setError("Field must not be empty.");
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidEmail(strEmail)) {
-                                edtEmail.setError("Invalid Email.");
-                                focusView = edtEmail;
-                                cancelLogin = true;
-                            }
-
-                            if (TextUtils.isEmpty(strPwd)) {
-                                edtPwd.setError("Field must not be empty.");
-                                focusView = edtPwd;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidPass(strPwd)) {
-                                edtPwd.setError("Password must be of length 6.");
-                                focusView = edtPwd;
-                                cancelLogin = true;
-                            }
-                            if (TextUtils.isEmpty(strCPwd)) {
-                                edtCPwd.setError("Field must not be empty.");
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-                            else if (!isValidPass(strCPwd)) {
-                                edtCPwd.setError("Password must be of length 6.");
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-                            else if(!strCPwd.equalsIgnoreCase(strPwd))
-                            {
-                                edtCPwd.setError("Passwords do not match.");
-                                focusView = edtCPwd;
-                                cancelLogin = true;
-                            }
-
-
-                          if(cancelLogin) {
-                                // error in login
-                                focusView.requestFocus();
-                            }
-                          else
-                           {
-                              if(cd.isConnectingToInternet())
-                              {
-                                  signUp();
-                              }
-                              else
-                              {
-                                  dialog();
-                              }
-                          }
-
-
+                onClickRegister();
 
 
             }
         });
-    }
-    private boolean isValidEmail(String email) {
-        String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-
-        Pattern pattern = Pattern.compile(EMAIL_PATTERN);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    private boolean isValidPhone(String pass) {
-        return pass != null && pass.length() == 10;
-    }
-    private boolean isValidPass(String pass) {
-        return pass != null && pass.length() >= 6;
     }
     @Override
     public void onStart() {
@@ -306,9 +197,9 @@ public class RegisterationActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-
                     params.put("user_name", strName);
                     params.put("user_email", strEmail);
+                    params.put(Prefshelper.USER_LAST_NAME,strLastName);
                     params.put("user_contact", strContact);
                     params.put("user_login_password", strPwd);
                     params.put("confirm_login_password", strCPwd);
@@ -325,5 +216,119 @@ public class RegisterationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+public void inflateLayout()
+{
+    btnRegister = (Button) findViewById(R.id.email_sign_in_button);
+    edtName = (EditText) findViewById(R.id.name);
+    edtEmail = (EditText) findViewById(R.id.email);
+    edtContact = (EditText) findViewById(R.id.mobile);
+    edtPwd = (EditText) findViewById(R.id.password);
+    edtLastName=(EditText) findViewById(R.id.last_name);
+    prefshelper=new Prefshelper(RegisterationActivity.this);
+    edtCPwd = (EditText) findViewById(R.id.confirm_password);
+    layout=(LinearLayout) findViewById(R.id.email_login_form);
+}
+    public void onClickRegister()
+    {
+        View focusView = null;
+        boolean cancelLogin = false;
+        strName=edtName.getText().toString();
+        strEmail=edtEmail.getText().toString();
+        strContact=edtContact.getText().toString();
+        strPwd=edtPwd.getText().toString();
+        strCPwd=edtCPwd.getText().toString();
+        strLastName=edtLastName.getText().toString();
 
+
+        if (TextUtils.isEmpty(strName)) {
+            edtName.setError("Field must not be empty.");
+            focusView = edtName;
+            cancelLogin = true;
+        }
+        else if(strName.length()<2)
+        {
+            edtName.setError("Field must be atleast of length 2.");
+            focusView = edtName;
+            cancelLogin = true;
+        }
+        if (TextUtils.isEmpty(strLastName)) {
+            edtLastName.setError("Field must not be empty.");
+            focusView = edtLastName;
+            cancelLogin = true;
+        }
+        else if(strLastName.length()<2)
+        {
+            edtLastName.setError("Field must be atleast of length 2.");
+            focusView = edtLastName;
+            cancelLogin = true;
+        }
+        if (TextUtils.isEmpty(strContact)) {
+            edtContact.setError("Field must not be empty.");
+            focusView = edtContact;
+            cancelLogin = true;
+        }
+        else if(!Utils.isValidPhone(strContact))
+        {
+            edtContact.setError("Mobile Number must be of 10 digits.");
+            focusView = edtContact;
+            cancelLogin = true;
+        }
+
+        if (TextUtils.isEmpty(strEmail)) {
+            edtEmail.setError("Field must not be empty.");
+            focusView = edtEmail;
+            cancelLogin = true;
+        }
+        else if (!Utils.isValidEmail(strEmail)) {
+            edtEmail.setError("Invalid Email.");
+            focusView = edtEmail;
+            cancelLogin = true;
+        }
+
+        if (TextUtils.isEmpty(strPwd)) {
+            edtPwd.setError("Field must not be empty.");
+            focusView = edtPwd;
+            cancelLogin = true;
+        }
+        else if (!Utils.isValidPass(strPwd)) {
+            edtPwd.setError("Password must be of length 6.");
+            focusView = edtPwd;
+            cancelLogin = true;
+        }
+        if (TextUtils.isEmpty(strCPwd)) {
+            edtCPwd.setError("Field must not be empty.");
+            focusView = edtCPwd;
+            cancelLogin = true;
+        }
+        else if (!Utils.isValidPass(strCPwd)) {
+            edtCPwd.setError("Password must be of length 6.");
+            focusView = edtCPwd;
+            cancelLogin = true;
+        }
+        else if(!strCPwd.equalsIgnoreCase(strPwd))
+        {
+            edtCPwd.setError("Passwords do not match.");
+            focusView = edtCPwd;
+            cancelLogin = true;
+        }
+
+
+        if(cancelLogin) {
+            // error in login
+            focusView.requestFocus();
+        }
+        else
+        {
+            if(cd.isConnectingToInternet())
+            {
+                signUp();
+            }
+            else
+            {
+                dialog();
+            }
+        }
+
+
+    }
 }

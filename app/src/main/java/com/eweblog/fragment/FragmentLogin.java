@@ -31,7 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.ForgotPasswordActivity;
-import com.eweblog.FreeUserSelectDateActivity;
+import com.eweblog.MainAcitivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
 import com.eweblog.Utils;
@@ -247,7 +247,7 @@ public class FragmentLogin extends Fragment {
                             }
                             else
                              Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FREE_OR_PAID,false);
-                            Intent intent = new Intent(getActivity(), FreeUserSelectDateActivity.class);
+                            Intent intent = new Intent(getActivity(), MainAcitivity.class);
                             startActivity(intent);
                         }
 

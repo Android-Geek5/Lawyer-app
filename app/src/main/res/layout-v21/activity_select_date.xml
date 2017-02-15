@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
+    android:background="@drawable/bgnew"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/content_frame"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/options_height"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin"
+                    android:layout_marginTop="@dimen/activity_horizontal_margin">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/options_height"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:background="@color/user_color">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/options_image_height"
+                            app:srcCompat="@drawable/view"
+                            />
+
+                        <TextView
+                            android:text="View Users"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:textSize="@dimen/options_text_size"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+                    <View
+                        android:layout_width="@dimen/views_height"
+                        android:layout_height="match_parent"
+                        />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/options_height"
+                        android:orientation="vertical"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:background="@color/case_color">
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/options_image_height"
+                            app:srcCompat="@drawable/view_file"
+                            />
+
+                        <TextView
+                            android:text="View Cases"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:textSize="@dimen/options_text_size"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/views_height"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/options_height"
+                    android:orientation="vertical"
+                    android:background="@color/add_color"
+                    android:gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/activity_vertical_margin"
+                    android:layout_marginRight="@dimen/activity_vertical_margin">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/options_image_height"
+                        app:srcCompat="@drawable/add_case"
+                        android:id="@+id/imageView6" />
+
+                    <TextView
+                        android:text="Add Case"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:textSize="@dimen/options_text_size"
+                        android:textStyle="bold"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+
+        android:background="@color/menuBG"
+        app:itemTextColor="@android:color/white"
+        app:theme="@style/list_item_appearance"
+        app:menu="@menu/drawer_menu" >
+
+    </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>
