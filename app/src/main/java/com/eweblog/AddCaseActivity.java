@@ -72,10 +72,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     ArrayAdapter<String> assignedToAdapter;
     Button btnAdd;
     EditText edtCourtName, edtCaseNumber, edtCaseTitle, edtCaseType, edtStatus, edtRetainName, edtRetainMobile,
-            edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate, edtClientContact;
+            edtOppositeName, edtOppositeNumber, edtComments, edtStartDate, edtPrevDate, edtNextDate, edtClientContact,edtCaseFee;
     Prefshelper prefshelper;
     String strNumber, strTitle, strType, strCourt, strStatus, strPreviousDt, strNextDt, strOCName, strOCContact, strRName, strRContact,
-            strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear;
+            strComment, strStartDate, strDay, strMonth, strYear, strNDay, strNMonth, strNYear, strSDay, strSMonth, strSYear,strFee,strSmsNumber;
     DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     DateFormat dateFormatter2 = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     TextView txtStartError, txtPrevError, txtNextError;
@@ -90,6 +90,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     HashMap<String,String> hash2 = new HashMap<String,String>();
     int selectedStatusCaseId=0;
     int selectedChildUser=0;
+    int smsAlertStatus=0;
+
 
 
     @Override
@@ -122,6 +124,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        MainAcitivity.txtTitle.setText("Home");
         finish();
         //Intent intent1 = new Intent(AddCaseActivity.this, CorporateUserMainActivity.class);
         //startActivity(intent1);
@@ -141,7 +144,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.e("ADD CASE URL",  response);
+                    Log.e("ADD CASE RESPONSE",  response);
 
                     try {
                         JSONObject object = new JSONObject(response);
@@ -203,13 +206,17 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     params.put("case_title", strTitle);
                     params.put("case_type", strType);
                     params.put("case_court_name", strCourt);
-                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID)){
+                    if(!Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID)){
                     params.put("case_position_status", strStatus);}
                     if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID) ||
-                            Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
-                    {
-                        params.put("case_statuses_id",String.valueOf(selectedStatusCaseId));
+                            Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT)) {
+                        params.put("case_statuses_id", String.valueOf(selectedStatusCaseId));
+                        if (smsAlertStatus==1) {
+                            params.put("case_sms_contact", edtClientContact.getText().toString());
+                        params.put("case_sms_alert_status", "1");}
+                        else params.put("case_sms_alert_status","0");
                     }
+
                     if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
                     {params.put("case_assigned_to",String.valueOf(selectedChildUser));}
                     params.put("case_previous_date", strPreviousDt);
@@ -220,8 +227,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                     params.put("case_retained_contact", strRContact);
                     params.put("case_detail_comment", strComment);
                     params.put("case_start_date", strStartDate);
-                    if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT) && edtClientContact.isEnabled()) {
-                        params.put("case_sms_contact", edtClientContact.getText().toString());}
+                    params.put("case_fee",strFee);
                     Log.e("ADD CASE REQUEST",params.toString());
                     return params;
                 }
@@ -260,7 +266,6 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 
     public void getCaseStatuses() {
@@ -343,7 +348,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                                        for (Map.Entry<String, String> entry : hash.entrySet()) {
                                            if (entry.getValue().equals(commonList.get(i))) {
-                                               Log.e("KEY",entry.getKey());
+                                               selectedStatusCaseId=Integer.valueOf(entry.getKey());
+                                               Log.e("KEY",""+selectedStatusCaseId);
                                            }
                                        }
                                    }
@@ -595,6 +601,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                     String userName="Me("+Utils.getUserPreferences(AddCaseActivity.this,Prefshelper.USER_NAME)+")";
                                       commonList2.add(userName);
                                       hash2.put(userId,userName);
+                                    selectedChildUser=Integer.valueOf(userId);
                                     JSONArray inactiveUsers=jsonObject.getJSONArray("inactive_users");
                                     if(inactiveUsers.length()>0)
                                     {
@@ -651,9 +658,10 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                                 sprAssignedTo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
                                     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                                        for (Map.Entry<String, String> entry : hash.entrySet()) {
-                                            if (entry.getValue().equals(commonList.get(i))) {
-                                                Log.e("KEY",entry.getKey());
+                                        for (Map.Entry<String, String> entry : hash2.entrySet()) {
+                                            if (entry.getValue().equals(commonList2.get(i))) {
+                                                selectedChildUser=Integer.valueOf(entry.getKey());
+                                                Log.e("KEY",""+selectedChildUser);
                                             }
                                         }
                                     }
@@ -738,6 +746,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         edtPrevDate = (EditText) findViewById(R.id.textView_prevdt);
         edtNextDate = (EditText) findViewById(R.id.textView_nextdt);
         edtClientContact = (EditText) findViewById(R.id.textView_clientnumber);
+        edtCaseFee=(EditText) findViewById(R.id.textView_caseFee);
         chkSmsAlert=(CheckBox)findViewById(R.id.checkedTextView);
         smsLayout=(LinearLayout) findViewById(R.id.smsLayout);
         edtNextDate.setHint(dateFormatter2.format(sysDate));
@@ -762,52 +771,22 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
                 onClickAdd();
             }
         });
+
     }
 
     public void showHideItems()
     {
         if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.CORPORATE_OR_NOT))
         {
-            llCaseStatus.setVisibility(View.VISIBLE);
             llAssignedTo.setVisibility(View.VISIBLE);
-            edtStatus.setVisibility(View.GONE);
-            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
-                chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                        if (compoundButton.isChecked()) {
-                            edtClientContact.setEnabled(true);
-                        } else {
-                            edtClientContact.setEnabled(false);
-                        }
-                    }
-                });
-            }
-            getCaseStatuses();
             getChildUsers();
+            commonPaid();
         }
-        else
-        {
+        else {
             llAssignedTo.setVisibility(View.GONE);
-            if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.FREE_OR_PAID))
-            {
-                llCaseStatus.setVisibility(View.VISIBLE);
-                edtStatus.setVisibility(View.GONE);
-                if(Utils.getUserPreferencesBoolean(AddCaseActivity.this,Prefshelper.SMS_ALERT)) {
-                    chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                            if (compoundButton.isChecked()) {
-                                edtClientContact.setEnabled(true);
-                            } else {
-                                edtClientContact.setEnabled(false);
-                            }
-                        }
-                    });
-                }
-                getCaseStatuses();
-            }
-            else {
+            if (Utils.getUserPreferencesBoolean(AddCaseActivity.this, Prefshelper.FREE_OR_PAID)) {
+                commonPaid();
+            } else {
                 llCaseStatus.setVisibility(View.GONE);
                 edtStatus.setVisibility(View.VISIBLE);
                 smsLayout.setVisibility(View.GONE);
@@ -829,7 +808,7 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         strRContact = edtRetainMobile.getText().toString();
         strComment = edtComments.getText().toString();
         strStatus = edtStatus.getText().toString();
-
+        strFee=edtCaseFee.getText().toString();
         if(strStartDate==null)
         {
             strStartDate=dateFormatter.format(sysDate);
@@ -838,11 +817,29 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         if (edtCaseType.getVisibility() == View.VISIBLE)
         {
             strType = edtCaseType.getText().toString();
+            focusView = edtCaseType;
+            cancelLogin = true;
         }
-
+        if (smsAlertStatus==1)
+        {
+            strSmsNumber = edtClientContact.getText().toString();
+            if (TextUtils.isEmpty(strSmsNumber)) {
+                edtClientContact.setError("Field must not be empty.");
+                focusView = edtClientContact;
+                cancelLogin = true;
+            }
+            if(Utils.isValidPhone(strSmsNumber))
+            {
+                edtClientContact.setError("Enter a valid mobile number.");
+                focusView = edtClientContact;
+                cancelLogin = true;
+            }
+        }
         if (strPreviousDt==null)
         {
             txtPrevError.setVisibility(View.VISIBLE);
+            focusView = txtPrevError;
+            cancelLogin = true;
         }
         else
         {
@@ -851,6 +848,8 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
         if (strNextDt==null)
         {
             txtNextError.setVisibility(View.VISIBLE);
+            focusView = txtPrevError;
+            cancelLogin = true;
         }
         else
         {
@@ -862,7 +861,11 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
             focusView = edtCaseTitle;
             cancelLogin = true;
         }
-
+        if (TextUtils.isEmpty(strFee)) {
+            edtCaseFee.setError("Field must not be empty.");
+            focusView = edtCaseFee;
+            cancelLogin = true;
+        }
         if (cancelLogin) {
             // error in login
             focusView.requestFocus();
@@ -906,5 +909,30 @@ public class AddCaseActivity extends AppCompatActivity implements AdapterView.On
 
 
         sprCaseType.setOnItemSelectedListener(AddCaseActivity.this);
+    }
+    public void commonPaid() {
+        llCaseStatus.setVisibility(View.VISIBLE);
+        edtStatus.setVisibility(View.GONE);
+        getCaseStatuses();
+        if (Utils.getUserPreferencesBoolean(AddCaseActivity.this, Prefshelper.SMS_ALERT)) {
+
+            smsLayout.setVisibility(View.VISIBLE);
+            edtClientContact.setVisibility(View.GONE);
+            chkSmsAlert.setChecked(false);
+            chkSmsAlert.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if (compoundButton.isChecked()) {
+                        smsAlertStatus = 1;
+                        edtClientContact.setVisibility(View.VISIBLE);
+                    } else {
+                        smsAlertStatus = 0;
+                        edtClientContact.setVisibility(View.GONE);
+                    }
+                }
+            });
+        }
+        else
+        {smsLayout.setVisibility(View.GONE);}
     }
 }

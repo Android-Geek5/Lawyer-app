@@ -55,6 +55,7 @@ public class FragmentCorporateLogin extends Fragment {
     TextView register;
     Prefshelper prefshelper;
     ConnectionDetector cd;
+    int corporatePlanId;
 
     public FragmentCorporateLogin() {
         // Required empty public constructor
@@ -211,30 +212,7 @@ public class FragmentCorporateLogin extends Fragment {
                                     stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
                                     cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
                                     specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
-                                    JSONArray servicesArray=jsonObject.getJSONArray("services_array");
-                                    if(servicesArray.length()>0)
-                                    {
-                                        for(int i=0;i<servicesArray.length();i++)
-                                        {
-                                            JSONObject jsonObject1=servicesArray.getJSONObject(i);
-                                            String name=jsonObject1.getString("service_name");
-                                            if(name.equalsIgnoreCase("Sms Alert"))
-                                            {
-                                                int status=jsonObject1.getInt("service_status");
-                                                if(status==1)
-                                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.SMS_ALERT,true);
-                                            else Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.SMS_ALERT,false);
-                                            }
-                                            if(name.equalsIgnoreCase("Fee Management"))
-                                            {
-                                                int status=jsonObject1.getInt("service_status");
-                                                if(status==1)
-                                                    Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FEE_MANAGEMENT,true);
-                                                else Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FEE_MANAGEMENT,false);
-                                            }
-                                        }
-                                    }
-
+                                    corporatePlanId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -255,10 +233,12 @@ public class FragmentCorporateLogin extends Fragment {
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
                             Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,true);
+                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.COMMON_PAID,true);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,lastName);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,specialization);
+                            Utils.checkSmsAlert(getActivity(),corporatePlanId);
                             Intent intent = new Intent(getActivity(), MainAcitivity.class);
                             startActivity(intent);
 

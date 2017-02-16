@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.eweblog.common.Prefshelper;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -90,4 +92,49 @@ public class Utils {
     public static boolean isValidPass(String pass) {
         return pass != null && pass.length() >= 6;
     }
+
+    public static void checkSmsAlert(Context context,int corporatePlansId)
+    {
+        if(corporatePlansId==2 || corporatePlansId==4 || corporatePlansId==6)
+            Utils.storeUserPreferencesBoolean(context, Prefshelper.SMS_ALERT,true);
+        else
+            Utils.storeUserPreferencesBoolean(context, Prefshelper.SMS_ALERT,false);
+    }
+
+    public static void saveTypeOfUser(Context context,int groupId)
+    {
+        if(groupId==5)
+        {Utils.storeUserPreferencesBoolean(context,Prefshelper.CORPORATE_OR_NOT,true);
+            Utils.storeUserPreferencesBoolean(context,Prefshelper.COMMON_PAID,true);}
+        if(groupId==4)
+        { Utils.storeUserPreferencesBoolean(context, Prefshelper.FREE_OR_PAID, true);
+            Utils.storeUserPreferencesBoolean(context,Prefshelper.COMMON_PAID,true);}
+        else Utils.storeUserPreferencesBoolean(context, Prefshelper.FREE_OR_PAID,false);
+
+    }
+
+       /* COMMENTED FOR NOW
+                                        JSONArray servicesArray=jsonObject.getJSONArray("services_array");
+                                        if(servicesArray.length()>0)
+                                        {
+                                            for(int i=0;i<servicesArray.length();i++)
+                                            {
+                                                JSONObject jsonObject1=servicesArray.getJSONObject(i);
+                                                String name=jsonObject1.getString("service_name");
+                                                if(name.equalsIgnoreCase("Sms Alert"))
+                                                {
+                                                    int status=jsonObject1.getInt("service_status");
+                                                    if(status==1)
+                                                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.SMS_ALERT,true);
+                                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.SMS_ALERT,false);
+                                                }
+                                                if(name.equalsIgnoreCase("Fee Management"))
+                                                {
+                                                    int status=jsonObject1.getInt("service_status");
+                                                    if(status==1)
+                                                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FEE_MANAGEMENT,true);
+                                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FEE_MANAGEMENT,false);
+                                                }
+                                            }
+                                        }*/
 }

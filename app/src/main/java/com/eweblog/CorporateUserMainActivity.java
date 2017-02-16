@@ -62,16 +62,7 @@ public class CorporateUserMainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
-        searchLayout=(LinearLayout) findViewById(R.id.imageView_back2);
-        searchLayout.setVisibility(View.VISIBLE);
-        searchLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Utils.storeUserPreferences(CorporateUserMainActivity.this,Prefshelper.SEARCH,"simple_search");
-                Intent intnt = new Intent(CorporateUserMainActivity.this, SearchActivity.class);
-                startActivity(intnt);
-            }
-        });
+
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.navigation);
         navigationView.setItemIconTintList(null);

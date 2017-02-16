@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -43,7 +44,7 @@ import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     SlidingTabLayout tabs;
-    LinearLayout llBack,llSearch;
+    LinearLayout llBack,llSearch,llUnderline;
     TextView txtType, txtCaseTitle, txtJudge,txtWeekly,txtAll;
     Prefshelper prefshelper;
     LinearLayout llFilters;
@@ -60,7 +61,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         setContentView(R.layout.activity_search);
         inflateToolbar();
         inflateLayout();
@@ -100,6 +101,7 @@ public class SearchActivity extends AppCompatActivity {
     public void inflateLayout()
     {
         llFilters=(LinearLayout)findViewById(R.id.ll_filter);
+        llUnderline=(LinearLayout) findViewById(R.id.ll_underline);
         v1=(View) findViewById(R.id.underline1);
         v2=(View) findViewById(R.id.underline2);
         v3=(View) findViewById(R.id.underline3);
@@ -175,6 +177,7 @@ public class SearchActivity extends AppCompatActivity {
             llFilters.setVisibility(View.GONE);
             spinner.setVisibility(View.VISIBLE);
             edtSearch.setVisibility(View.GONE);
+            llUnderline.setVisibility(View.GONE);
         }
         else
         {
@@ -187,6 +190,7 @@ public class SearchActivity extends AppCompatActivity {
 
     public void search(String searchKeyword)
     {
+        Utils.hideSoftKeyboard(SearchActivity.this);
         search_keyword=searchKeyword;
         try {
             final ProgressDialog pDialog = new ProgressDialog(SearchActivity.this);

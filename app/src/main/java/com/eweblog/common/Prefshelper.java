@@ -20,6 +20,8 @@ public class Prefshelper {
     private Context context;
     public static SharedPreferences preferences;
     public static final String FREE_OR_PAID="free_or_paid"; //TRUE FOR PAID
+    public static final String CORPORATE_OR_NOT="corporate_or_not"; //TRUE FOR CORPORATE
+    public static final String COMMON_PAID="common_paid";
     public static final String USER_EMAIL="user_email";
     public static final String USER_NAME="user_name";
     public static final String USER_LAST_NAME="user_last_name";
@@ -34,7 +36,7 @@ public class Prefshelper {
     public static final String DATE="date";
     public static final String SEARCH="search";
     public static final String SELECTED_DATE="selected_date";
-    public static final String CORPORATE_OR_NOT="corporate_or_not"; //TRUE FOR CORPORATE
+
     public static final String USER_STATE_OF_PRACTISE="user_state_of_practice";
     public static final String USER_CITY_OF_PRACTISE="user_city_of_practice";
     public static final String USER_SPECIALIZATION="user_specialization";
@@ -51,6 +53,7 @@ public class Prefshelper {
 
     public static final String USER_DETAILS="user_details";
     public static final String CASES_COUNT="cases_count";
+    public static final String CORPORATE_PLANS_ID="corporate_plans_id";
 
    public Prefshelper(Context context) {
         this.context = context;

@@ -50,13 +50,14 @@ public class SplashScreenActivity extends AppCompatActivity {
     Prefshelper prefshelper;
     private static int SPLASH_TIME_OUT = 2000;
     String userID, userSecHash, userName, userEmail, userContact, userEmailVerified, userMobileVerified,
-            userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice;
+            userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice,userSpecialization;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
     List<CaseListModel> caseList ;
     int groupId;
     JSONObject jsonObject;
+    int corporatePlansId=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,83 +224,41 @@ public class SplashScreenActivity extends AppCompatActivity {
                                      userEmailVerified=jsonObject.getString("user_email_verification_status");
                                      userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                      userStatus=jsonObject.getString("user_status");
-                                    // userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
-                                  //  userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
-                                   // userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
-                                     groupId=jsonObject.getInt("group_id");
-                                    if(groupId==5)  Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT,true);
-                                    if(groupId==4) Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID, true);
-                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID,false);
-                                    if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT)) {
-                                        imgUrl = jsonObject.getString("user_profile_image_url");
-                                        JSONArray servicesArray=jsonObject.getJSONArray("services_array");
-                                        if(servicesArray.length()>0)
-                                        {
-                                            for(int i=0;i<servicesArray.length();i++)
-                                            {
-                                                JSONObject jsonObject1=servicesArray.getJSONObject(i);
-                                                String name=jsonObject1.getString("service_name");
-                                                if(name.equalsIgnoreCase("Sms Alert"))
-                                                {
-                                                    int status=jsonObject1.getInt("service_status");
-                                                    if(status==1)
-                                                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.SMS_ALERT,true);
-                                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.SMS_ALERT,false);
-                                                }
-                                                if(name.equalsIgnoreCase("Fee Management"))
-                                                {
-                                                    int status=jsonObject1.getInt("service_status");
-                                                    if(status==1)
-                                                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FEE_MANAGEMENT,true);
-                                                    else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FEE_MANAGEMENT,false);
-                                                }
-                                            }
-                                        }
-                                    }
-                                    if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID)) {
-                                        imgUrl=jsonObject.getString("user_profile_image_url");
-                                    }
+                                     userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                      userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                      userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
+                                      groupId=jsonObject.getInt("group_id");
+                                      imgUrl = jsonObject.getString("user_profile_image");
+                                    if(groupId==4 || groupId==5) //Check if paid or business user
+                                    corporatePlansId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
+                                    userSpecialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
+                            Utils.saveTypeOfUser(SplashScreenActivity.this,groupId);
+                            Utils.checkSmsAlert(SplashScreenActivity.this,corporatePlansId);
 
-
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID,userID);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL,userEmail);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_NAME,userName);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CONTACT,userContact);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATUS,userStatus);
-                        Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL_VERIFICATION_STATUS,userEmailVerified);
-                            if(userMobileVerified.equalsIgnoreCase("1"))
-                        Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
-                            else Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
-                        if(Utils.getUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.CORPORATE_OR_NOT))
-                        {
-                            String lastName,stateOfPractise,cityOfPractise,specialization;
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_ID,userID);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_EMAIL,userEmail);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_NAME,userName);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CONTACT,userContact);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATUS,userStatus);
                             Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            lastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
-                            stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
-                            cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
-                            specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
-                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_LAST_NAME,lastName);
-                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
-                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
-                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SPECIALIZATION,specialization);
-
-                        }
-                       else
-                        {
-                            if(groupId==4) {
-                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this, Prefshelper.FREE_OR_PAID, true);
-                                Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            }
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_LAST_NAME,userLastName);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_STATE_OF_PRACTISE,userStateOfPractice);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_CITY_OF_PRACTISE,userCityofPractice);
+                            Utils.storeUserPreferences(SplashScreenActivity.this,Prefshelper.USER_SPECIALIZATION,userSpecialization);
+                            if(userEmailVerified.equalsIgnoreCase("1"))
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
                             else
-                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.FREE_OR_PAID,false);
-
-                        }
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                            if(userMobileVerified.equalsIgnoreCase("1"))
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                            else
+                                Utils.storeUserPreferencesBoolean(SplashScreenActivity.this,Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
                             Intent intent = new Intent(SplashScreenActivity.this, MainAcitivity.class);
                             startActivity(intent);
                             finish();

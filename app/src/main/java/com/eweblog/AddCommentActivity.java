@@ -80,10 +80,10 @@ public class AddCommentActivity extends AppCompatActivity{
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
-                startActivity(intent1);
+               // Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
+               // startActivity(intent1);
                 finish();
-                CorporateUserMainActivity.txtTitle.setText("Home");
+              //  MainAcitivity.txtTitle.setText("Home");
             }
         });
         strId=getIntent().getStringExtra("id");

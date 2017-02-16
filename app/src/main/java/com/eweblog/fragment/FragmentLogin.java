@@ -50,12 +50,12 @@ public class FragmentLogin extends Fragment {
 
     EditText edtContact,edtPwd;
     String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact,
-            userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
+            userEmailVerified, userMobileVerified,userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice,userSpecialization;;
     Prefshelper prefshelper;
     ConnectionDetector cd;
     TextView txtNotAUser, txtForgotPwd;
     int groupId;
-
+    int corporatePlansId=0;
 
     public FragmentLogin() {
         // Required empty public constructor
@@ -216,20 +216,33 @@ public class FragmentLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
+                                    userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                    userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                    userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
                                     groupId=jsonObject.getInt("group_id");
-                                    if(groupId==4) {
-                                        imgUrl=jsonObject.getString("user_profile_image_url");
-                                    }
+                                    groupId=jsonObject.getInt("group_id");
+                                    imgUrl = jsonObject.getString("user_profile_image");
+                                    if(groupId==4 || groupId==5) //Check if paid or business user
+                                        corporatePlansId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
+                                    userSpecialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
+
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            Utils.saveTypeOfUser(getActivity(),groupId);
+                            Utils.checkSmsAlert(getActivity(),corporatePlansId);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,userLastName);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,userStateOfPractice);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,userCityofPractice);
+                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,userSpecialization);
                             if(userEmailVerified.equalsIgnoreCase("1"))
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
                             else
@@ -239,14 +252,7 @@ public class FragmentLogin extends Fragment {
                             else
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
 
-                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,false);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.GROUP_ID,String.valueOf(groupId));
-                            if(groupId==4) {
-                                Utils.storeUserPreferencesBoolean(getActivity(), Prefshelper.FREE_OR_PAID, true);
-                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            }
-                            else
-                             Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.FREE_OR_PAID,false);
                             Intent intent = new Intent(getActivity(), MainAcitivity.class);
                             startActivity(intent);
                         }

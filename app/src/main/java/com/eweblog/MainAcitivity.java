@@ -47,7 +47,7 @@ public class MainAcitivity extends AppCompatActivity {
     static TextView text_name, email_name;
     android.support.v4.app.FragmentManager fragmentManager;
     android.support.v4.app.FragmentTransaction fragmentTransaction;
-    LinearLayout linearLayout, linearLayout_search;
+    LinearLayout linearLayout, searchLayout;
     String pic,name,email;
     public static CircularImageView pimage;
     boolean paidOrNot,corporateOrNot;
@@ -66,6 +66,22 @@ public class MainAcitivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
+        searchLayout=(LinearLayout) findViewById(R.id.imageView_back2);
+        if(Utils.getUserPreferencesBoolean(MainAcitivity.this,Prefshelper.COMMON_PAID)) {
+            searchLayout.setVisibility(View.VISIBLE);
+            searchLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.storeUserPreferences(MainAcitivity.this, Prefshelper.SEARCH, "simple_search");
+                    Intent intnt = new Intent(MainAcitivity.this, SearchActivity.class);
+                    startActivity(intnt);
+                }
+            });
+        }
+        else
+        {
+            searchLayout.setVisibility(View.GONE);
+        }
         inflateLayout();
         paidLayout();
         hideItem();
@@ -150,12 +166,11 @@ public class MainAcitivity extends AppCompatActivity {
     {
         Menu nav_Menu = navigationView.getMenu();
         if(!corporateOrNot) {
-            if (paidOrNot)
                 nav_Menu.findItem(R.id.drawer_view).setVisible(false);
             if (!paidOrNot) {
                 nav_Menu.findItem(R.id.drawer_edit).setVisible(false);
                 nav_Menu.findItem(R.id.drawer_case).setVisible(false);
-                nav_Menu.findItem(R.id.drawer_add).setVisible(false);
+               // nav_Menu.findItem(R.id.drawer_add).setVisible(false);
                 nav_Menu.findItem(R.id.drawer_settings).setVisible(false);
                 // nav_Menu.findItem(R.id.drawer_fee).setVisible(false);
             }
