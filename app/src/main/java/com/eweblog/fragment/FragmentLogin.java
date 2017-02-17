@@ -219,7 +219,7 @@ public class FragmentLogin extends Fragment {
                                     userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
                                     userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
                                     userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
-                                    groupId=jsonObject.getInt("group_id");
+
                                     groupId=jsonObject.getInt("group_id");
                                     imgUrl = jsonObject.getString("user_profile_image");
                                     if(groupId==4 || groupId==5) //Check if paid or business user

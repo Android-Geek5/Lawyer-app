@@ -103,6 +103,9 @@ public class Utils {
 
     public static void saveTypeOfUser(Context context,int groupId)
     {
+        Utils.storeUserPreferencesBoolean(context,Prefshelper.CORPORATE_OR_NOT,false);
+        Utils.storeUserPreferencesBoolean(context,Prefshelper.COMMON_PAID,false);
+        Utils.storeUserPreferencesBoolean(context,Prefshelper.FREE_OR_PAID,false);
         if(groupId==5)
         {Utils.storeUserPreferencesBoolean(context,Prefshelper.CORPORATE_OR_NOT,true);
             Utils.storeUserPreferencesBoolean(context,Prefshelper.COMMON_PAID,true);}

@@ -31,6 +31,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.MainAcitivity;
+import com.eweblog.OTPScreenActivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
@@ -50,12 +51,13 @@ public class FragmentCorporateLogin extends Fragment {
 
     EditText edtContact,edtPwd, edtCorporateId;
     String strContact, strPwd, strCorporateId, userID, userSecHash, userName, userEmail,
-            userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl, corporateUser;
+            userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl;
     String lastName,stateOfPractise,cityOfPractise,specialization;
     TextView register;
     Prefshelper prefshelper;
     ConnectionDetector cd;
-    int corporatePlanId;
+    int corporatePlanId=0;
+    int groupId=0;
 
     public FragmentCorporateLogin() {
         // Required empty public constructor
@@ -193,10 +195,9 @@ public class FragmentCorporateLogin extends Fragment {
                                 Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
                             }
                         }
-                        if (serverCode.equalsIgnoreCase("1")) {
-
+                        if (serverCode.equalsIgnoreCase("1") || serverCode.equalsIgnoreCase("2")) {
                             try {
-                                if ("1".equals(serverCode)) {
+                                //if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
@@ -206,17 +207,18 @@ public class FragmentCorporateLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
-                                    imgUrl=jsonObject.getString("user_profile_image_url");
-                                    corporateUser=jsonObject.getString("group_id");
+                                    imgUrl=jsonObject.getString("user_profile_image");
+                                    groupId=jsonObject.getInt("group_id");
                                     lastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
                                     stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
                                     cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
                                     specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
                                     corporatePlanId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
-                                }
+                              //  }
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            Utils.saveTypeOfUser(getActivity(),groupId);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
@@ -232,17 +234,20 @@ public class FragmentCorporateLogin extends Fragment {
                             else
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.CORPORATE_OR_NOT,true);
-                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.COMMON_PAID,true);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,lastName);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
                             Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,specialization);
                             Utils.checkSmsAlert(getActivity(),corporatePlanId);
-                            Intent intent = new Intent(getActivity(), MainAcitivity.class);
-                            startActivity(intent);
-
-
+                            if(serverCode.equalsIgnoreCase("1") ) {
+                                Intent intent = new Intent(getActivity(), MainAcitivity.class);
+                                startActivity(intent);
+                            }
+                            else if(serverCode.equalsIgnoreCase("2"))
+                            {
+                                Intent intent = new Intent(getActivity(), OTPScreenActivity.class);
+                                startActivity(intent);
+                            }
                         }
 
 

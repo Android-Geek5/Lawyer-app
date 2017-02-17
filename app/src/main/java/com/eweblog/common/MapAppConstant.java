@@ -11,4 +11,7 @@ public class MapAppConstant {
     public static final String SEARCH="/search";
     public static final String ADVANCED_SEARCH="/advanced_search";
     public static final String GET_USER_CASES="/get_user_cases";
+    public static final String VERIFY_OTP="/verify_otp";
+    public static final String RESEND_OTP="/resend_otp";
+    public static final String RESEND_EMAIL_VERIFICATION="/resend_email_verification_code";
 }

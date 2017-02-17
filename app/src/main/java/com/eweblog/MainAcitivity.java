@@ -170,8 +170,7 @@ public class MainAcitivity extends AppCompatActivity {
             if (!paidOrNot) {
                 nav_Menu.findItem(R.id.drawer_edit).setVisible(false);
                 nav_Menu.findItem(R.id.drawer_case).setVisible(false);
-               // nav_Menu.findItem(R.id.drawer_add).setVisible(false);
-                nav_Menu.findItem(R.id.drawer_settings).setVisible(false);
+              //  nav_Menu.findItem(R.id.drawer_settings).setVisible(false);
                 // nav_Menu.findItem(R.id.drawer_fee).setVisible(false);
             }
         }

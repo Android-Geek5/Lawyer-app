@@ -343,6 +343,7 @@ public class SelectDateFragment extends Fragment {
                     params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
                     params.put("user_security_hash", Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
                     params.put("case_detail_hearing_date",daySelected);
+                    Log.e("GET CASES REQUEST",params.toString());
                     return params;
                 }
             };

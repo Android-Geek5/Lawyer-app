@@ -46,6 +46,7 @@ public class Prefshelper {
     public static final String CASE_SEARCH_KEYWORD="case_search_keyword";
     public static final String CASE_SEARCH_PERIOD="case_search_period";
     public static final String CASE_SEARCH_IN="case_search_in";
+    public static final String CASE_STATUS_ID="case_status_id";
 
     public static final String CASE_ID="case_id";
     public static final String CASE_TITLE="case_title";
