@@ -119,20 +119,18 @@ public class RegisterationActivity extends AppCompatActivity {
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
-
-            Log.e("", "SIGNUP " + MapAppConstant.API + "signup");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "signup", new Response.Listener<String>() {
+            String SIGNUP_URL=MapAppConstant.API+MapAppConstant.SIGNUP;
+            Log.e("SIGNUP URL " ,SIGNUP_URL);
+            StringRequest sr = new StringRequest(Request.Method.POST,SIGNUP_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("SIGNUP RESPONSE",response);
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-
 
                         if (serverCode.equalsIgnoreCase("0")) {
 
@@ -203,6 +201,7 @@ public class RegisterationActivity extends AppCompatActivity {
                     params.put("user_contact", strContact);
                     params.put("user_login_password", strPwd);
                     params.put("confirm_login_password", strCPwd);
+                    Log.e("SIGNUP REQUEST",params.toString());
                     return params;
                 }
             };

@@ -155,15 +155,14 @@ public class ChangePasswordFragment extends Fragment {
             final ProgressDialog pDialog = new ProgressDialog(getActivity());
             pDialog.setMessage("Loading...");
             pDialog.show();
-
-            Log.e("", "SIGNUP " + MapAppConstant.API + "change_password");
+            String URL_CHANGE_PASSWORD=MapAppConstant.API + MapAppConstant.CHANGE_PASSWORD;
+            Log.e("CHANGE PASSWORD URL",URL_CHANGE_PASSWORD);
             StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "change_password", new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("CHANGE PASSWORD RESP", response);
 
-                    ////////
                     try {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
@@ -179,7 +178,6 @@ public class ChangePasswordFragment extends Fragment {
                                     JSONObject jsonObject=object.getJSONObject("data");
 
                                     String userSecHash=jsonObject.getString("user_security_hash");
-
                                     Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
 
                                 }
@@ -225,7 +223,7 @@ public class ChangePasswordFragment extends Fragment {
                     params.put("user_security_hash", Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
                     params.put("user_login_password", strPwd);
                     params.put("confirm_login_password", strConfirmPwd);
-
+                    Log.e("CHANGE PASSWORD REQ",params.toString());
                     return params;
                 }
             };

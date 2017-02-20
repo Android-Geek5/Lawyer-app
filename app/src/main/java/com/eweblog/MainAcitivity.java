@@ -67,21 +67,7 @@ public class MainAcitivity extends AppCompatActivity {
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("Home");
         searchLayout=(LinearLayout) findViewById(R.id.imageView_back2);
-        if(Utils.getUserPreferencesBoolean(MainAcitivity.this,Prefshelper.COMMON_PAID)) {
-            searchLayout.setVisibility(View.VISIBLE);
-            searchLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Utils.storeUserPreferences(MainAcitivity.this, Prefshelper.SEARCH, "simple_search");
-                    Intent intnt = new Intent(MainAcitivity.this, SearchActivity.class);
-                    startActivity(intnt);
-                }
-            });
-        }
-        else
-        {
-            searchLayout.setVisibility(View.GONE);
-        }
+        inflateSearch();
         inflateLayout();
         paidLayout();
         hideItem();
@@ -262,6 +248,7 @@ public class MainAcitivity extends AppCompatActivity {
                     //Replacing the main content with ContentFragment Which is our Inbox View;
                     case R.id.drawer_home:
                         txtTitle.setText("Home");
+                        inflateSearch();
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         if(corporateOrNot)
@@ -274,6 +261,7 @@ public class MainAcitivity extends AppCompatActivity {
 
                     case R.id.changePwd:
                         txtTitle.setText("Change Password");
+                        searchLayout.setVisibility(View.GONE);
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new ChangePasswordFragment());
@@ -282,6 +270,7 @@ public class MainAcitivity extends AppCompatActivity {
                         return true;
                     case R.id.drawer_edit:
                         txtTitle.setText("Edit Profile");
+                        searchLayout.setVisibility(View.GONE);
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new EditProfileFragment());
@@ -290,6 +279,7 @@ public class MainAcitivity extends AppCompatActivity {
                         return true;
                     case R.id.about_us:
                         txtTitle.setText("About us");
+                        searchLayout.setVisibility(View.GONE);
                         fragmentManager = getSupportFragmentManager();
                         fragmentTransaction = fragmentManager.beginTransaction();
                         fragmentTransaction.replace(R.id.content_frame, new AboutUS());
@@ -358,5 +348,23 @@ public class MainAcitivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void inflateSearch()
+    {
+        if(Utils.getUserPreferencesBoolean(MainAcitivity.this,Prefshelper.COMMON_PAID)) {
+            searchLayout.setVisibility(View.VISIBLE);
+            searchLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Utils.storeUserPreferences(MainAcitivity.this, Prefshelper.SEARCH, "simple_search");
+                    Intent intnt = new Intent(MainAcitivity.this, SearchActivity.class);
+                    startActivity(intnt);
+                }
+            });
+        }
+        else
+        {
+            searchLayout.setVisibility(View.GONE);
+        }
     }
 }

@@ -23,6 +23,7 @@ public class Prefshelper {
     public static final String CORPORATE_OR_NOT="corporate_or_not"; //TRUE FOR CORPORATE
     public static final String COMMON_PAID="common_paid";
     public static final String USER_EMAIL="user_email";
+    public static final String USER_FIRST_NAME="user_first_name";
     public static final String USER_NAME="user_name";
     public static final String USER_LAST_NAME="user_last_name";
     public static final String USER_ID="user_id";
@@ -31,7 +32,7 @@ public class Prefshelper {
     public static final String USER_STATUS="user_status";
     public static final String USER_MOBILE_VERIFICATION_STATUS="user_mobile_verification_status";
     public static final String USER_EMAIL_VERIFICATION_STATUS="user_email_verification_status";
-    public static final String USER_PROFILE_IMAGE_URL="user_profile_image_url";
+    public static final String USER_PROFILE_IMAGE_URL="user_profile_image";
     public static final String GROUP_ID="group_id";
     public static final String DATE="date";
     public static final String SEARCH="search";

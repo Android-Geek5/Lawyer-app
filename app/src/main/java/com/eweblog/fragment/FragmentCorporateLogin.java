@@ -183,9 +183,9 @@ public class FragmentCorporateLogin extends Fragment {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-
+                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                         if (serverCode.equalsIgnoreCase("0")) {
-                            if(serverMessage.contains("|"))
+                          /*  if(serverMessage.contains("|"))
                             {
 
                                 Toast.makeText(getActivity(),  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
@@ -193,7 +193,7 @@ public class FragmentCorporateLogin extends Fragment {
                             else
                             {
                                 Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
-                            }
+                            }*/
                         }
                         if (serverCode.equalsIgnoreCase("1") || serverCode.equalsIgnoreCase("2")) {
                             try {
@@ -242,6 +242,7 @@ public class FragmentCorporateLogin extends Fragment {
                             if(serverCode.equalsIgnoreCase("1") ) {
                                 Intent intent = new Intent(getActivity(), MainAcitivity.class);
                                 startActivity(intent);
+                                getActivity().finish();
                             }
                             else if(serverCode.equalsIgnoreCase("2"))
                             {

@@ -207,7 +207,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(SplashScreenActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                        Utils.showToast(SplashScreenActivity.this, serverMessage);
 
                         if (serverCode.equalsIgnoreCase("0")) {
 

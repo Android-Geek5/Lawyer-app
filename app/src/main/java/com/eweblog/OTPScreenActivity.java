@@ -136,18 +136,10 @@ public class OTPScreenActivity extends AppCompatActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
-
                                     resendEmailVerification();
-
                                 }
                             } else {
                                 Utils.clearData(OTPScreenActivity.this);
-                                /*
-                                try {
-                                    prefshelper.getPreferences().edit().clear().apply();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }*/
                                 finish();
                             }
                         }

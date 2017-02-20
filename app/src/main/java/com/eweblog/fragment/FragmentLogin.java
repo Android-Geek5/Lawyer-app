@@ -32,6 +32,7 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.ForgotPasswordActivity;
 import com.eweblog.MainAcitivity;
+import com.eweblog.OTPScreenActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
 import com.eweblog.Utils;
@@ -191,9 +192,9 @@ public class FragmentLogin extends Fragment {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-
+                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                         if (serverCode.equalsIgnoreCase("0")) {
-                            if(serverMessage.contains("|"))
+                           /* if(serverMessage.contains("|"))
                             {
 
                                 Toast.makeText(getActivity(),  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
@@ -201,12 +202,12 @@ public class FragmentLogin extends Fragment {
                             else
                             {
                                 Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
-                            }
+                            }*/
                         }
-                        if (serverCode.equalsIgnoreCase("1")) {
+                        if (serverCode.equalsIgnoreCase("1") || serverCode.equalsIgnoreCase("2")) {
 
                             try {
-                                if ("1".equals(serverCode)) {
+                                //if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
@@ -226,7 +227,7 @@ public class FragmentLogin extends Fragment {
                                         corporatePlansId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
                                     userSpecialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
 
-                                }
+
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -253,8 +254,16 @@ public class FragmentLogin extends Fragment {
                                 Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
 
                             Utils.storeUserPreferences(getActivity(),Prefshelper.GROUP_ID,String.valueOf(groupId));
-                            Intent intent = new Intent(getActivity(), MainAcitivity.class);
-                            startActivity(intent);
+                            if(serverCode.equalsIgnoreCase("1") ) {
+                                Intent intent = new Intent(getActivity(), MainAcitivity.class);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                            else if(serverCode.equalsIgnoreCase("2"))
+                            {
+                                Intent intent = new Intent(getActivity(), OTPScreenActivity.class);
+                                startActivity(intent);
+                            }
                         }
 
 

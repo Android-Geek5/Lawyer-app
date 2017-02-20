@@ -47,6 +47,6 @@ public class ViewCasesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        ViewCasesActivity.this.finish();
     }
 }

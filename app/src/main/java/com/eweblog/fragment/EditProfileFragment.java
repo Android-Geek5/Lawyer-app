@@ -45,6 +45,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.MainAcitivity;
+import com.eweblog.OTPScreenActivity;
 import com.eweblog.R;
 import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
@@ -83,7 +84,10 @@ public class EditProfileFragment extends Fragment
     LinearLayout llProfilePic;
 
     private static final int REQUEST_CODE_CAPTURE_IMAGE = 2500;
-    String  u_name,l_name,contact,email, filename,state,city;
+    String strContact,userName, userEmail, userContact,filename,
+            userEmailVerified, userMobileVerified,userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice;
+    int groupId;
+    int corporatePlansId=0;
 
     View rootview;
 
@@ -146,7 +150,7 @@ public class EditProfileFragment extends Fragment
                             String serverMessage = object.getString("message");
                             Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                             if (serverCode.equalsIgnoreCase("0")) {
-                                if(serverMessage.contains("|"))
+                             /*   if(serverMessage.contains("|"))
                                 {
 
                                     Toast.makeText(getActivity(),  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
@@ -154,36 +158,66 @@ public class EditProfileFragment extends Fragment
                                 else
                                 {
                                     Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
-                                }
+                                }*/
                             }
                             if (serverCode.equalsIgnoreCase("1")) {
                                 try {
-                                    if ("1".equals(serverCode)) {
+                                   // if ("1".equals(serverCode)) {
                                         JSONObject object1 = object.getJSONObject("data");
 
-                                        u_name=object1.getString("user_name");
-                                        contact=object1.getString("user_contact");
-                                        email=object1.getString("user_email");
-                                        l_name=object1.getString("user_last_name");
-                                        state=object1.getString(Prefshelper.USER_STATE_OF_PRACTISE);
-                                        city=object1.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                    JSONObject jsonObject=object.getJSONObject("data");
+                                    userName=jsonObject.getString(Prefshelper.USER_NAME);
+                                    userEmail=jsonObject.getString(Prefshelper.USER_EMAIL);
+                                    userContact=jsonObject.getString(Prefshelper.USER_CONTACT);
+                                    userEmailVerified=jsonObject.getString(Prefshelper.USER_EMAIL_VERIFICATION_STATUS);
+                                    userMobileVerified=jsonObject.getString(Prefshelper.USER_MOBILE_VERIFICATION_STATUS);
+                                    userStatus=jsonObject.getString(Prefshelper.USER_STATUS);
+                                    userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
+                                    userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
+                                    userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
 
-                                        }
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,u_name);
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,email);
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,contact);
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,l_name);
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,state);
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,city);
+                                    groupId=jsonObject.getInt(Prefshelper.GROUP_ID);
+                                    imgUrl = jsonObject.getString(Prefshelper.USER_PROFILE_IMAGE_URL);
+                                    if(groupId==4 || groupId==5) //Check if paid or business user
+                                        corporatePlansId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
+                                    //userSpecialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
+                                    // }
+
+
                                 }
 
                                 catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
-                                Intent intent=new Intent(getActivity(),  MainAcitivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
+                                Utils.saveTypeOfUser(getActivity(),groupId);
+                                Utils.checkSmsAlert(getActivity(),corporatePlansId);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,userLastName);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,userStateOfPractice);
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,userCityofPractice);
+                                //Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,userSpecialization);
+                                if(userEmailVerified.equalsIgnoreCase("1"))
+                                    Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
+                                else
+                                    Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                                if(userMobileVerified.equalsIgnoreCase("1")) {
+                                    Utils.storeUserPreferencesBoolean(getActivity(), Prefshelper.USER_MOBILE_VERIFICATION_STATUS, true);
+                                    Intent intent = new Intent(getActivity(), MainAcitivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish(); //Update the header by killing activity
+                                }
+                                else {
+                                    Utils.storeUserPreferencesBoolean(getActivity(), Prefshelper.USER_MOBILE_VERIFICATION_STATUS, false);
+                                    Intent intent = new Intent(getActivity(), OTPScreenActivity.class);
+                                    startActivity(intent);
+                                    getActivity().finish();
+                                }
+                                Utils.storeUserPreferences(getActivity(),Prefshelper.GROUP_ID,String.valueOf(groupId));
 
                             }
 
@@ -217,11 +251,14 @@ public class EditProfileFragment extends Fragment
                     protected Map<String, String> getParams() {
                         Map<String, String> params = new HashMap<String, String>();
 
-                        params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
-                        params.put("user_security_hash",Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
-                        params.put("first_name", u_name);
-                        params.put("user_contact", contact);
-                        params.put("user_email",email);
+                        params.put(Prefshelper.USER_ID, Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
+                        params.put(Prefshelper.USER_SECURITY_HASH,Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
+                        params.put(Prefshelper.USER_FIRST_NAME, userName);
+                        params.put(Prefshelper.USER_LAST_NAME,userLastName);
+                        params.put(Prefshelper.USER_CONTACT, userContact);
+                        params.put(Prefshelper.USER_STATE_OF_PRACTISE,userStateOfPractice);
+                        params.put(Prefshelper.USER_CITY_OF_PRACTISE,userCityofPractice);
+                        //params.put("user_email",email);
                         return params;
                     }
                 };
@@ -646,6 +683,7 @@ public class EditProfileFragment extends Fragment
         edtName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_NAME));
         edtLastName.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME));
         edtEmail.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_EMAIL));
+        edtEmail.setEnabled(false);
         edtContact.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CONTACT));
         edtCity.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE));
         edtState.setText(Utils.getUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE));
@@ -656,45 +694,45 @@ public class EditProfileFragment extends Fragment
         boolean cancelSignup = false;
         View focusView = null;
 
-        u_name = edtName.getText().toString();
-        contact = edtContact.getText().toString();
-        email =edtEmail.getText().toString();
-        l_name=edtLastName.getText().toString();
-        state=edtState.getText().toString();
-        city=edtCity.getText().toString();
+        userName = edtName.getText().toString();
+        userContact = edtContact.getText().toString();
+        userEmail =edtEmail.getText().toString();
+        userLastName=edtLastName.getText().toString();
+        userStateOfPractice=edtState.getText().toString();
+        userCityofPractice=edtCity.getText().toString();
 
-        if (TextUtils.isEmpty(u_name)) {
+        if (TextUtils.isEmpty(userName)) {
             edtName.setError("Name is required");
             focusView = edtName;
             cancelSignup = true;
         }
-        if (TextUtils.isEmpty(contact)) {
+        if (TextUtils.isEmpty(userContact)) {
             edtContact.setError("Contact Number is Required");
             focusView = edtContact;
             cancelSignup = true;
         }
-        else if (!Utils.isValidPhone((contact))) {
+        else if (!Utils.isValidPhone((userContact))) {
             edtContact.setError("Mobile number must be of digits 10.");
             focusView = edtContact;
             cancelSignup = true;
         }
-        if (TextUtils.isEmpty(email)) {
+        if (TextUtils.isEmpty(userEmail)) {
             edtEmail.setError("Field must not be empty.");
             focusView = edtEmail;
             cancelSignup = true;
         }
-        else if (!Utils.isValidEmail(email)) {
+        else if (!Utils.isValidEmail(userEmail)) {
             edtEmail.setError("Invalid Email.");
             focusView = edtEmail;
             cancelSignup = true;
         }
-        else if(TextUtils.isEmpty(state))
+        else if(TextUtils.isEmpty(userStateOfPractice))
         {
             edtState.setError("Field must not be empty.");
             focusView = edtState;
             cancelSignup = true;
         }
-        else if(TextUtils.isEmpty(city))
+        else if(TextUtils.isEmpty(userCityofPractice))
         {
             edtCity.setError("Field must not be empty.");
             focusView = edtCity;
