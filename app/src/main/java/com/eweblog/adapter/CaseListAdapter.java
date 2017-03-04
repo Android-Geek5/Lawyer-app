@@ -2,128 +2,78 @@ package com.eweblog.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.util.Log;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.eweblog.CaseDetailActivity;
 import com.eweblog.R;
-import com.eweblog.Utils;
-import com.eweblog.common.ConnectionDetector;
-import com.eweblog.common.Prefshelper;
-import com.eweblog.model.CaseListModel;
+import com.eweblog.model.CaseList;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by erginus on 2/8/2017.
+ */
 
-public class CaseListAdapter  extends BaseAdapter {
-    List<CaseListModel> caseList, newList;
-    ConnectionDetector cd;
-    private static LayoutInflater inflater=null;
+/**
+ * Adapter to show case list on search,advance search and view cases.
+ * It is used to show case title and date
+ */
+
+public class CaseListAdapter extends RecyclerView.Adapter<CaseListAdapter.SearchCaseListViewHolder> {
+    List<CaseList> caseList=new ArrayList<>();
     Context context;
-   Prefshelper prefshelper;
 
-    public CaseListAdapter(Context contxt, List<CaseListModel> list) {
-        // TODO Auto-generated constructor stub
+    public CaseListAdapter(Context context, List<CaseList> caseList)
+    {
+        this.context=context;
+        this.caseList=caseList;
+    }
 
-        context=contxt;
-        caseList=list;
-        inflater = ( LayoutInflater )context.
-                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    @Override
+    public SearchCaseListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.case_list_item, parent, false);
+
+        return new SearchCaseListViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(SearchCaseListViewHolder holder, int position) {
+        CaseList caseListObject =caseList.get(position);
+        holder.txtTitle.setText(caseListObject.getCase_title());
+        holder.txtDate.setText(caseListObject.getCase_date());
+        final int id= caseListObject.getCase_id();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context, CaseDetailActivity.class);
+                intent.putExtra("id",String.valueOf(id));
+                context.startActivity(intent);
+            }
+        });
+    }
+    public void addArrayList(List<CaseList> caseLists)
+    {
+        caseList.clear();
+        caseList.addAll(caseLists);
     }
     @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
+    public int getItemCount() {
         return caseList.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return position;
-    }
+    public class SearchCaseListViewHolder extends RecyclerView.ViewHolder {
+        TextView txtTitle, txtDate;
 
-    @Override
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
-    }
-
-    public class Holder
-    {
-        TextView txtCase, txtNumber;
-
-    }
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        Holder holder=new Holder();
-        View rowView;
-
-        rowView = inflater.inflate(R.layout.case_list_item, null);
-        holder.txtCase=(TextView) rowView.findViewById(R.id.textView_title);
-        holder.txtNumber=(TextView) rowView.findViewById(R.id.textView_nmber);
-        holder.txtCase.setText(caseList.get(position).getCaseTitle());
-        prefshelper=new Prefshelper(context);
-        holder.txtNumber.setText(Utils.getUserPreferences(context,Prefshelper.SELECTED_DATE));
-        cd=new ConnectionDetector(context);
-        if(!cd.isConnectingToInternet())
-        {
-            List<CaseListModel> list=caseList.get(position).getCaseArrayList();
-            newList=new ArrayList<>();
-            String caseId=caseList.get(position).getCaseId();
-            for(int i=0; i<list.size(); i++)
-            {
-
-                if((list.get(i).getCaseId()).equalsIgnoreCase(caseId))
-                {
-
-                    newList.add(list.get(i));
-
-                }
-
-            }
-
-
+        public SearchCaseListViewHolder(View itemView) {
+            super(itemView);
+            txtTitle=(TextView) itemView.findViewById(R.id.textView_title);
+            txtDate=(TextView) itemView.findViewById(R.id.textView_date);
         }
-
-        rowView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Intent intent=new Intent(context, CaseDetailActivity.class);
-                intent.putExtra("cnumber",caseList.get(position).getCaseNumber());
-                intent.putExtra("id", caseList.get(position).getCaseId());
-                intent.putExtra("ctype",caseList.get(position).getCaseType());
-                intent.putExtra("ctitle", caseList.get(position).getCaseTitle());
-                intent.putExtra("court",caseList.get(position).getCourtName());
-                intent.putExtra("status", caseList.get(position).getCaseStatus());
-                intent.putExtra("sdate",caseList.get(position).getCaseStartDate());
-                intent.putExtra("oname", caseList.get(position).getCounsellorName());
-                intent.putExtra("ocontact",caseList.get(position).getCounsellorContact());
-                intent.putExtra("rname", caseList.get(position).getRetainName());
-                intent.putExtra("rcontact",caseList.get(position).getRetainContact());
-                if(cd.isConnectingToInternet()) {
-                    intent.putExtra("list1", (Serializable) caseList.get(position).getCaseArrayList());
-                }
-                else
-                {
-                    if(newList!=null)
-                    {
-                        intent.putExtra("list1", (Serializable) newList);
-                    }
-                }
-                context.startActivity(intent);
-
-            }
-        });
-        return rowView;
     }
-
 }

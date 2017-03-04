@@ -3,21 +3,19 @@ package com.eweblog.fragment;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.eweblog.MainAcitivity;
 import com.eweblog.R;
-import com.eweblog.CorporateUserMainActivity;
-import com.eweblog.adapter.UserAdapter;
-import com.eweblog.model.CaseListModel;
+import com.eweblog.adapter.UserListAdapter;
 import com.eweblog.model.ChildUsersList;
 
 import java.util.ArrayList;
@@ -26,8 +24,11 @@ import java.util.List;
 
 public class InactiveUsersFragement extends Fragment {
     List<ChildUsersList> childUsersLists=new ArrayList<>();
-    UserAdapter userAdapter;
+    UserListAdapter userListAdapter;
     RecyclerView recyclerView;
+    DividerItemDecoration mDividerItemDecoration;
+    LinearLayoutManager mLayoutManager;
+    TextView noUser;
 
     public InactiveUsersFragement() {
         // Required empty public constructor
@@ -45,9 +46,14 @@ public class InactiveUsersFragement extends Fragment {
         // Inflate the layout for this fragment
          View rootview= inflater.inflate(R.layout.fragment_case_list, container, false);
         recyclerView=(RecyclerView)rootview.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-        userAdapter=new UserAdapter(getActivity(),childUsersLists);
-        recyclerView.setAdapter(userAdapter);
+        noUser=(TextView) rootview.findViewById(R.id.no_user);
+        mLayoutManager=new LinearLayoutManager(getActivity().getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        userListAdapter =new UserListAdapter(getActivity(),childUsersLists);
+        mDividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                mLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(mDividerItemDecoration);
+        recyclerView.setAdapter(userListAdapter);
 
         return  rootview;
     }
@@ -80,11 +86,20 @@ public class InactiveUsersFragement extends Fragment {
             }
         });
     }
+    // This method is being called from main activity and then list is shown
     public void inflateList(List<ChildUsersList> childUsers)
     {
+        noUser.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
         childUsersLists.clear();
         childUsersLists.addAll(childUsers);
-        userAdapter.notifyDataSetChanged();
-
+        userListAdapter.notifyDataSetChanged();
+    }
+    // This method is being called from main activity and there are no users
+    public void noUsers()
+    {
+        recyclerView.setVisibility(View.GONE);
+        noUser.setVisibility(View.VISIBLE);
+        noUser.setText("No inactive users");
     }
 }

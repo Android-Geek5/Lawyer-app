@@ -12,6 +12,11 @@ import com.android.volley.toolbox.Volley;
 /**
  * Created by android_dev2 on 21/5/15.
  */
+
+/*
+Singleton class for making Requests using the Volley library
+ */
+
 public class VolleySingleton
 {
 private static VolleySingleton instance;

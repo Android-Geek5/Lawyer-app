@@ -13,6 +13,11 @@ import com.eweblog.R;
 import com.eweblog.ViewUsersActivity;
 import com.eweblog.ViewCasesActivity;
 
+
+/*
+*Main screen for Corporate user
+ */
+
 public class CorporateUserMainFragment extends Fragment {
    LinearLayout viewUserLayout,viewCaseLayout,addCaseLayout;
 

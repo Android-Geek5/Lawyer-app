@@ -27,9 +27,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
@@ -40,7 +40,6 @@ import java.util.Map;
 public class OTPScreenActivity extends AppCompatActivity {
     Button btnRegister;
     EditText edtOtp;
-    Prefshelper prefshelper;
     String otp;
     TextView txtNotReceived;
     ConnectionDetector cd;
@@ -53,10 +52,8 @@ public class OTPScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otpscreen);
         cd = new ConnectionDetector(OTPScreenActivity.this);
         edtOtp = (EditText) findViewById(R.id.password);
-        prefshelper = new Prefshelper(OTPScreenActivity.this);
         btnRegister = (Button) findViewById(R.id.email_sign_in_button);
         txtNotReceived = (TextView) findViewById(R.id.textView);
-
         txtNotReceived.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,13 +122,13 @@ public class OTPScreenActivity extends AppCompatActivity {
 
                         Log.e("error", response);
                         if (serverCode.equalsIgnoreCase("0")) {
-                            Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+                            Utils.showToast(OTPScreenActivity.this, serverMessage);
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
-                            if (Utils.getUserPreferencesBoolean(OTPScreenActivity.this, Prefshelper.COMMON_PAID)) {
-                                if (Utils.getUserPreferencesBoolean(OTPScreenActivity.this, Prefshelper.USER_EMAIL_VERIFICATION_STATUS)) {
-                                    Utils.storeUserPreferencesBoolean(OTPScreenActivity.this, Prefshelper.USER_MOBILE_VERIFICATION_STATUS, true);
-                                    Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+                            if (Utils.getUserPreferencesBoolean(OTPScreenActivity.this, UserInfo.COMMON_PAID)) {
+                                if (Utils.getUserPreferencesBoolean(OTPScreenActivity.this, UserInfo.USER_EMAIL_VERIFICATION_STATUS)) {
+                                    Utils.storeUserPreferencesBoolean(OTPScreenActivity.this, UserInfo.USER_MOBILE_VERIFICATION_STATUS, true);
+                                    Utils.showToast(OTPScreenActivity.this, serverMessage);
                                     Intent intent = new Intent(OTPScreenActivity.this, SplashScreenActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -156,8 +153,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(OTPScreenActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
+                        Utils.showToast(OTPScreenActivity.this, "No Internet Connection");
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                     } else if (error instanceof ServerError) {
@@ -173,9 +169,9 @@ public class OTPScreenActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("user_id", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_ID));
-                    params.put("user_security_hash", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_SECURITY_HASH));
-                    params.put("user_otp", otp);
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_SECURITY_HASH));
+                    params.put(UserInfo.USER_OTP, otp);
                     Log.e("VERIFY OTP REQUEST", params.toString());
                     return params;
                 }
@@ -209,13 +205,12 @@ public class OTPScreenActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-
+                        Utils.showToast(OTPScreenActivity.this,serverMessage);
 
                         if (serverCode.equalsIgnoreCase("0")) {
-                            Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
-                            Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
 
 
                         }
@@ -232,8 +227,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(OTPScreenActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
+                        Utils.showToast(OTPScreenActivity.this, "No Internet Connection");
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                     } else if (error instanceof ServerError) {
@@ -249,8 +243,8 @@ public class OTPScreenActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("user_id", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_ID));
-                    params.put("user_security_hash", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_SECURITY_HASH));
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_SECURITY_HASH));
                     Log.e("RESEND OTP REQUEST", params.toString());
                     return params;
                 }
@@ -303,10 +297,10 @@ public class OTPScreenActivity extends AppCompatActivity {
 
 
                     if (serverCode.equalsIgnoreCase("0")) {
-                        Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+                        Utils.showToast(OTPScreenActivity.this, serverMessage);
                     }
                     if (serverCode.equalsIgnoreCase("1")) {
-                        Toast.makeText(OTPScreenActivity.this, serverMessage, Toast.LENGTH_LONG).show();
+                        Utils.showToast(OTPScreenActivity.this, serverMessage);
                         Utils.clearData(OTPScreenActivity.this);
                         finish();
                     }
@@ -323,8 +317,7 @@ public class OTPScreenActivity extends AppCompatActivity {
                 pDialog.dismiss();
                 //  VolleyLog.d("", "Error: " + error.getMessage());
                 if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                    Toast.makeText(OTPScreenActivity.this, "No Internet Connection",
-                            Toast.LENGTH_LONG).show();
+                    Utils.showToast(OTPScreenActivity.this, "No Internet Connection");
                 } else if (error instanceof AuthFailureError) {
                     VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                 } else if (error instanceof ServerError) {
@@ -340,8 +333,8 @@ public class OTPScreenActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("user_id", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_ID));
-                params.put("user_security_hash", Utils.getUserPreferences(OTPScreenActivity.this, Prefshelper.USER_SECURITY_HASH));
+                params.put("user_id", Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_ID));
+                params.put("user_security_hash", Utils.getUserPreferences(OTPScreenActivity.this, UserInfo.USER_SECURITY_HASH));
                 Log.e("RESEND EMAIL REQUEST", params.toString());
                 return params;
             }

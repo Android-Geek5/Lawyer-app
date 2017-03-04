@@ -32,26 +32,28 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.eweblog.adapter.SearchCaseListAdapter;
+import com.eweblog.adapter.CaseListAdapter;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.SlidingTabLayout;
 import com.eweblog.common.VolleySingleton;
-import com.eweblog.model.SearchCaseList;
+import com.eweblog.model.CaseList;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SearchActivity extends AppCompatActivity {
     SlidingTabLayout tabs;
     LinearLayout llBack,llSearch,llUnderline;
     TextView txtType, txtCaseTitle, txtJudge,txtWeekly,txtAll;
-    Prefshelper prefshelper;
     LinearLayout llFilters;
     Spinner spinner;
     EditText edtSearch;
@@ -59,11 +61,13 @@ public class SearchActivity extends AppCompatActivity {
     int search_period=0;
     int search_in=0;
     RecyclerView recyclerView;
-    SearchCaseListAdapter searchCaseListAdapter;
-    List<SearchCaseList> searchCaseList=new ArrayList<>();
+    CaseListAdapter searchCaseListAdapter;
+    List<CaseList> caseList =new ArrayList<>();
     HashMap<String,String> hash = new HashMap<String,String>();
     List<String> commonList=new ArrayList<>();
     ArrayAdapter<String> caseStatusAdapter;
+    private SimpleDateFormat dateFormatForDisplaying = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
     int caseStatusId=0;
     int searchType=0; // 2 for search and 1 for advanced search
 
@@ -76,15 +80,14 @@ public class SearchActivity extends AppCompatActivity {
         inflateLayout();
         advancedOrSimpleSearch();
         onClickSubTabs();
-        search_in=1;
-        search_period=1;
+        search_in=1; //By default,search in is case type
+        search_period=2; //By default,search period is weekly
     }
 
     public void inflateToolbar()
     {
         Toolbar toolbar = (Toolbar) findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
-        prefshelper=new Prefshelper(this);
         spinner=(Spinner)toolbar.findViewById(R.id.spinner);
         edtSearch=(EditText)toolbar.findViewById(R.id.toolbar_title);
         llBack=(LinearLayout)toolbar.findViewById(R.id.imageView_back);
@@ -101,6 +104,7 @@ public class SearchActivity extends AppCompatActivity {
         llSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Utils.hideKeyboard(SearchActivity.this,view);
                 if(searchType==2) {
                     if (edtSearch.getText().toString() != null || !edtSearch.getText().toString().isEmpty())
                         search(edtSearch.getText().toString());
@@ -126,10 +130,10 @@ public class SearchActivity extends AppCompatActivity {
         txtAll=(TextView) findViewById(R.id.text_all);
         recyclerView=(RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        searchCaseListAdapter=new SearchCaseListAdapter(SearchActivity.this,searchCaseList);
+        searchCaseListAdapter=new CaseListAdapter(SearchActivity.this, caseList);
         recyclerView.setAdapter(searchCaseListAdapter);
     }
-
+   /** Select type,title and judge on click of tabs **/
     public void onClickMainTabs()
     {
         txtType.setOnClickListener(new View.OnClickListener() {
@@ -161,12 +165,13 @@ public class SearchActivity extends AppCompatActivity {
         });
 
     }
+    /** Select weekly and all tabs on click of sub tabs**/
     public void onClickSubTabs()
     {
         txtWeekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search_period=1;
+                search_period=2;
                 v4.setVisibility(View.VISIBLE);
                 v5.setVisibility(View.INVISIBLE);
             }
@@ -174,17 +179,17 @@ public class SearchActivity extends AppCompatActivity {
         txtAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search_period=2;
+                search_period=1;
                 v5.setVisibility(View.VISIBLE);
                 v4.setVisibility(View.INVISIBLE);
             }
         });
     }
-
+   /** Show screen according to search type-Simple or advance search ***/
     public void advancedOrSimpleSearch()
     {
 
-        if(Utils.getUserPreferences(SearchActivity.this,Prefshelper.SEARCH).equalsIgnoreCase("advanced_search"))
+        if(Utils.getUserPreferences(SearchActivity.this, UserInfo.SEARCH).equalsIgnoreCase("advanced_search"))
         {
             llFilters.setVisibility(View.GONE);
             spinner.setVisibility(View.VISIBLE);
@@ -202,10 +207,9 @@ public class SearchActivity extends AppCompatActivity {
             searchType=2;
         }
     }
-
+    /** SEARCH API **/
     public void search(final String searchKeyword)
     {
-        Utils.hideSoftKeyboard(SearchActivity.this);
         try {
             final ProgressDialog pDialog = new ProgressDialog(SearchActivity.this);
             pDialog.setMessage("Loading...");
@@ -225,7 +229,7 @@ public class SearchActivity extends AppCompatActivity {
                         String serverMessage = object.getString("message");
                         Toast.makeText(SearchActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-                        searchCaseList.clear();
+                        caseList.clear();
                         searchCaseListAdapter.notifyDataSetChanged();
 
                         if (serverCode.equalsIgnoreCase("0")) {
@@ -238,11 +242,12 @@ public class SearchActivity extends AppCompatActivity {
                                 for(int i=0;i<jsonArray.length();i++)
                                 {
                                     JSONObject jsonObject=jsonArray.getJSONObject(i);
-                                    SearchCaseList searchCaseListObject=new SearchCaseList();
-                                    searchCaseListObject.setCase_id(jsonObject.getInt(Prefshelper.CASE_ID));
-                                    searchCaseListObject.setCase_date(jsonObject.getString(Prefshelper.CASE_DATE));
-                                    searchCaseListObject.setCase_title(jsonObject.getString(Prefshelper.CASE_TITLE));
-                                    searchCaseList.add(searchCaseListObject);
+                                    CaseList caseListObject =new CaseList();
+                                    caseListObject.setCase_id(jsonObject.getInt(UserInfo.CASE_ID));
+                                    Date date1 = dateFormatForDisplaying.parse(jsonObject.getString(UserInfo.CASE_DETAIL_HEARING_DATE));
+                                    caseListObject.setCase_date(dateFormat.format(date1));
+                                    caseListObject.setCase_title(jsonObject.getString(UserInfo.CASE_TITLE));
+                                    caseList.add(caseListObject);
                                 }
                                 searchCaseListAdapter.notifyDataSetChanged();
                             }
@@ -277,11 +282,11 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put(Prefshelper.USER_ID, Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_ID));
-                    params.put(Prefshelper.USER_SECURITY_HASH, Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_SECURITY_HASH));
-                    params.put(Prefshelper.CASE_SEARCH_IN, String.valueOf(search_in));
-                    params.put(Prefshelper.CASE_SEARCH_KEYWORD, searchKeyword);
-                    params.put(Prefshelper.CASE_SEARCH_PERIOD,String.valueOf(search_period));
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_SECURITY_HASH));
+                    params.put(UserInfo.CASE_SEARCH_IN, String.valueOf(search_in));
+                    params.put(UserInfo.CASE_SEARCH_KEYWORD, searchKeyword);
+                    params.put(UserInfo.CASE_SEARCH_PERIOD,String.valueOf(search_period));
                     Log.e("SEARCH REQUEST",params.toString());
                     return params;
                 }
@@ -297,9 +302,9 @@ public class SearchActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+    /** ADVANCED SEARCH API **/
     public void advanceSearch(final String searchKeyword)
     {
-        Utils.hideSoftKeyboard(SearchActivity.this);
         try {
             final ProgressDialog pDialog = new ProgressDialog(SearchActivity.this);
             pDialog.setMessage("Loading...");
@@ -319,7 +324,7 @@ public class SearchActivity extends AppCompatActivity {
                         String serverMessage = object.getString("message");
                         Toast.makeText(SearchActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-                        searchCaseList.clear();
+                        caseList.clear();
                         searchCaseListAdapter.notifyDataSetChanged();
 
                         if (serverCode.equalsIgnoreCase("0")) {
@@ -332,11 +337,12 @@ public class SearchActivity extends AppCompatActivity {
                                 for(int i=0;i<jsonArray.length();i++)
                                 {
                                     JSONObject jsonObject=jsonArray.getJSONObject(i);
-                                    SearchCaseList searchCaseListObject=new SearchCaseList();
-                                    searchCaseListObject.setCase_id(jsonObject.getInt(Prefshelper.CASE_ID));
-                                    searchCaseListObject.setCase_date(jsonObject.getString(Prefshelper.CASE_DATE));
-                                    searchCaseListObject.setCase_title(jsonObject.getString(Prefshelper.CASE_TITLE));
-                                    searchCaseList.add(searchCaseListObject);
+                                    CaseList caseListObject =new CaseList();
+                                    caseListObject.setCase_id(jsonObject.getInt(UserInfo.CASE_ID));
+                                    Date date2 = dateFormatForDisplaying.parse(jsonObject.getString(UserInfo.CASE_DETAIL_HEARING_DATE));
+                                    caseListObject.setCase_date(dateFormat.format(date2));
+                                    caseListObject.setCase_title(jsonObject.getString(UserInfo.CASE_TITLE));
+                                    caseList.add(caseListObject);
                                 }
                                 searchCaseListAdapter.notifyDataSetChanged();
                             }
@@ -371,10 +377,10 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put(Prefshelper.USER_ID, Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_ID));
-                    params.put(Prefshelper.USER_SECURITY_HASH, Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_SECURITY_HASH));
-                    params.put(Prefshelper.CASE_STATUS_ID,searchKeyword);
-                    params.put(Prefshelper.CASE_SEARCH_PERIOD,String.valueOf(search_period));
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_SECURITY_HASH));
+                    params.put(UserInfo.CASE_STATUS_ID,searchKeyword);
+                    params.put(UserInfo.CASE_SEARCH_PERIOD,String.valueOf(search_period));
                     Log.e("SEARCH REQUEST",params.toString());
                     return params;
                 }
@@ -390,6 +396,8 @@ public class SearchActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+    /** GET CASE STATUS FOR ADVANCE SEARCH **/
     public void getCaseStatuses() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(SearchActivity.this);
@@ -417,8 +425,6 @@ public class SearchActivity extends AppCompatActivity {
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONArray jsonArray=object.getJSONArray("data");
-                                    // CommonList commonListObject1=new CommonList(0,"Case Status");
-                                    // commonList.add(commonListObject1);
                                     commonList.add("Case Status");
                                     hash.put("0","Case Status");
                                     if(jsonArray.length()>0)
@@ -430,8 +436,6 @@ public class SearchActivity extends AppCompatActivity {
                                             String name=jsonObject.getString("case_status_name");
                                             hash.put(id,name);
                                             commonList.add(name);
-                                            //CommonList commonListObject=new CommonList(id,name);
-                                            // commonList.add(commonListObject);
                                         }
                                     }
 
@@ -509,8 +513,8 @@ public class SearchActivity extends AppCompatActivity {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
 
-                    params.put("user_id", Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_ID));
-                    params.put("user_security_hash", Utils.getUserPreferences(SearchActivity.this,Prefshelper.USER_SECURITY_HASH));
+                    params.put("user_id", Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(SearchActivity.this, UserInfo.USER_SECURITY_HASH));
 
                     return params;
                 }

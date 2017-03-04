@@ -27,9 +27,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.eweblog.adapter.ViewUserAdapter;
+import com.eweblog.adapter.UserViewPagerAdapter;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.SlidingTabLayout;
 import com.eweblog.common.VolleySingleton;
 import com.eweblog.fragment.ActiveUsersFragement;
@@ -46,7 +46,7 @@ import java.util.Map;
 
 public class ViewUsersActivity extends AppCompatActivity {
     ViewPager pager;
-    ViewUserAdapter adapter;
+    UserViewPagerAdapter adapter;
     SlidingTabLayout tabs;
     CharSequence Titles[]={"Active","Inactive"};
     int Numboftabs =2;
@@ -63,7 +63,7 @@ public class ViewUsersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         txtTitle = (TextView) findViewById(R.id.toolbar_title);
         txtTitle.setText("View Users");
-        adapter =  new ViewUserAdapter(getSupportFragmentManager(),Titles,Numboftabs);
+        adapter =  new UserViewPagerAdapter(getSupportFragmentManager(),Titles,Numboftabs);
 
         // Assigning ViewPager View and setting the adapter
         pager = (ViewPager) findViewById(R.id.pager);
@@ -105,7 +105,7 @@ public class ViewUsersActivity extends AppCompatActivity {
         });
         getChildUsers();
     }
-
+  /* Fetch the list of active and inactive users in main activity and then pass the data to fragments**/
     public void getChildUsers()
     {
         try {
@@ -125,7 +125,7 @@ public class ViewUsersActivity extends AppCompatActivity {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Toast.makeText(ViewUsersActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                        Utils.showToast(ViewUsersActivity.this, serverMessage);
 
                         if (serverCode.equalsIgnoreCase("0")) {
 
@@ -133,36 +133,49 @@ public class ViewUsersActivity extends AppCompatActivity {
                         if (serverCode.equalsIgnoreCase("1")) {
                             JSONObject data=object.getJSONObject("data");
                             JSONArray inactiveUsers=data.getJSONArray("inactive_users");
+                            List<ChildUsersList> childUsersLists=new ArrayList<>();
+                            // fetch inactive users first
                             if(inactiveUsers.length()>0)
                             {
-                                List<ChildUsersList> childUsersLists=new ArrayList<>();
                                 for(int i = 0; i<inactiveUsers.length(); i++)
                             {
                                 JSONObject jsonObject=inactiveUsers.getJSONObject(i);
                                 ChildUsersList childUsersListObject=new ChildUsersList();
-                                childUsersListObject.setId(jsonObject.getInt(Prefshelper.USER_ID));
-                                childUsersListObject.setUserDetail(jsonObject.getString(Prefshelper.USER_DETAILS));
-                                childUsersListObject.setCasesCount(jsonObject.getInt(Prefshelper.CASES_COUNT));
+                                childUsersListObject.setId(jsonObject.getInt(UserInfo.USER_ID));
+                                childUsersListObject.setUserDetail(jsonObject.getString(UserInfo.USER_DETAILS));
+                                childUsersListObject.setCasesCount(jsonObject.getInt(UserInfo.CASES_COUNT));
                                 childUsersLists.add(childUsersListObject);
                             }
-                                inflateInactiveUsers(childUsersLists);
+                                //Now send data to inactive fragment
+                                inflateInactiveUsers(childUsersLists,false);
+                            }
+                            else
+                            {
+                                //In case of no inactive users,show null layout
+                                inflateInactiveUsers(childUsersLists,true);
                             }
                             JSONArray activeUsers=data.getJSONArray("active_users");
+                            List<ChildUsersList> childUsersLists2=new ArrayList<>();
+                            // fetch active users first
                             if(activeUsers.length()>0)
                             {
-                                List<ChildUsersList> childUsersLists2=new ArrayList<>();
                                 for(int i = 0; i<activeUsers.length(); i++)
                                 {
                                     JSONObject jsonObject=activeUsers.getJSONObject(i);
                                     ChildUsersList childUsersListObject=new ChildUsersList();
-                                    childUsersListObject.setId(jsonObject.getInt(Prefshelper.USER_ID));
-                                    childUsersListObject.setUserDetail(jsonObject.getString(Prefshelper.USER_DETAILS));
-                                    childUsersListObject.setCasesCount(jsonObject.getInt(Prefshelper.CASES_COUNT));
+                                    childUsersListObject.setId(jsonObject.getInt(UserInfo.USER_ID));
+                                    childUsersListObject.setUserDetail(jsonObject.getString(UserInfo.USER_DETAILS));
+                                    childUsersListObject.setCasesCount(jsonObject.getInt(UserInfo.CASES_COUNT));
                                     childUsersLists2.add(childUsersListObject);
                                 }
-                                inflateActiveUsers(childUsersLists2);
+                                //Now send data to active fragment
+                                inflateActiveUsers(childUsersLists2,false);
                             }
-
+                            else
+                            {
+                                //In case of no active users,show null layout
+                                inflateActiveUsers(childUsersLists2,true);
+                            }
                         }
 
 
@@ -177,8 +190,7 @@ public class ViewUsersActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(ViewUsersActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
+                       Utils.showToast(ViewUsersActivity.this, "No Internet Connection");
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                     } else if (error instanceof ServerError) {
@@ -194,8 +206,8 @@ public class ViewUsersActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put(Prefshelper.USER_ID, Utils.getUserPreferences(ViewUsersActivity.this,Prefshelper.USER_ID));
-                    params.put(Prefshelper.USER_SECURITY_HASH, Utils.getUserPreferences(ViewUsersActivity.this,Prefshelper.USER_SECURITY_HASH));
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(ViewUsersActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(ViewUsersActivity.this, UserInfo.USER_SECURITY_HASH));
 
                     Log.e("VIEW CHILD REQUEST",params.toString());
                     return params;
@@ -212,28 +224,34 @@ public class ViewUsersActivity extends AppCompatActivity {
         }
     }
 
-    public void inflateInactiveUsers(List<ChildUsersList> childUsersList)
+    public void inflateInactiveUsers(List<ChildUsersList> childUsersList,boolean noUser)
     {
         Fragment reference = null;
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-        //int size=bottomBar.getMaxItemCount();
+
         for (int i = 0; i < fragmentList.size(); i++) {
             reference = fragmentList.get(i);
             if (reference != null && reference instanceof InactiveUsersFragement) {
-                ((InactiveUsersFragement) reference).inflateList(childUsersList);
+                if(noUser)
+                    ((InactiveUsersFragement) reference).noUsers();   // No users
+                else
+                ((InactiveUsersFragement) reference).inflateList(childUsersList); //Pass list of users
             }
         }
     }
 
-    public void inflateActiveUsers(List<ChildUsersList> childUsersList)
+    public void inflateActiveUsers(List<ChildUsersList> childUsersList,boolean noUser)
     {
         Fragment reference = null;
         List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
-        //int size=bottomBar.getMaxItemCount();
+
         for (int i = 0; i < fragmentList.size(); i++) {
             reference = fragmentList.get(i);
             if (reference != null && reference instanceof ActiveUsersFragement) {
-                ((ActiveUsersFragement) reference).inflateList(childUsersList);
+                if(noUser)
+                    ((ActiveUsersFragement) reference).noUsers(); // No users
+                else
+                ((ActiveUsersFragement) reference).inflateList(childUsersList); //Pass list of users
             }
         }
     }

@@ -21,8 +21,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+/* Class to upload image using Volley multi part request.
+It is used because we are sending the parameters file and strings both while using change profile image API
+ */
 
-public class MultipartRequest extends Request<String> {
+    public class MultipartRequest extends Request<String> {
     private MultipartEntityBuilder entity = MultipartEntityBuilder.create();
     private final Response.Listener<String> mListener;
     private final File file;
@@ -31,7 +34,6 @@ public class MultipartRequest extends Request<String> {
     public MultipartRequest(String url, Response.Listener<String> listener, Response.ErrorListener errorListener, File file, HashMap<String, String> params)
     {
         super(Method.POST, url, errorListener);
-
         mListener = listener;
         this.file = file;
         this.params = params;
@@ -44,7 +46,7 @@ public class MultipartRequest extends Request<String> {
 
     private void buildMultipartEntity()
     {
-        entity.addBinaryBody("user_profile_image", file, ContentType.create("image/jpeg"), file.getName());
+        entity.addBinaryBody(UserInfo.USER_PROFILE_IMAGE, file, ContentType.create("image/jpeg"), file.getName());
         entity.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
         entity.setLaxMode().setBoundary("xx").setCharset(Charset.forName("UTF-8"));
 

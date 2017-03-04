@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -30,17 +31,15 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
-import com.eweblog.MainAcitivity;
+import com.eweblog.LoginActivity;
 import com.eweblog.OTPScreenActivity;
 import com.eweblog.R;
-import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -51,13 +50,15 @@ public class FragmentCorporateLogin extends Fragment {
 
     EditText edtContact,edtPwd, edtCorporateId;
     String strContact, strPwd, strCorporateId, userID, userSecHash, userName, userEmail,
-            userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl;
+            userContact, userEmailVerified, userMobileVerified,userStatus, imgUrl,userStateOfPractice2,userCityofPractice2;;
     String lastName,stateOfPractise,cityOfPractise,specialization;
     TextView register;
-    Prefshelper prefshelper;
     ConnectionDetector cd;
     int corporatePlanId=0;
     int groupId=0;
+    int parentId=0;
+    int expiry=0;
+    String versionName,versionResponse,linkDownload;
 
     public FragmentCorporateLogin() {
         // Required empty public constructor
@@ -80,11 +81,13 @@ public class FragmentCorporateLogin extends Fragment {
         edtPwd = (EditText) rootview.findViewById(R.id.password);
         register=(TextView) rootview.findViewById(R.id.textView_register);
         edtCorporateId= (EditText) rootview.findViewById(R.id.id);
-        prefshelper=new Prefshelper(getActivity());
+        versionName=Utils.GetAppVersion(getActivity());
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.showToast(getActivity(),"Business user");
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(MapAppConstant.REGISTER_AS_PAID));
+                startActivity(i);
             }
         });
         Button mEmailSignInButton = (Button)rootview.findViewById(R.id.email_sign_in_button);
@@ -101,7 +104,7 @@ public class FragmentCorporateLogin extends Fragment {
                     edtContact.setError("Field must not be empty.");
                     focusView = edtContact;
                     cancelLogin = true;
-                }else if (!isValidPhone((strContact))) {
+                }else if (!Utils.isValidPhone((strContact))) {
                     edtContact.setError("Mobile number must be of digits 10.");
                     focusView = edtContact;
                     cancelLogin = true;
@@ -111,7 +114,7 @@ public class FragmentCorporateLogin extends Fragment {
                     edtPwd.setError("Field must not be empty.");
                     focusView = edtPwd;
                     cancelLogin = true;
-                } else if (!isValidPass(strPwd)) {
+                } else if (!Utils.isValidPass(strPwd)) {
                     edtPwd.setError("Password must be of digits 6.");
                     focusView = edtPwd;
                     cancelLogin = true;
@@ -142,12 +145,6 @@ public class FragmentCorporateLogin extends Fragment {
 
         return  rootview;
     }
-    private boolean isValidPhone(String pass) {
-        return pass != null && pass.length() == 10;
-    }
-    private boolean isValidPass(String pass) {
-        return pass != null && pass.length() >= 6;
-    }
 
     public void dialog() {
         final Dialog dialog = new Dialog(getActivity());
@@ -171,9 +168,9 @@ public class FragmentCorporateLogin extends Fragment {
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
-
-            Log.e("CLogin URL", MapAppConstant.API + "login");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "login", new Response.Listener<String>() {
+            String CORPORATE_LOGIN_URL=MapAppConstant.API + MapAppConstant.LOGIN;
+            Log.e("CLogin URL", CORPORATE_LOGIN_URL);
+            StringRequest sr = new StringRequest(Request.Method.POST, CORPORATE_LOGIN_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
@@ -183,21 +180,15 @@ public class FragmentCorporateLogin extends Fragment {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
-                        if (serverCode.equalsIgnoreCase("0")) {
-                          /*  if(serverMessage.contains("|"))
-                            {
 
-                                Toast.makeText(getActivity(),  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
-                            }*/
+                        if (serverCode.equalsIgnoreCase("0")) {
+                            Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                        }
+                        if (serverCode.equalsIgnoreCase("-1")) {
+                            Utils.showToast(getActivity(), serverMessage);
                         }
                         if (serverCode.equalsIgnoreCase("1") || serverCode.equalsIgnoreCase("2")) {
                             try {
-                                //if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
                                     userID=jsonObject.getString("user_id");
                                     userSecHash=jsonObject.getString("user_security_hash");
@@ -207,45 +198,74 @@ public class FragmentCorporateLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
-                                    imgUrl=jsonObject.getString("user_profile_image");
+                                if(jsonObject.getString(UserInfo.USER_PROFILE_IMAGE).equalsIgnoreCase(""))
+                                {imgUrl="";}
+                                else {
+                                    imgUrl = jsonObject.getString(UserInfo.USER_PROFILE_IMAGE_URL);
+                                }
                                     groupId=jsonObject.getInt("group_id");
-                                    lastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
-                                    stateOfPractise=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
-                                    cityOfPractise=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
-                                    specialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
-                                    corporatePlanId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
-                              //  }
+                                    parentId=jsonObject.getInt(UserInfo.USER_PARENT_ID);
+                                    lastName=jsonObject.getString(UserInfo.USER_LAST_NAME);
+                                    stateOfPractise=jsonObject.getString(UserInfo.USER_STATE_OF_PRACTISE);
+                                    cityOfPractise=jsonObject.getString(UserInfo.USER_CITY_OF_PRACTISE);
+                                    specialization=jsonObject.getString(UserInfo.USER_SPECIALIZATION);
+                                    corporatePlanId=jsonObject.getInt(UserInfo.CORPORATE_PLANS_ID);
+                                    userStateOfPractice2=jsonObject.getString(UserInfo.USER_STATE_OF_PRACTISE1);
+                                    userCityofPractice2=jsonObject.getString(UserInfo.USER_CITY_OF_PRACTISE1);
+                                JSONObject configurations=jsonObject.getJSONObject(UserInfo.CONFIGURATIONS);
+                                versionResponse=configurations.getString(UserInfo.VERSION);
+                                linkDownload=configurations.getString(UserInfo.URL_DOWNLOAD);
+                                expiry=jsonObject.getInt(UserInfo.USER_IS_EXPIRED);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Utils.saveTypeOfUser(getActivity(),groupId);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
+                            Utils.saveTypeOfUser(getActivity(),groupId,parentId);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_ID,userID);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_SECURITY_HASH,userSecHash);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_EMAIL,userEmail);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_NAME,userName);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CONTACT,userContact);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATUS,userStatus);
                             if(userEmailVerified.equalsIgnoreCase("1"))
-                            Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
+                            Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_EMAIL_VERIFICATION_STATUS,true);
                             else
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_EMAIL_VERIFICATION_STATUS,false);
                             if(userMobileVerified.equalsIgnoreCase("1"))
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_MOBILE_VERIFICATION_STATUS,true);
                             else
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,lastName);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,stateOfPractise);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,cityOfPractise);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,specialization);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_MOBILE_VERIFICATION_STATUS,false);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_PROFILE_IMAGE_URL,imgUrl);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_LAST_NAME,lastName);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATE_OF_PRACTISE,stateOfPractise);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CITY_OF_PRACTISE,cityOfPractise);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATE_OF_PRACTISE1,userStateOfPractice2);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CITY_OF_PRACTISE1,userCityofPractice2);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_SPECIALIZATION,specialization);
                             Utils.checkSmsAlert(getActivity(),corporatePlanId);
                             if(serverCode.equalsIgnoreCase("1") ) {
-                                Intent intent = new Intent(getActivity(), MainAcitivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
+
+                                if(versionName.equalsIgnoreCase(versionResponse))
+                                {
+                                    Log.e("Version","Same");
+
+                                    if(expiry==0) {
+                                        ((LoginActivity)getActivity()).getAllCases();
+                                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                                    }
+                                    else if(expiry==1)
+                                    {dialogExpiry(1,serverMessage);}
+                                    else if(expiry==2)
+                                    {dialogExpiry(2,serverMessage);}
+                                }
+                                else{
+                                    Log.e("Version","Not same");
+                                    dialogUpdate(linkDownload);
+                                }
+
                             }
                             else if(serverCode.equalsIgnoreCase("2"))
                             {
+                                Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                                 Intent intent = new Intent(getActivity(), OTPScreenActivity.class);
                                 startActivity(intent);
                             }
@@ -304,8 +324,61 @@ public class FragmentCorporateLogin extends Fragment {
     public void onResume() {
 
         super.onResume();
-
-
     }
 
+    public void dialogUpdate(final String url) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.update_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        dialog.show();
+    }
+    public void dialogExpiry(int expiryInteger,final String serverMessage) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.update_layout);
+        TextView textView=(TextView) dialog.findViewById(R.id.text1);
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+        if(expiryInteger==1) {
+            textView.setText("Your package is about to expire.");
+            yes.setText("OK");
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    ((LoginActivity)getActivity()).getAllCases();
+                    Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                }
+            });
+        }
+        if(expiryInteger==2)
+        {
+            textView.setText("You subscription is expired. Please renew your package first to use unlimited services");
+            yes.setText("BUY NOW");
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(MapAppConstant.REGISTER_AS_PAID));
+                    startActivity(i);
+                }
+            });
+        }
+
+        dialog.show();
+    }
 }

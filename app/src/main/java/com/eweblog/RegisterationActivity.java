@@ -2,22 +2,17 @@ package com.eweblog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -33,15 +28,13 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class RegisterationActivity extends AppCompatActivity {
@@ -49,9 +42,7 @@ public class RegisterationActivity extends AppCompatActivity {
     Button btnRegister;
     EditText edtName,edtEmail,edtContact,edtPwd,edtCPwd,edtLastName;
     String strName, strEmail, strContact, strPwd, strCPwd, userID, userSecHash,strLastName;
-    Prefshelper prefshelper;
     LinearLayout layout;
-    String errorName, errorMobile, errorEmail, errorPassword, errorConfirm;
     ConnectionDetector cd;
 
     @Override
@@ -59,14 +50,8 @@ public class RegisterationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_registeration);
        inflateLayout();
-       /* layout.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Utils.hideSoftKeyboard(RegisterationActivity.this);
-            }
-        });*/
 
         cd=new ConnectionDetector(RegisterationActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +80,7 @@ public class RegisterationActivity extends AppCompatActivity {
 
 
     }
-
+    // Dialog for Internet check
     public void dialog() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -137,23 +122,23 @@ public class RegisterationActivity extends AppCompatActivity {
                             if(serverMessage.contains("|"))
                             {
 
-                                Toast.makeText(RegisterationActivity.this,  serverMessage.replace("|"," "),Toast.LENGTH_LONG).show();
+                                Utils.showToast(RegisterationActivity.this,  serverMessage.replace("|"," "));
                             }
                             else
                             {
-                                Toast.makeText(RegisterationActivity.this, serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
+                                Utils.showToast(RegisterationActivity.this, serverMessage.replace("|", ""));
                             }
 
                         }
                         if (serverCode.equalsIgnoreCase("1")) {
-                            Toast.makeText(RegisterationActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                           Utils.showToast(RegisterationActivity.this, serverMessage);
                             try {
                                 if ("1".equals(serverCode)) {
                                     JSONObject jsonObject=object.getJSONObject("data");
-                                    userID=jsonObject.getString("user_id");
-                                    userSecHash=jsonObject.getString("user_security_hash");
-                                    Utils.storeUserPreferences(RegisterationActivity.this,Prefshelper.USER_ID,userID);
-                                    Utils.storeUserPreferences(RegisterationActivity.this,Prefshelper.USER_SECURITY_HASH,userSecHash);
+                                    userID=jsonObject.getString(UserInfo.USER_ID);
+                                    userSecHash=jsonObject.getString(UserInfo.USER_SECURITY_HASH);
+                                    Utils.storeUserPreferences(RegisterationActivity.this, UserInfo.USER_ID,userID);
+                                    Utils.storeUserPreferences(RegisterationActivity.this, UserInfo.USER_SECURITY_HASH,userSecHash);
                                 }
 
                             } catch (Exception e) {
@@ -178,8 +163,7 @@ public class RegisterationActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(RegisterationActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
+                        Utils.showToast(RegisterationActivity.this, "No Internet Connection");
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                     } else if (error instanceof ServerError) {
@@ -195,12 +179,12 @@ public class RegisterationActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("user_name", strName);
-                    params.put("user_email", strEmail);
-                    params.put(Prefshelper.USER_LAST_NAME,strLastName);
-                    params.put("user_contact", strContact);
-                    params.put("user_login_password", strPwd);
-                    params.put("confirm_login_password", strCPwd);
+                    params.put(UserInfo.USER_NAME, strName);
+                    params.put(UserInfo.USER_EMAIL, strEmail);
+                    params.put(UserInfo.USER_LAST_NAME,strLastName);
+                    params.put(UserInfo.USER_CONTACT, strContact);
+                    params.put(UserInfo.USER_LOGIN_PASSWORD, strPwd);
+                    params.put(UserInfo.CONFIRM_LOGIN_PASSWORD, strCPwd);
                     Log.e("SIGNUP REQUEST",params.toString());
                     return params;
                 }
@@ -223,7 +207,6 @@ public void inflateLayout()
     edtContact = (EditText) findViewById(R.id.mobile);
     edtPwd = (EditText) findViewById(R.id.password);
     edtLastName=(EditText) findViewById(R.id.last_name);
-    prefshelper=new Prefshelper(RegisterationActivity.this);
     edtCPwd = (EditText) findViewById(R.id.confirm_password);
     layout=(LinearLayout) findViewById(R.id.email_login_form);
 }

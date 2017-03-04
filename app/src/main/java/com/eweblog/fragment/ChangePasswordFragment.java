@@ -30,11 +30,10 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.MainAcitivity;
 import com.eweblog.R;
-import com.eweblog.CorporateUserMainActivity;
 import com.eweblog.Utils;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
@@ -46,7 +45,6 @@ public class ChangePasswordFragment extends Fragment {
 
     EditText edtPwd,edtConfirmPwd;
     String strPwd, strConfirmPwd;
-    Prefshelper prefshelper;
     ConnectionDetector cd;
 
     public ChangePasswordFragment() {
@@ -64,7 +62,6 @@ public class ChangePasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootview = inflater.inflate(R.layout.fragment_change_password, container, false);
-        prefshelper=new Prefshelper(getActivity());
         MainAcitivity.txtTitle.setText("Change Password");
         cd=new ConnectionDetector(getActivity());
         edtPwd = (EditText) rootview.findViewById(R.id.password);
@@ -157,7 +154,7 @@ public class ChangePasswordFragment extends Fragment {
             pDialog.show();
             String URL_CHANGE_PASSWORD=MapAppConstant.API + MapAppConstant.CHANGE_PASSWORD;
             Log.e("CHANGE PASSWORD URL",URL_CHANGE_PASSWORD);
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "change_password", new Response.Listener<String>() {
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_CHANGE_PASSWORD, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
@@ -178,7 +175,7 @@ public class ChangePasswordFragment extends Fragment {
                                     JSONObject jsonObject=object.getJSONObject("data");
 
                                     String userSecHash=jsonObject.getString("user_security_hash");
-                                    Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
+                                    Utils.storeUserPreferences(getActivity(), UserInfo.USER_SECURITY_HASH,userSecHash);
 
                                 }
                             } catch (Exception e) {
@@ -219,8 +216,8 @@ public class ChangePasswordFragment extends Fragment {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-                    params.put("user_id", Utils.getUserPreferences(getActivity(),Prefshelper.USER_ID));
-                    params.put("user_security_hash", Utils.getUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH));
+                    params.put("user_id", Utils.getUserPreferences(getActivity(), UserInfo.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(getActivity(), UserInfo.USER_SECURITY_HASH));
                     params.put("user_login_password", strPwd);
                     params.put("confirm_login_password", strConfirmPwd);
                     Log.e("CHANGE PASSWORD REQ",params.toString());

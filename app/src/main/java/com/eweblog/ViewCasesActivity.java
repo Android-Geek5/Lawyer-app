@@ -29,7 +29,7 @@ public class ViewCasesActivity extends AppCompatActivity {
         imageBack=(LinearLayout) toolbar.findViewById(R.id.imageView_back);
         imageBack.setVisibility(View.VISIBLE);
         title=(TextView) toolbar.findViewById(R.id.toolbar_title);
-        title.setText("");
+        title.setText("View cases");
         llBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,6 +37,7 @@ public class ViewCasesActivity extends AppCompatActivity {
             }
         });
 
+        // Here show the calender to view cases
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.content_frame, new SelectDateFragment());

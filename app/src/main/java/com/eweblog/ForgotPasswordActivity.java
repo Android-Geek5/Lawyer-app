@@ -25,9 +25,9 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
@@ -38,7 +38,6 @@ import java.util.Map;
 public class ForgotPasswordActivity extends AppCompatActivity {
     Button btnRegister;
     EditText editText;
-    Prefshelper prefshelper;
     String strMobile;
     ConnectionDetector cd;
     
@@ -49,7 +48,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_forgot_password);
         editText =(EditText)findViewById(R.id.password);
-        prefshelper=new Prefshelper(ForgotPasswordActivity.this);
         btnRegister=(Button)findViewById(R.id.email_sign_in_button);
         cd=new ConnectionDetector(ForgotPasswordActivity.this);
         btnRegister.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +62,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     editText.setError("Field must not be empty.");
                     focusView = editText;
                     cancelLogin = true;
-                }else if (!isValidOTP((strMobile))) {
+                }else if (!Utils.isValidPhone((strMobile))) {
                     editText.setError("Mobile number must be of digits 10.");
                     focusView = editText;
                     cancelLogin = true;
@@ -106,25 +104,20 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-
-    private boolean isValidOTP(String pass)
-    {
-        return pass != null && pass.length() == 10;
-    }
-
+    /** Forgot password Api **/
     public void forgotPwd() {
         try {
             final ProgressDialog pDialog = new ProgressDialog(ForgotPasswordActivity.this);
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
-
-            Log.e("", "SIGNUP " + MapAppConstant.API + "forgot_password");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "forgot_password", new Response.Listener<String>() {
+            String FORGOT_PASSWORD_URL=MapAppConstant.API + MapAppConstant.FORGOT_PASSWORD;
+            Log.e("FORGOT PASSWORD URL", FORGOT_PASSWORD_URL);
+            StringRequest sr = new StringRequest(Request.Method.POST, FORGOT_PASSWORD_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
+                    Log.e("FORGOT PASSWORD RESP",response);
 
                     ////////
                     try {
@@ -135,13 +128,11 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
                         if (serverCode.equalsIgnoreCase("0"))
                         {
-                            Toast.makeText(ForgotPasswordActivity.this, serverMessage,Toast.LENGTH_LONG).show();
+                            Utils.showToast(ForgotPasswordActivity.this, serverMessage);
                         }
                         if (serverCode.equalsIgnoreCase("1"))
                         {
-                            Toast.makeText(ForgotPasswordActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-
-
+                            Utils.showToast(ForgotPasswordActivity.this, serverMessage);
                         }
                          finish();
 
@@ -156,8 +147,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     pDialog.dismiss();
                     //  VolleyLog.d("", "Error: " + error.getMessage());
                     if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(ForgotPasswordActivity.this, "No Internet Connection",
-                                Toast.LENGTH_LONG).show();
+                        Utils.showToast(ForgotPasswordActivity.this, "No Internet Connection");
                     } else if (error instanceof AuthFailureError) {
                         VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
                     } else if (error instanceof ServerError) {
@@ -173,10 +163,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<String, String>();
-/*
-                    params.put("user_id", prefshelper.getUserIdFromPreference());
-                    params.put("user_security_hash", prefshelper.getUserSecHashFromPreference());*/
-                    params.put("user_contact", strMobile);
+                    params.put(UserInfo.USER_CONTACT, strMobile);
 
                     return params;
                 }

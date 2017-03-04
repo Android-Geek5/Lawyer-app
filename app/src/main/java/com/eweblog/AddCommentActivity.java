@@ -2,19 +2,22 @@ package com.eweblog;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,48 +33,54 @@ import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 public class AddCommentActivity extends AppCompatActivity{
 
- /*   Spinner sprNDay, sprNMonth, sprNYear;*/
     Button btnAdd;
     EditText edtComments, edtNextDate;
     TextView txtNextError;
-    ArrayAdapter<String> stringArrayAdapter;
-    Prefshelper prefshelper;
-    String strId, strNextDt, strComment,  strNDay, strNMonth, strNYear, nextTime;
+    String strId, strNextDt, strComment;
     DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     DateFormat dateFormatter2 = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
-    LinearLayout linearLayout;
+    LinearLayout linearLayout, llCaseStatus;
     Calendar cal = Calendar.getInstance();
     Date sysDate = cal.getTime();
-
+    ArrayAdapter<String> caseStatusAdapter;
+    Spinner sprCaseStaus;
+    List<String> commonList=new ArrayList<>();
+    HashMap<String,String> hash = new HashMap<String,String>();
+    int selectedStatusCaseId=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+              //  WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_add_comment);
-        prefshelper=new Prefshelper(AddCommentActivity.this);
-   /*     sprNDay = (Spinner) findViewById(R.id.spinner_nday);
-        sprNMonth = (Spinner) findViewById(R.id.spinner_nmonth);
-        sprNYear = (Spinner) findViewById(R.id.spinner_nyear);*/
+        inflateLayout();
+    }
+    public void inflateLayout()
+    {
         btnAdd=(Button)findViewById(R.id.add);
+        llCaseStatus = (LinearLayout) findViewById(R.id.ll_case_status);
+        sprCaseStaus = (Spinner) findViewById(R.id.spinner_case_status);
         txtNextError=(TextView)findViewById(R.id.tw_next_error);
         edtComments=(EditText) findViewById(R.id.textView_comments);
         edtNextDate=(EditText) findViewById(R.id.textView_nextdt);
@@ -80,47 +89,25 @@ public class AddCommentActivity extends AppCompatActivity{
         linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               // Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
-               // startActivity(intent1);
-                finish();
-              //  MainAcitivity.txtTitle.setText("Home");
+                onBackPressed();
             }
         });
+
+        /** Show case status column only if Piad user **/
+        if(Utils.getUserPreferencesBoolean(AddCommentActivity.this, UserInfo.COMMON_PAID))
+        {
+            llCaseStatus.setVisibility(View.VISIBLE);
+            getCaseStatuses();
+        }
+        else
+        {
+            llCaseStatus.setVisibility(View.GONE);
+        }
         strId=getIntent().getStringExtra("id");
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                            View focusView = null;
-                boolean cancelLogin = false;
-
-                strComment=edtComments.getText().toString();
-              
-                if(strNextDt==null)
-                {
-                    txtNextError.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    txtNextError.setVisibility(View.GONE);
-                }
-
-              
-                if (TextUtils.isEmpty(strComment)) {
-                    edtComments.setError("Field must not be empty.");
-                    focusView = edtComments;
-                    cancelLogin = true;
-                }
-               
-
-                if (cancelLogin) {
-                    // error in login
-                    focusView.requestFocus();
-                } else {
-
-                    addComment();
-                }
-
-
+                onClickAddComment();
             }
         });
         edtNextDate.setOnClickListener(new View.OnClickListener() {
@@ -129,194 +116,8 @@ public class AddCommentActivity extends AppCompatActivity{
                 dialogDatePicker();
             }
         });
-      /*  if (sprNDay.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCommentActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.day)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNDay.setAdapter(stringArrayAdapter);
-        }
-        if (sprNMonth.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCommentActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.month)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNMonth.setAdapter(stringArrayAdapter);
-        }
-        if (sprNYear.getAdapter() == null) {
-            stringArrayAdapter = new ArrayAdapter<String>(AddCommentActivity.this, R.layout.layout_spinner, getResources().getStringArray(R.array.year)) {
-
-                @Override
-                public boolean isEnabled(int position) {
-
-                    if (position == 0) {
-                        // Disable the first item from Spinner
-                        // First item will be use for hint
-                        return false;
-                    } else {
-                        return true;
-                    }
-                }
-
-                @Override
-                public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                    View view = super.getDropDownView(position, convertView, parent);
-                    TextView tv = (TextView) view;
-                    if (position == 0) {
-                        // Set the hint text color gray
-                        tv.setTextColor(Color.GRAY);
-                    } else {
-                        tv.setTextColor(Color.BLACK);
-                    }
-                    return view;
-                }
-            };
-            stringArrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
-            sprNYear.setAdapter(stringArrayAdapter);
-        }
-        sprNDay.setOnItemSelectedListener(AddCommentActivity.this);
-        sprNMonth.setOnItemSelectedListener(AddCommentActivity.this);
-        sprNYear.setOnItemSelectedListener(AddCommentActivity.this);
-*/
     }
-    public void addComment() {
-        try {
-            final ProgressDialog pDialog = new ProgressDialog(AddCommentActivity.this);
-            pDialog.setMessage("Loading...");
-            pDialog.setCancelable(false);
-            pDialog.show();
 
-            Log.e("", "SIGNUP " + MapAppConstant.API + "add_comment" );
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "add_comment", new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    pDialog.dismiss();
-                    Log.d("", ".......response====" + response.toString());
-
-                    ////////
-                    try {
-                        JSONObject object = new JSONObject(response);
-                        String serverCode = object.getString("code");
-                        String serverMessage = object.getString("message");
-                        Toast.makeText(AddCommentActivity.this, serverMessage,Toast.LENGTH_LONG).show();
-
-                        if (serverCode.equalsIgnoreCase("0")) {
-
-                        }
-                        if (serverCode.equalsIgnoreCase("1")) {
-                            try {
-                                if ("1".equals(serverCode)) {
-
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
-                            startActivity(intent1);
-                            finish();
-                        }
-
-
-
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-                    , new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    pDialog.dismiss();
-                    //  VolleyLog.d("", "Error: " + error.getMessage());
-                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
-                        Toast.makeText(AddCommentActivity.this, "Timeout Error",
-                                Toast.LENGTH_LONG).show();
-                    } else if (error instanceof AuthFailureError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ServerError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof NetworkError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    } else if (error instanceof ParseError) {
-                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
-                    }
-                }
-            }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-
-                    params.put("user_id", Utils.getUserPreferences(AddCommentActivity.this,Prefshelper.USER_ID));
-                    params.put("user_security_hash", Utils.getUserPreferences(AddCommentActivity.this,Prefshelper.USER_SECURITY_HASH));
-                    params.put("case_id", strId);
-                    params.put("case_detail_comment", strComment);
-                    params.put("case_next_date", strNextDt);
-                    return params;
-                }
-            };
-            sr.setShouldCache(true);
-
-            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     public void dialogDatePicker()
     {
         final Dialog dialog = new Dialog(AddCommentActivity.this);
@@ -374,75 +175,281 @@ public class AddCommentActivity extends AppCompatActivity{
 
         dialog.show();
     }
+    /** List of case status for paid users **/
+    public void getCaseStatuses() {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(AddCommentActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            String URL_CASE_STATUS=MapAppConstant.API + MapAppConstant.GET_CASE_STATUS;
+            Log.e("CASE STATUS URL" ,URL_CASE_STATUS);
+            StringRequest sr = new StringRequest(Request.Method.POST, URL_CASE_STATUS, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.e("CASE STATUS RESPONSE",response);
 
-  /*  @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Spinner spinner = (Spinner) adapterView;
-       
-        if(spinner.getId()==R.id.spinner_nday)
-        {
-            if (i==0)
-            {
-                strNDay="";
-            }
-            else {
-                strNDay=sprNDay.getSelectedItem().toString();
-                Log.e("year", strNDay);
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Toast.makeText(AddCommentActivity.this, serverMessage,Toast.LENGTH_LONG).show();
 
-            }
-        }
-        if(spinner.getId()==R.id.spinner_nmonth)
-        {
-            if (i==0)
-            {
-                strNMonth="";
-            }
-            else {
-                strNMonth=String.valueOf(i);
-                Log.e("year", strNMonth);
-            }
-        }
-        if(spinner.getId()==R.id.spinner_nyear)
-        {
-            if (i==0)
-            {
-                strNYear="";
-            }
-            else {
-                if(txtNextError.getVisibility()==View.VISIBLE)
-                {
-                    txtNextError.setVisibility(View.GONE);
-                }
-               
-                strNYear= sprNYear.getSelectedItem().toString();
-                Log.e("year", strNYear);
-                String nextDate=strNYear+"-"+strNMonth+"-"+strNDay;
+                        if (serverCode.equalsIgnoreCase("0")) {
 
-                try {
-                    Date dt = dateFormatter2.parse(nextDate);
-                    if(dt.after(dateFormatter2.parse(dateFormatter2.format(sysDate))) ||
-                            dt.equals(dateFormatter2.parse(dateFormatter2.format(sysDate))))
-                    {
-                        strNextDt = dateFormatter2.format(dt);
-                        txtNextError.setVisibility(View.GONE);
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+                                    JSONArray jsonArray=object.getJSONArray("data");
+                                    // CommonList commonListObject1=new CommonList(0,"Case Status");
+                                    // commonList.add(commonListObject1);
+                                    commonList.add("Case Status");
+                                    hash.put("0","Case Status");
+                                    if(jsonArray.length()>0)
+                                    {
+                                        for(int i=0; i<jsonArray.length();i++)
+                                        {
+                                            JSONObject jsonObject=jsonArray.getJSONObject(i);
+                                            String id=jsonObject.getString("case_status_id");
+                                            String name=jsonObject.getString("case_status_name");
+                                            hash.put(id,name);
+                                            commonList.add(name);
+                                            //CommonList commonListObject=new CommonList(id,name);
+                                            // commonList.add(commonListObject);
+                                        }
+                                    }
+
+
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (sprCaseStaus.getAdapter() == null) {
+                                caseStatusAdapter = new ArrayAdapter<String>(AddCommentActivity.this, R.layout.layout_spinner, commonList)
+                                {
+                                    @Override
+                                    public boolean isEnabled(int position) {
+
+                                        return position != 0;
+                                    }
+
+                                    @Override
+                                    public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
+                                        View view = super.getDropDownView(position, convertView, parent);
+                                        TextView tv = (TextView) view;
+                                        if (position == 0) {
+                                            // Set the hint text color gray
+                                            tv.setTextColor(Color.GRAY);
+                                        } else {
+                                            tv.setTextColor(Color.BLACK);
+                                        }
+
+                                        return view;
+                                    }
+                                };
+                                caseStatusAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown);
+                                sprCaseStaus.setAdapter(caseStatusAdapter);
+                                sprCaseStaus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                                        for (Map.Entry<String, String> entry : hash.entrySet()) {
+                                            if (entry.getValue().equals(commonList.get(i))) {
+                                                selectedStatusCaseId=Integer.valueOf(entry.getKey());
+                                                Log.e("KEY",""+selectedStatusCaseId);
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                                    }
+                                });
+                                sprCaseStaus.setSelection(1);
+
+                            }
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    else
-                    {
-                        txtNextError.setVisibility(View.VISIBLE);
-                        txtNextError.setText("Next date should be equals to or greater than current date");
-                    }
-
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
                 }
             }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Toast.makeText(AddCommentActivity.this, "No Internet Connection",
+                                Toast.LENGTH_LONG).show();
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    params.put("user_id", Utils.getUserPreferences(AddCommentActivity.this, UserInfo.USER_ID));
+                    params.put("user_security_hash", Utils.getUserPreferences(AddCommentActivity.this, UserInfo.USER_SECURITY_HASH));
+
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-       
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+    /** Check validations before adding comment**/
+    public void onClickAddComment()
+    {
+        View focusView = null;
+        boolean cancelLogin = false;
+
+        strComment=edtComments.getText().toString();
+
+        if(strNextDt==null)
+        {
+            txtNextError.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            txtNextError.setVisibility(View.GONE);
+        }
+
+
+        if (TextUtils.isEmpty(strComment)) {
+            edtComments.setError("Field must not be empty.");
+            focusView = edtComments;
+            cancelLogin = true;
+        }
+
+
+        if (cancelLogin) {
+            // error in login
+            focusView.requestFocus();
+        } else {
+
+            addComment();
+        }
 
     }
-*/}
+
+    public void addComment() {
+        try {
+            final ProgressDialog pDialog = new ProgressDialog(AddCommentActivity.this);
+            pDialog.setMessage("Loading...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+            String ADD_COMMENT_URL=MapAppConstant.API + MapAppConstant.ADD_COMMENT;
+            Log.e("ADD COMMENT URL",ADD_COMMENT_URL);
+            StringRequest sr = new StringRequest(Request.Method.POST, ADD_COMMENT_URL, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    pDialog.dismiss();
+                    Log.e("ADD COMMENT RESPONSE", response);
+
+                    try {
+                        JSONObject object = new JSONObject(response);
+                        String serverCode = object.getString("code");
+                        String serverMessage = object.getString("message");
+                        Utils.showToast(AddCommentActivity.this, serverMessage);
+
+                        if (serverCode.equalsIgnoreCase("0")) {
+
+                        }
+                        if (serverCode.equalsIgnoreCase("1")) {
+                            try {
+                                if ("1".equals(serverCode)) {
+
+                                }
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            //Intent intent1 = new Intent(AddCommentActivity.this,  MainAcitivity.class);
+                            //startActivity(intent1);
+                            onBackPressed();
+                        }
+
+
+
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+                    , new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    pDialog.dismiss();
+                    //  VolleyLog.d("", "Error: " + error.getMessage());
+                    if (error instanceof TimeoutError || error instanceof NoConnectionError) {
+                        Utils.showToast(AddCommentActivity.this, "Timeout Error");
+                    } else if (error instanceof AuthFailureError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ServerError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof NetworkError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    } else if (error instanceof ParseError) {
+                        VolleyLog.d("", "" + error.getMessage() + "," + error.toString());
+                    }
+                }
+            }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+
+                    params.put(UserInfo.USER_ID, Utils.getUserPreferences(AddCommentActivity.this, UserInfo.USER_ID));
+                    params.put(UserInfo.USER_SECURITY_HASH, Utils.getUserPreferences(AddCommentActivity.this, UserInfo.USER_SECURITY_HASH));
+                    params.put(UserInfo.CASE_ID, strId);
+                    params.put(UserInfo.CASE_DETAIL_COMMENT, strComment);
+                    params.put(UserInfo.CASE_NEXT_DATE, strNextDt);
+                    if(Utils.getUserPreferencesBoolean(AddCommentActivity.this, UserInfo.COMMON_PAID))
+                    {
+                        params.put(UserInfo.CASE_STATUSES_ID,String.valueOf(selectedStatusCaseId));
+                    }
+                    Log.e("ADD COMMENT REQUEST",params.toString());
+                    return params;
+                }
+            };
+            sr.setShouldCache(true);
+
+            sr.setRetryPolicy(new DefaultRetryPolicy(50000 * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(sr);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

@@ -4,6 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+/*
+*Common class to check the internet connection
+ */
 
 public class ConnectionDetector {
 

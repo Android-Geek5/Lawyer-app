@@ -17,9 +17,10 @@ import android.widget.TextView;
 
 import com.eweblog.MainAcitivity;
 import com.eweblog.R;
-import com.eweblog.CorporateUserMainActivity;
 
-
+/*
+ABOUT US SCREEN
+ */
 public class AboutUS extends Fragment {
 
     LinearLayout llContactUs;
@@ -39,8 +40,8 @@ public class AboutUS extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-       View rootview= inflater.inflate(R.layout.fragment_about_us, container, false);
-       MainAcitivity.txtTitle.setText("About Us");
+        View rootview= inflater.inflate(R.layout.fragment_about_us, container, false);
+        MainAcitivity.txtTitle.setText("About Us");
 
         llContactUs=(LinearLayout)rootview.findViewById(R.id.ll_call);
 

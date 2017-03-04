@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,14 +32,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.StringRequest;
 import com.eweblog.ForgotPasswordActivity;
-import com.eweblog.MainAcitivity;
+import com.eweblog.LoginActivity;
 import com.eweblog.OTPScreenActivity;
 import com.eweblog.R;
 import com.eweblog.RegisterationActivity;
 import com.eweblog.Utils;
+import com.eweblog.common.UserInfo;
 import com.eweblog.common.ConnectionDetector;
 import com.eweblog.common.MapAppConstant;
-import com.eweblog.common.Prefshelper;
 import com.eweblog.common.VolleySingleton;
 
 import org.json.JSONObject;
@@ -51,13 +52,16 @@ public class FragmentLogin extends Fragment {
 
     EditText edtContact,edtPwd;
     String strContact, strPwd, userID, userSecHash, userName, userEmail, userContact,
-            userEmailVerified, userMobileVerified,userStatus, imgUrl,userLastName,userStateOfPractice,userCityofPractice,userSpecialization;;
-    Prefshelper prefshelper;
+            userEmailVerified, userMobileVerified,userStatus, imgUrl,userLastName,
+            userStateOfPractice,userCityofPractice,userSpecialization,userStateOfPractice2,userCityofPractice2;;;
+    UserInfo userInfo;
     ConnectionDetector cd;
     TextView txtNotAUser, txtForgotPwd;
     int groupId;
     int corporatePlansId=0;
-
+    int parentId=0;
+    String versionName,versionResponse,linkDownload;
+    int expiry=0;
     public FragmentLogin() {
         // Required empty public constructor
     }
@@ -78,7 +82,7 @@ public class FragmentLogin extends Fragment {
         edtPwd = (EditText) rootview.findViewById(R.id.password);
         txtNotAUser = (TextView)rootview. findViewById(R.id.textView);
         txtForgotPwd = (TextView) rootview.findViewById(R.id.textView_forgot);
-        prefshelper=new Prefshelper(getActivity());
+        versionName=Utils.GetAppVersion(getActivity());
       /*  txtNotAUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -180,9 +184,9 @@ public class FragmentLogin extends Fragment {
             pDialog.setMessage("Loading...");
             pDialog.setCancelable(false);
             pDialog.show();
-
-            Log.e("Login URL",MapAppConstant.API + "login");
-            StringRequest sr = new StringRequest(Request.Method.POST, MapAppConstant.API + "login", new Response.Listener<String>() {
+            String LOGIN_URL=MapAppConstant.API + MapAppConstant.LOGIN;
+            Log.e("CLogin URL",LOGIN_URL);
+            StringRequest sr = new StringRequest(Request.Method.POST, LOGIN_URL, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
                     pDialog.dismiss();
@@ -192,8 +196,9 @@ public class FragmentLogin extends Fragment {
                         JSONObject object = new JSONObject(response);
                         String serverCode = object.getString("code");
                         String serverMessage = object.getString("message");
-                        Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+
                         if (serverCode.equalsIgnoreCase("0")) {
+                            Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
                            /* if(serverMessage.contains("|"))
                             {
 
@@ -203,6 +208,9 @@ public class FragmentLogin extends Fragment {
                             {
                                 Toast.makeText(getActivity(), serverMessage.replace("|", ""), Toast.LENGTH_LONG).show();
                             }*/
+                        }
+                        if (serverCode.equalsIgnoreCase("-1")) {
+                            Utils.showToast(getActivity(), serverMessage);
                         }
                         if (serverCode.equalsIgnoreCase("1") || serverCode.equalsIgnoreCase("2")) {
 
@@ -217,50 +225,82 @@ public class FragmentLogin extends Fragment {
                                     userEmailVerified=jsonObject.getString("user_email_verification_status");
                                     userMobileVerified=jsonObject.getString("user_mobile_verification_status");
                                     userStatus=jsonObject.getString("user_status");
-                                    userStateOfPractice=jsonObject.getString(Prefshelper.USER_STATE_OF_PRACTISE);
-                                    userCityofPractice=jsonObject.getString(Prefshelper.USER_CITY_OF_PRACTISE);
-                                    userLastName=jsonObject.getString(Prefshelper.USER_LAST_NAME);
-
+                                    userStateOfPractice=jsonObject.getString(UserInfo.USER_STATE_OF_PRACTISE);
+                                    userCityofPractice=jsonObject.getString(UserInfo.USER_CITY_OF_PRACTISE);
+                                userStateOfPractice2=jsonObject.getString(UserInfo.USER_STATE_OF_PRACTISE1);
+                                userCityofPractice2=jsonObject.getString(UserInfo.USER_CITY_OF_PRACTISE1);
+                                    userLastName=jsonObject.getString(UserInfo.USER_LAST_NAME);
+                                    parentId=jsonObject.getInt(UserInfo.USER_PARENT_ID);
                                     groupId=jsonObject.getInt("group_id");
-                                    imgUrl = jsonObject.getString("user_profile_image");
-                                    if(groupId==4 || groupId==5) //Check if paid or business user
-                                        corporatePlansId=jsonObject.getInt(Prefshelper.CORPORATE_PLANS_ID);
-                                    userSpecialization=jsonObject.getString(Prefshelper.USER_SPECIALIZATION);
-
-
+                                if(jsonObject.getString(UserInfo.USER_PROFILE_IMAGE).equalsIgnoreCase(""))
+                                {imgUrl="";}
+                                else {
+                                    imgUrl = jsonObject.getString(UserInfo.USER_PROFILE_IMAGE_URL);
+                                }
+                                if((groupId==4 || groupId==5)&& parentId==0)//Check if paid or business user
+                                        corporatePlansId=jsonObject.getInt(UserInfo.CORPORATE_PLANS_ID);
+                                    userSpecialization=jsonObject.getString(UserInfo.USER_SPECIALIZATION);
+                                JSONObject configurations=jsonObject.getJSONObject(UserInfo.CONFIGURATIONS);
+                                versionResponse=configurations.getString(UserInfo.VERSION);
+                                linkDownload=configurations.getString(UserInfo.URL_DOWNLOAD);
+                                expiry=jsonObject.getInt(UserInfo.USER_IS_EXPIRED);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            Utils.saveTypeOfUser(getActivity(),groupId);
+                            Utils.saveTypeOfUser(getActivity(),groupId,parentId);
                             Utils.checkSmsAlert(getActivity(),corporatePlansId);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_ID,userID);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SECURITY_HASH,userSecHash);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_EMAIL,userEmail);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_NAME,userName);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CONTACT,userContact);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATUS,userStatus);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_PROFILE_IMAGE_URL,imgUrl);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_LAST_NAME,userLastName);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_STATE_OF_PRACTISE,userStateOfPractice);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_CITY_OF_PRACTISE,userCityofPractice);
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.USER_SPECIALIZATION,userSpecialization);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_ID,userID);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_SECURITY_HASH,userSecHash);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_EMAIL,userEmail);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_NAME,userName);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CONTACT,userContact);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATUS,userStatus);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_PROFILE_IMAGE_URL,imgUrl);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_LAST_NAME,userLastName);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATE_OF_PRACTISE,userStateOfPractice);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CITY_OF_PRACTISE,userCityofPractice);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_SPECIALIZATION,userSpecialization);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_STATE_OF_PRACTISE1,userStateOfPractice2);
+                            Utils.storeUserPreferences(getActivity(), UserInfo.USER_CITY_OF_PRACTISE1,userCityofPractice2);
                             if(userEmailVerified.equalsIgnoreCase("1"))
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,true);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_EMAIL_VERIFICATION_STATUS,true);
                             else
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_EMAIL_VERIFICATION_STATUS,false);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_EMAIL_VERIFICATION_STATUS,false);
                             if(userMobileVerified.equalsIgnoreCase("1"))
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,true);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_MOBILE_VERIFICATION_STATUS,true);
                             else
-                                Utils.storeUserPreferencesBoolean(getActivity(),Prefshelper.USER_MOBILE_VERIFICATION_STATUS,false);
+                                Utils.storeUserPreferencesBoolean(getActivity(), UserInfo.USER_MOBILE_VERIFICATION_STATUS,false);
 
-                            Utils.storeUserPreferences(getActivity(),Prefshelper.GROUP_ID,String.valueOf(groupId));
+                            Utils.storeUserPreferences(getActivity(), UserInfo.GROUP_ID,String.valueOf(groupId));
                             if(serverCode.equalsIgnoreCase("1") ) {
-                                Intent intent = new Intent(getActivity(), MainAcitivity.class);
-                                startActivity(intent);
-                                getActivity().finish();
+
+                                if(versionName.equalsIgnoreCase(versionResponse))
+                                {
+                                    Log.e("Version","Same");
+
+                                    if(versionName.equalsIgnoreCase(versionResponse))
+                                    {
+                                        Log.e("Version","Same");
+                                        if(expiry==0) {
+                                            ((LoginActivity)getActivity()).getAllCases();
+                                            // Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                                        }
+                                        else if(expiry==1)
+                                        {dialogExpiry(1,serverMessage);}
+                                        else if(expiry==2)
+                                        {dialogExpiry(2,serverMessage);}
+                                    }
+
+                                }
+                                else{
+                                    Log.e("Version","Not same");
+                                    dialogUpdate(linkDownload);
+                                }
+
                             }
                             else if(serverCode.equalsIgnoreCase("2"))
                             {
+
                                 Intent intent = new Intent(getActivity(), OTPScreenActivity.class);
                                 startActivity(intent);
                             }
@@ -337,7 +377,10 @@ public class FragmentLogin extends Fragment {
         type1text.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.showToast(getActivity(),"Premium User");
+                //Utils.showToast(getActivity(),"Premium User");
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(MapAppConstant.REGISTER_AS_PAID));
+                startActivity(i);
                 dialog.dismiss();
             }
         });
@@ -349,6 +392,61 @@ public class FragmentLogin extends Fragment {
                 startActivity(intent);
             }
         });
+        dialog.show();
+    }
+    public void dialogUpdate(final String url) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.update_layout);
+
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        dialog.show();
+    }
+    public void dialogExpiry(int expiryInteger,final String serverMessage) {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.update_layout);
+        TextView textView=(TextView) dialog.findViewById(R.id.text1);
+        Button yes = (Button) dialog.findViewById(R.id.bt_yes);
+        if(expiryInteger==1) {
+            textView.setText("Your package is about to expire.");
+            yes.setText("OK");
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    ((LoginActivity)getActivity()).getAllCases();
+                    Utils.showToast(getActivity(),serverMessage.replace(" | "," "));
+                }
+            });
+        }
+        if(expiryInteger==2)
+        {
+            textView.setText("You subscription is expired. Please renew your package first to use unlimited services");
+            yes.setText("BUY NOW");
+            yes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(MapAppConstant.REGISTER_AS_PAID));
+                    startActivity(i);
+                }
+            });
+        }
+
         dialog.show();
     }
 }

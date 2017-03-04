@@ -13,10 +13,12 @@ import com.eweblog.R;
 
 import com.eweblog.SplashScreenActivity;
 
+
+/* Service to show notifications **/
+
 public class MyAlarmService extends Service
 {
-      
-   private NotificationManager mManager;
+
  
     @Override
     public IBinder onBind(Intent arg0)
@@ -48,7 +50,7 @@ public class MyAlarmService extends Service
 
        Intent resultIntent = new Intent(this.getApplicationContext(), SplashScreenActivity.class);
        resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP| Intent.FLAG_ACTIVITY_CLEAR_TOP);
-       PendingIntent resultPendingIntent = PendingIntent.getActivity(this.getApplicationContext(),0,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+       PendingIntent resultPendingIntent = PendingIntent.getActivity(this.getApplicationContext(),4,resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
        mBuilder.setContentIntent(resultPendingIntent);
        NotificationManager mNotificationManager = (NotificationManager) this.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
